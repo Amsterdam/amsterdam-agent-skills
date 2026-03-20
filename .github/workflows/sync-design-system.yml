@@ -1,0 +1,143 @@
+name: Sync Design System
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+    inputs:
+      hours_back:
+        description: "Hours to look back for releases"
+        required: false
+        default: "25"
+        type: string
+
+permissions:
+  issues: write
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for label_json in \
+            '{"name":"copilot","color":"1d76db","description":"Copilot coding agent pickup"}' \
+            '{"name":"upstream-sync","color":"0e8a16","description":"Auto-created upstream monitoring issue"}' \
+            '{"name":"skill:amsterdam-design-system","color":"e99695","description":"Amsterdam Design System skill"}'; do
+            name=$(echo "$label_json" | jq -r .name)
+            gh label create "$name" \
+              --repo "$GITHUB_REPOSITORY" \
+              --color "$(echo "$label_json" | jq -r .color)" \
+              --description "$(echo "$label_json" | jq -r .description)" 2>/dev/null || true
+          done
+
+      - name: Check for new releases
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          HOURS_BACK="${{ inputs.hours_back || '25' }}"
+          SINCE=$(date -u -d "-${HOURS_BACK} hours" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
+            || date -u -v-${HOURS_BACK}H +%Y-%m-%dT%H:%M:%SZ)
+
+          echo "Checking releases since $SINCE"
+
+          RELEASES=$(gh api "repos/Amsterdam/design-system/releases?per_page=100" --jq \
+            "[.[] | select(.published_at >= \"$SINCE\" and .draft == false)]")
+
+          COUNT=$(echo "$RELEASES" | jq 'length')
+          echo "Found $COUNT release(s)"
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+          # Build release summary and save to file (header + body per release)
+          echo "$RELEASES" | jq -r '.[] | "### [`\(.tag_name)`](\(.html_url))\n\n\(.body // "No release notes." | .[0:2000])\n\n---\n"' > /tmp/release_summary.md
+
+          RELEASE_LIST=$(echo "$RELEASES" | jq -r '.[].tag_name' | paste -sd ', ' -)
+          echo "release_list=$RELEASE_LIST" >> "$GITHUB_OUTPUT"
+
+      - name: Check for duplicate issue
+        if: steps.check.outputs.skip != 'true'
+        id: dedup
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          EXISTING=$(gh issue list \
+            --repo "$GITHUB_REPOSITORY" \
+            --label "upstream-sync,skill:amsterdam-design-system" \
+            --state open \
+            --search "in:title $TODAY" \
+            --json number \
+            --jq 'length')
+
+          if [ "$EXISTING" -gt 0 ]; then
+            echo "Issue already exists for today, skipping"
+            echo "duplicate=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "duplicate=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create issue
+        if: steps.check.outputs.skip != 'true' && steps.dedup.outputs.duplicate != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_LIST: ${{ steps.check.outputs.release_list }}
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+
+          cat > /tmp/issue_body.md <<'EOF'
+          ## Upstream Changes Detected
+          EOF
+
+          # Use printf to safely insert dynamic content
+          printf '\nNew release(s) published in [`Amsterdam/design-system`](https://github.com/Amsterdam/design-system): **%s**\n' "$RELEASE_LIST" >> /tmp/issue_body.md
+
+          cat >> /tmp/issue_body.md <<'EOF'
+
+          ## Release Details
+
+          EOF
+
+          cat /tmp/release_summary.md >> /tmp/issue_body.md
+
+          cat >> /tmp/issue_body.md <<'EOF'
+
+          ## Skill Files to Review
+
+          - [ ] `skills/amsterdam-design-system/SKILL.md`
+          - [ ] `skills/amsterdam-design-system/references/components.md`
+          - [ ] `skills/amsterdam-design-system/references/tokens.md`
+          - [ ] `skills/amsterdam-design-system/references/icons.md`
+          - [ ] `skills/amsterdam-design-system/references/layout-patterns.md`
+          - [ ] `skills/amsterdam-design-system/references/tailwind-bridge.md`
+
+          ## What to Look For
+
+          - New, changed, or deprecated components
+          - Updated design tokens or CSS custom properties
+          - New icons or icon naming changes
+          - Breaking changes that affect skill guidance
+          - New layout or spacing patterns
+
+          ## Instructions
+
+          1. Read the release notes above
+          2. Check the upstream repo for detailed changes
+          3. Update each skill file where the release impacts existing guidance
+          4. Do NOT remove existing patterns that still work — only add, update, or mark deprecated
+          5. Keep the same file structure and formatting conventions
+          EOF
+
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "upstream-sync: design-system releases — $TODAY" \
+            --body-file /tmp/issue_body.md \
+            --label "copilot,upstream-sync,skill:amsterdam-design-system"
