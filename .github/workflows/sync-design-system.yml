@@ -3,21 +3,18 @@ name: Sync Design System
 on:
   schedule:
     - cron: "0 7 * * *"
-  workflow_dispatch:
-    inputs:
-      hours_back:
-        description: "Hours to look back for releases"
-        required: false
-        default: "25"
-        type: string
+  workflow_dispatch: {}
 
 permissions:
   issues: write
+  contents: write
 
 jobs:
   check-upstream:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Ensure labels exist
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,82 +30,87 @@ jobs:
               --description "$(echo "$label_json" | jq -r .description)" 2>/dev/null || true
           done
 
-      - name: Check for new releases
-        id: check
+      - name: Detect upstream changes
+        id: detect
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          HOURS_BACK="${{ inputs.hours_back || '25' }}"
-          SINCE=$(date -u -d "-${HOURS_BACK} hours" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
-            || date -u -v-${HOURS_BACK}H +%Y-%m-%dT%H:%M:%SZ)
+          STATE_FILE=.github/upstream-state.json
+          STORED=$(jq -r '."design-system".latest_release_published_at // ""' "$STATE_FILE")
 
-          echo "Checking releases since $SINCE"
-
+          # Fetch recent non-draft releases
           RELEASES=$(gh api "repos/Amsterdam/design-system/releases?per_page=100" --jq \
-            "[.[] | select(.published_at >= \"$SINCE\" and .draft == false)]")
+            '[.[] | select(.draft == false)]')
 
-          COUNT=$(echo "$RELEASES" | jq 'length')
-          echo "Found $COUNT release(s)"
-
-          if [ "$COUNT" -eq 0 ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
+          if [ "$(echo "$RELEASES" | jq 'length')" -eq 0 ]; then
+            echo "No releases found upstream"
+            echo "action=none" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          echo "skip=false" >> "$GITHUB_OUTPUT"
+          if [ -z "$STORED" ]; then
+            echo "First run — seeding state"
+            NEWEST=$(echo "$RELEASES" | jq -r '.[0].published_at')
+            echo "action=seed" >> "$GITHUB_OUTPUT"
+            echo "newest_date=$NEWEST" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
-          # Build release summary and save to file (header + body per release)
-          echo "$RELEASES" | jq -r '.[] | "### [`\(.tag_name)`](\(.html_url))\n\n\(.body // "No release notes." | .[0:2000])\n\n---\n"' > /tmp/release_summary.md
+          # Filter releases published after stored date
+          NEW=$(echo "$RELEASES" | jq --arg since "$STORED" '[.[] | select(.published_at > $since)]')
+          COUNT=$(echo "$NEW" | jq 'length')
 
-          RELEASE_LIST=$(echo "$RELEASES" | jq -r '.[].tag_name' | paste -sd ', ' -)
+          if [ "$COUNT" -eq 0 ]; then
+            echo "No new releases since $STORED"
+            echo "action=none" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Found $COUNT new release(s)"
+          echo "action=notify" >> "$GITHUB_OUTPUT"
+
+          # Build release summary
+          echo "$NEW" | jq -r '.[] | "### [`\(.tag_name)`](\(.html_url))\n\n\(.body // "No release notes." | .[0:2000])\n\n---\n"' > /tmp/release_summary.md
+
+          RELEASE_LIST=$(echo "$NEW" | jq -r '.[].tag_name' | paste -sd ', ' -)
           echo "release_list=$RELEASE_LIST" >> "$GITHUB_OUTPUT"
 
+          NEWEST=$(echo "$NEW" | jq -r '[.[].published_at] | sort | last')
+          echo "newest_date=$NEWEST" >> "$GITHUB_OUTPUT"
+
       - name: Check for duplicate issue
-        if: steps.check.outputs.skip != 'true'
+        if: steps.detect.outputs.action == 'notify'
         id: dedup
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TODAY=$(date -u +%Y-%m-%d)
           EXISTING=$(gh issue list \
             --repo "$GITHUB_REPOSITORY" \
             --label "upstream-sync,skill:amsterdam-design-system" \
             --state open \
-            --search "in:title $TODAY" \
             --json number \
             --jq 'length')
 
           if [ "$EXISTING" -gt 0 ]; then
-            echo "Issue already exists for today, skipping"
+            echo "Open issue already exists, skipping"
             echo "duplicate=true" >> "$GITHUB_OUTPUT"
           else
             echo "duplicate=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Create issue
-        if: steps.check.outputs.skip != 'true' && steps.dedup.outputs.duplicate != 'true'
+        if: steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_LIST: ${{ steps.check.outputs.release_list }}
+          RELEASE_LIST: ${{ steps.detect.outputs.release_list }}
         run: |
           TODAY=$(date -u +%Y-%m-%d)
 
-          cat > /tmp/issue_body.md <<'EOF'
-          ## Upstream Changes Detected
-          EOF
-
-          # Use printf to safely insert dynamic content
-          printf '\nNew release(s) published in [`Amsterdam/design-system`](https://github.com/Amsterdam/design-system): **%s**\n' "$RELEASE_LIST" >> /tmp/issue_body.md
-
-          cat >> /tmp/issue_body.md <<'EOF'
-
-          ## Release Details
-
-          EOF
-
+          printf '## Upstream Changes Detected\n\n' > /tmp/issue_body.md
+          printf 'New release(s) in [`Amsterdam/design-system`](https://github.com/Amsterdam/design-system): **%s**\n\n' "$RELEASE_LIST" >> /tmp/issue_body.md
+          printf '## Release Details\n\n' >> /tmp/issue_body.md
           cat /tmp/release_summary.md >> /tmp/issue_body.md
-
-          cat >> /tmp/issue_body.md <<'EOF'
+          cat >> /tmp/issue_body.md <<'BODY'
 
           ## Skill Files to Review
 
@@ -134,10 +136,25 @@ jobs:
           3. Update each skill file where the release impacts existing guidance
           4. Do NOT remove existing patterns that still work — only add, update, or mark deprecated
           5. Keep the same file structure and formatting conventions
-          EOF
+          BODY
 
           gh issue create \
             --repo "$GITHUB_REPOSITORY" \
             --title "upstream-sync: design-system releases — $TODAY" \
             --body-file /tmp/issue_body.md \
             --label "copilot,upstream-sync,skill:amsterdam-design-system"
+
+      - name: Update state
+        if: >-
+          steps.detect.outputs.action == 'seed' ||
+          (steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true')
+        env:
+          NEWEST_DATE: ${{ steps.detect.outputs.newest_date }}
+        run: |
+          jq --arg d "$NEWEST_DATE" '."design-system".latest_release_published_at = $d' \
+            .github/upstream-state.json > tmp.json && mv tmp.json .github/upstream-state.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/upstream-state.json
+          git diff --cached --quiet || (git commit -m "chore: update design-system sync state [skip ci]" && git push)

@@ -3,21 +3,18 @@ name: Sync Development Standards
 on:
   schedule:
     - cron: "15 7 * * *"
-  workflow_dispatch:
-    inputs:
-      hours_back:
-        description: "Hours to look back for commits"
-        required: false
-        default: "25"
-        type: string
+  workflow_dispatch: {}
 
 permissions:
   issues: write
+  contents: write
 
 jobs:
   check-upstream:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Ensure labels exist
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,35 +30,58 @@ jobs:
               --description "$(echo "$label_json" | jq -r .description)" 2>/dev/null || true
           done
 
-      - name: Check for new commits
-        id: check
+      - name: Detect upstream changes
+        id: detect
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          HOURS_BACK="${{ inputs.hours_back || '25' }}"
-          SINCE=$(date -u -d "-${HOURS_BACK} hours" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
-            || date -u -v-${HOURS_BACK}H +%Y-%m-%dT%H:%M:%SZ)
+          STATE_FILE=.github/upstream-state.json
+          STORED=$(jq -r '."development-standards".latest_commit_sha // ""' "$STATE_FILE")
 
-          echo "Checking commits on develop since $SINCE"
+          # Get current HEAD of develop
+          CURRENT_SHA=$(gh api "repos/Amsterdam/development-standards/commits?sha=develop&per_page=1" --jq '.[0].sha')
 
-          COMMITS=$(gh api "repos/Amsterdam/development-standards/commits?sha=develop&since=$SINCE&per_page=100" --jq \
-            '[.[] | select(.commit.message | test("^Merge") | not) | {
-              sha: .sha[0:7],
-              message: (.commit.message | split("\n")[0] | .[0:120]),
-              author: (.commit.author.name // .author.login // "unknown"),
-              date: .commit.author.date,
-              url: .html_url
-            }]')
-
-          COUNT=$(echo "$COMMITS" | jq 'length')
-          echo "Found $COUNT non-merge commit(s)"
-
-          if [ "$COUNT" -eq 0 ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
+          if [ -z "$STORED" ]; then
+            echo "First run — seeding state with $CURRENT_SHA"
+            echo "action=seed" >> "$GITHUB_OUTPUT"
+            echo "newest_sha=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          echo "skip=false" >> "$GITHUB_OUTPUT"
+          if [ "$STORED" = "$CURRENT_SHA" ]; then
+            echo "No changes on develop"
+            echo "action=none" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Compare stored SHA with current HEAD
+          COMPARISON=$(gh api "repos/Amsterdam/development-standards/compare/${STORED}...${CURRENT_SHA}" 2>/dev/null) || {
+            echo "Compare failed (stored SHA may no longer exist). Re-seeding."
+            echo "action=seed" >> "$GITHUB_OUTPUT"
+            echo "newest_sha=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+
+          # Filter non-merge commits
+          COMMITS=$(echo "$COMPARISON" | jq '[.commits[] | select(.commit.message | test("^Merge") | not) | {
+            sha: .sha[0:7],
+            full_sha: .sha,
+            message: (.commit.message | split("\n")[0] | .[0:120]),
+            author: (.commit.author.name // .author.login // "unknown"),
+            url: .html_url
+          }]')
+
+          COUNT=$(echo "$COMMITS" | jq 'length')
+          echo "newest_sha=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "Only merge commits — advancing state"
+            echo "action=advance" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Found $COUNT non-merge commit(s)"
+          echo "action=notify" >> "$GITHUB_OUTPUT"
           echo "commit_count=$COUNT" >> "$GITHUB_OUTPUT"
 
           # Build commit table
@@ -71,58 +91,45 @@ jobs:
             echo "$COMMITS" | jq -r '.[] | "| [`\(.sha)`](\(.url)) | \(.author) | \(.message) |"'
           } > /tmp/commit_table.md
 
-          # Get compare link
-          OLDEST_SHA=$(echo "$COMMITS" | jq -r '.[-1].sha')
-          NEWEST_SHA=$(echo "$COMMITS" | jq -r '.[0].sha')
-          echo "compare_url=https://github.com/Amsterdam/development-standards/compare/${OLDEST_SHA}...${NEWEST_SHA}" >> "$GITHUB_OUTPUT"
+          SHORT_STORED=$(echo "$STORED" | cut -c1-7)
+          SHORT_CURRENT=$(echo "$CURRENT_SHA" | cut -c1-7)
+          echo "compare_url=https://github.com/Amsterdam/development-standards/compare/${SHORT_STORED}...${SHORT_CURRENT}" >> "$GITHUB_OUTPUT"
 
       - name: Check for duplicate issue
-        if: steps.check.outputs.skip != 'true'
+        if: steps.detect.outputs.action == 'notify'
         id: dedup
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TODAY=$(date -u +%Y-%m-%d)
           EXISTING=$(gh issue list \
             --repo "$GITHUB_REPOSITORY" \
             --label "upstream-sync,skill:developers-amsterdam" \
             --state open \
-            --search "in:title $TODAY" \
             --json number \
             --jq 'length')
 
           if [ "$EXISTING" -gt 0 ]; then
-            echo "Issue already exists for today, skipping"
+            echo "Open issue already exists, skipping"
             echo "duplicate=true" >> "$GITHUB_OUTPUT"
           else
             echo "duplicate=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Create issue
-        if: steps.check.outputs.skip != 'true' && steps.dedup.outputs.duplicate != 'true'
+        if: steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMIT_COUNT: ${{ steps.check.outputs.commit_count }}
-          COMPARE_URL: ${{ steps.check.outputs.compare_url }}
+          COMMIT_COUNT: ${{ steps.detect.outputs.commit_count }}
+          COMPARE_URL: ${{ steps.detect.outputs.compare_url }}
         run: |
           TODAY=$(date -u +%Y-%m-%d)
 
-          cat > /tmp/issue_body.md <<'EOF'
-          ## Upstream Changes Detected
-          EOF
-
-          printf '\n**%s** new commit(s) on [`Amsterdam/development-standards@develop`](https://github.com/Amsterdam/development-standards/tree/develop).\n' "$COMMIT_COUNT" >> /tmp/issue_body.md
-          printf '\n[View full diff](%s)\n' "$COMPARE_URL" >> /tmp/issue_body.md
-
-          cat >> /tmp/issue_body.md <<'EOF'
-
-          ## Commits
-
-          EOF
-
+          printf '## Upstream Changes Detected\n\n' > /tmp/issue_body.md
+          printf '**%s** new commit(s) on [`Amsterdam/development-standards@develop`](https://github.com/Amsterdam/development-standards/tree/develop).\n\n' "$COMMIT_COUNT" >> /tmp/issue_body.md
+          printf '[View full diff](%s)\n\n' "$COMPARE_URL" >> /tmp/issue_body.md
+          printf '## Commits\n\n' >> /tmp/issue_body.md
           cat /tmp/commit_table.md >> /tmp/issue_body.md
-
-          cat >> /tmp/issue_body.md <<'EOF'
+          cat >> /tmp/issue_body.md <<'BODY'
 
           ## Skill Files to Review
 
@@ -149,10 +156,26 @@ jobs:
           3. Update each skill file where the commits impact existing guidance
           4. Do NOT remove existing patterns that still work — only add, update, or mark deprecated
           5. Keep the same file structure and formatting conventions
-          EOF
+          BODY
 
           gh issue create \
             --repo "$GITHUB_REPOSITORY" \
             --title "upstream-sync: development-standards commits — $TODAY" \
             --body-file /tmp/issue_body.md \
             --label "copilot,upstream-sync,skill:developers-amsterdam"
+
+      - name: Update state
+        if: >-
+          steps.detect.outputs.action == 'seed' ||
+          steps.detect.outputs.action == 'advance' ||
+          (steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true')
+        env:
+          NEWEST_SHA: ${{ steps.detect.outputs.newest_sha }}
+        run: |
+          jq --arg s "$NEWEST_SHA" '."development-standards".latest_commit_sha = $s' \
+            .github/upstream-state.json > tmp.json && mv tmp.json .github/upstream-state.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/upstream-state.json
+          git diff --cached --quiet || (git commit -m "chore: update dev-standards sync state [skip ci]" && git push)
