@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 *.skill
 .DS_Store
+.agents/skills/
