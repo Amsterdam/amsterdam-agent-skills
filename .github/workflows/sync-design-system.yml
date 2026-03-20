@@ -7,14 +7,12 @@ on:
 
 permissions:
   issues: write
-  contents: write
+  variables: write
 
 jobs:
   check-upstream:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Ensure labels exist
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,8 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          STATE_FILE=.github/upstream-state.json
-          STORED=$(jq -r '."design-system".latest_release_published_at // ""' "$STATE_FILE")
+          STORED=$(gh variable get DESIGN_SYSTEM_LAST_RELEASE --repo "$GITHUB_REPOSITORY" 2>/dev/null || echo "")
 
           # Fetch recent non-draft releases
           RELEASES=$(gh api "repos/Amsterdam/design-system/releases?per_page=100" --jq \
@@ -149,12 +146,9 @@ jobs:
           steps.detect.outputs.action == 'seed' ||
           (steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true')
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEWEST_DATE: ${{ steps.detect.outputs.newest_date }}
         run: |
-          jq --arg d "$NEWEST_DATE" '."design-system".latest_release_published_at = $d' \
-            .github/upstream-state.json > tmp.json && mv tmp.json .github/upstream-state.json
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/upstream-state.json
-          git diff --cached --quiet || (git commit -m "chore: update design-system sync state [skip ci]" && git push)
+          gh variable set DESIGN_SYSTEM_LAST_RELEASE \
+            --repo "$GITHUB_REPOSITORY" \
+            --body "$NEWEST_DATE"

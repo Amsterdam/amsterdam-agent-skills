@@ -7,14 +7,12 @@ on:
 
 permissions:
   issues: write
-  contents: write
+  variables: write
 
 jobs:
   check-upstream:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Ensure labels exist
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,8 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          STATE_FILE=.github/upstream-state.json
-          STORED=$(jq -r '."development-standards".latest_commit_sha // ""' "$STATE_FILE")
+          STORED=$(gh variable get DEV_STANDARDS_LAST_COMMIT --repo "$GITHUB_REPOSITORY" 2>/dev/null || echo "")
 
           # Get current HEAD of develop
           CURRENT_SHA=$(gh api "repos/Amsterdam/development-standards/commits?sha=develop&per_page=1" --jq '.[0].sha')
@@ -170,12 +167,9 @@ jobs:
           steps.detect.outputs.action == 'advance' ||
           (steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true')
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEWEST_SHA: ${{ steps.detect.outputs.newest_sha }}
         run: |
-          jq --arg s "$NEWEST_SHA" '."development-standards".latest_commit_sha = $s' \
-            .github/upstream-state.json > tmp.json && mv tmp.json .github/upstream-state.json
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/upstream-state.json
-          git diff --cached --quiet || (git commit -m "chore: update dev-standards sync state [skip ci]" && git push)
+          gh variable set DEV_STANDARDS_LAST_COMMIT \
+            --repo "$GITHUB_REPOSITORY" \
+            --body "$NEWEST_SHA"
