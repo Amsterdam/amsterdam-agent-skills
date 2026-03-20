@@ -7,7 +7,7 @@ on:
 
 permissions:
   issues: write
-  variables: write
+  actions: write
 
 jobs:
   check-upstream:
@@ -33,7 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          STORED=$(gh variable get DEV_STANDARDS_LAST_COMMIT --repo "$GITHUB_REPOSITORY" 2>/dev/null || echo "")
+          STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DEV_STANDARDS_LAST_COMMIT" --jq '.value' 2>/dev/null || echo "")
 
           # Get current HEAD of develop
           CURRENT_SHA=$(gh api "repos/Amsterdam/development-standards/commits?sha=develop&per_page=1" --jq '.[0].sha')
@@ -170,6 +170,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEWEST_SHA: ${{ steps.detect.outputs.newest_sha }}
         run: |
-          gh variable set DEV_STANDARDS_LAST_COMMIT \
-            --repo "$GITHUB_REPOSITORY" \
-            --body "$NEWEST_SHA"
+          # Create or update the variable
+          gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DEV_STANDARDS_LAST_COMMIT" \
+            --method PATCH -f value="$NEWEST_SHA" 2>/dev/null \
+          || gh api "repos/${GITHUB_REPOSITORY}/actions/variables" \
+            --method POST -f name="DEV_STANDARDS_LAST_COMMIT" -f value="$NEWEST_SHA"
