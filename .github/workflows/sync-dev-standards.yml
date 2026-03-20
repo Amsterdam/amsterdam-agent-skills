@@ -7,7 +7,6 @@ on:
 
 permissions:
   issues: write
-  actions: write
 
 jobs:
   check-upstream:
@@ -31,8 +30,9 @@ jobs:
       - name: Detect upstream changes
         id: detect
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
         run: |
+          # Read state from repo variable (requires PAT with Variables permission)
           STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DEV_STANDARDS_LAST_COMMIT" --jq '.value' 2>/dev/null || echo "")
 
           # Get current HEAD of develop
@@ -167,10 +167,10 @@ jobs:
           steps.detect.outputs.action == 'advance' ||
           (steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true')
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
           NEWEST_SHA: ${{ steps.detect.outputs.newest_sha }}
         run: |
-          # Create or update the variable
+          # Create or update repo variable (requires PAT with Variables permission)
           gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DEV_STANDARDS_LAST_COMMIT" \
             --method PATCH -f value="$NEWEST_SHA" 2>/dev/null \
           || gh api "repos/${GITHUB_REPOSITORY}/actions/variables" \

@@ -7,7 +7,6 @@ on:
 
 permissions:
   issues: write
-  actions: write
 
 jobs:
   check-upstream:
@@ -31,8 +30,9 @@ jobs:
       - name: Detect upstream changes
         id: detect
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
         run: |
+          # Read state from repo variable (requires PAT with Variables permission)
           STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DESIGN_SYSTEM_LAST_RELEASE" --jq '.value' 2>/dev/null || echo "")
 
           # Fetch recent non-draft releases
@@ -146,10 +146,10 @@ jobs:
           steps.detect.outputs.action == 'seed' ||
           (steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true')
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
           NEWEST_DATE: ${{ steps.detect.outputs.newest_date }}
         run: |
-          # Create or update the variable
+          # Create or update repo variable (requires PAT with Variables permission)
           gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DESIGN_SYSTEM_LAST_RELEASE" \
             --method PATCH -f value="$NEWEST_DATE" 2>/dev/null \
           || gh api "repos/${GITHUB_REPOSITORY}/actions/variables" \
