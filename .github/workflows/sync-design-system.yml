@@ -1,0 +1,156 @@
+name: Sync Design System
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for label_json in \
+            '{"name":"copilot","color":"1d76db","description":"Copilot coding agent pickup"}' \
+            '{"name":"upstream-sync","color":"0e8a16","description":"Auto-created upstream monitoring issue"}' \
+            '{"name":"skill:amsterdam-design-system","color":"e99695","description":"Amsterdam Design System skill"}'; do
+            name=$(echo "$label_json" | jq -r .name)
+            gh label create "$name" \
+              --repo "$GITHUB_REPOSITORY" \
+              --color "$(echo "$label_json" | jq -r .color)" \
+              --description "$(echo "$label_json" | jq -r .description)" 2>/dev/null || true
+          done
+
+      - name: Detect upstream changes
+        id: detect
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+        run: |
+          # Read state from repo variable (requires PAT with Variables permission)
+          STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DESIGN_SYSTEM_LAST_RELEASE" --jq '.value' 2>/dev/null || echo "")
+
+          # Fetch recent non-draft releases
+          RELEASES=$(gh api "repos/Amsterdam/design-system/releases?per_page=100" --jq \
+            '[.[] | select(.draft == false)]')
+
+          if [ "$(echo "$RELEASES" | jq 'length')" -eq 0 ]; then
+            echo "No releases found upstream"
+            echo "action=none" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ -z "$STORED" ]; then
+            echo "First run — seeding state"
+            NEWEST=$(echo "$RELEASES" | jq -r '.[0].published_at')
+            echo "action=seed" >> "$GITHUB_OUTPUT"
+            echo "newest_date=$NEWEST" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Filter releases published after stored date
+          NEW=$(echo "$RELEASES" | jq --arg since "$STORED" '[.[] | select(.published_at > $since)]')
+          COUNT=$(echo "$NEW" | jq 'length')
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "No new releases since $STORED"
+            echo "action=none" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Found $COUNT new release(s)"
+          echo "action=notify" >> "$GITHUB_OUTPUT"
+
+          # Build release summary
+          echo "$NEW" | jq -r '.[] | "### [`\(.tag_name)`](\(.html_url))\n\n\(.body // "No release notes." | .[0:2000])\n\n---\n"' > /tmp/release_summary.md
+
+          RELEASE_LIST=$(echo "$NEW" | jq -r '.[].tag_name' | paste -sd ', ' -)
+          echo "release_list=$RELEASE_LIST" >> "$GITHUB_OUTPUT"
+
+          NEWEST=$(echo "$NEW" | jq -r '[.[].published_at] | sort | last')
+          echo "newest_date=$NEWEST" >> "$GITHUB_OUTPUT"
+
+      - name: Check for duplicate issue
+        if: steps.detect.outputs.action == 'notify'
+        id: dedup
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh issue list \
+            --repo "$GITHUB_REPOSITORY" \
+            --label "upstream-sync,skill:amsterdam-design-system" \
+            --state open \
+            --json number \
+            --jq 'length')
+
+          if [ "$EXISTING" -gt 0 ]; then
+            echo "Open issue already exists, skipping"
+            echo "duplicate=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "duplicate=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create issue
+        if: steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_LIST: ${{ steps.detect.outputs.release_list }}
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+
+          printf '## Upstream Changes Detected\n\n' > /tmp/issue_body.md
+          printf 'New release(s) in [`Amsterdam/design-system`](https://github.com/Amsterdam/design-system): **%s**\n\n' "$RELEASE_LIST" >> /tmp/issue_body.md
+          printf '## Release Details\n\n' >> /tmp/issue_body.md
+          cat /tmp/release_summary.md >> /tmp/issue_body.md
+          cat >> /tmp/issue_body.md <<'BODY'
+
+          ## Skill Files to Review
+
+          - [ ] `skills/amsterdam-design-system/SKILL.md`
+          - [ ] `skills/amsterdam-design-system/references/components.md`
+          - [ ] `skills/amsterdam-design-system/references/tokens.md`
+          - [ ] `skills/amsterdam-design-system/references/icons.md`
+          - [ ] `skills/amsterdam-design-system/references/layout-patterns.md`
+          - [ ] `skills/amsterdam-design-system/references/tailwind-bridge.md`
+
+          ## What to Look For
+
+          - New, changed, or deprecated components
+          - Updated design tokens or CSS custom properties
+          - New icons or icon naming changes
+          - Breaking changes that affect skill guidance
+          - New layout or spacing patterns
+
+          ## Instructions
+
+          1. Read the release notes above
+          2. Check the upstream repo for detailed changes
+          3. Update each skill file where the release impacts existing guidance
+          4. Do NOT remove existing patterns that still work — only add, update, or mark deprecated
+          5. Keep the same file structure and formatting conventions
+          BODY
+
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "upstream-sync: design-system releases — $TODAY" \
+            --body-file /tmp/issue_body.md \
+            --label "copilot,upstream-sync,skill:amsterdam-design-system"
+
+      - name: Update state
+        if: >-
+          steps.detect.outputs.action == 'seed' ||
+          (steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true')
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+          NEWEST_DATE: ${{ steps.detect.outputs.newest_date }}
+        run: |
+          # Create or update repo variable (requires PAT with Variables permission)
+          gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DESIGN_SYSTEM_LAST_RELEASE" \
+            --method PATCH -f value="$NEWEST_DATE" 2>/dev/null \
+          || gh api "repos/${GITHUB_REPOSITORY}/actions/variables" \
+            --method POST -f name="DESIGN_SYSTEM_LAST_RELEASE" -f value="$NEWEST_DATE"

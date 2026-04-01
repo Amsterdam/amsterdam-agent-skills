@@ -1,0 +1,177 @@
+name: Sync Development Standards
+
+on:
+  schedule:
+    - cron: "15 7 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for label_json in \
+            '{"name":"copilot","color":"1d76db","description":"Copilot coding agent pickup"}' \
+            '{"name":"upstream-sync","color":"0e8a16","description":"Auto-created upstream monitoring issue"}' \
+            '{"name":"skill:developers-amsterdam","color":"c5def5","description":"Development Standards skill"}'; do
+            name=$(echo "$label_json" | jq -r .name)
+            gh label create "$name" \
+              --repo "$GITHUB_REPOSITORY" \
+              --color "$(echo "$label_json" | jq -r .color)" \
+              --description "$(echo "$label_json" | jq -r .description)" 2>/dev/null || true
+          done
+
+      - name: Detect upstream changes
+        id: detect
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+        run: |
+          # Read state from repo variable (requires PAT with Variables permission)
+          STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DEV_STANDARDS_LAST_COMMIT" --jq '.value' 2>/dev/null) || STORED=""
+
+          # Get current HEAD of develop
+          CURRENT_SHA=$(gh api "repos/Amsterdam/development-standards/commits?sha=develop&per_page=1" --jq '.[0].sha')
+
+          if [ -z "$STORED" ]; then
+            echo "First run — seeding state with $CURRENT_SHA"
+            echo "action=seed" >> "$GITHUB_OUTPUT"
+            echo "newest_sha=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "$STORED" = "$CURRENT_SHA" ]; then
+            echo "No changes on develop"
+            echo "action=none" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Compare stored SHA with current HEAD
+          COMPARISON=$(gh api "repos/Amsterdam/development-standards/compare/${STORED}...${CURRENT_SHA}" 2>/dev/null) || {
+            echo "Compare failed (stored SHA may no longer exist). Re-seeding."
+            echo "action=seed" >> "$GITHUB_OUTPUT"
+            echo "newest_sha=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+
+          # Filter non-merge commits
+          COMMITS=$(echo "$COMPARISON" | jq '[.commits[] | select(.commit.message | test("^Merge") | not) | {
+            sha: .sha[0:7],
+            full_sha: .sha,
+            message: (.commit.message | split("\n")[0] | .[0:120]),
+            author: (.commit.author.name // .author.login // "unknown"),
+            url: .html_url
+          }]')
+
+          COUNT=$(echo "$COMMITS" | jq 'length')
+          echo "newest_sha=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "Only merge commits — advancing state"
+            echo "action=advance" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Found $COUNT non-merge commit(s)"
+          echo "action=notify" >> "$GITHUB_OUTPUT"
+          echo "commit_count=$COUNT" >> "$GITHUB_OUTPUT"
+
+          # Build commit table
+          {
+            echo "| Commit | Author | Message |"
+            echo "| ------ | ------ | ------- |"
+            echo "$COMMITS" | jq -r '.[] | "| [`\(.sha)`](\(.url)) | \(.author) | \(.message) |"'
+          } > /tmp/commit_table.md
+
+          SHORT_STORED=$(echo "$STORED" | cut -c1-7)
+          SHORT_CURRENT=$(echo "$CURRENT_SHA" | cut -c1-7)
+          echo "compare_url=https://github.com/Amsterdam/development-standards/compare/${SHORT_STORED}...${SHORT_CURRENT}" >> "$GITHUB_OUTPUT"
+
+      - name: Check for duplicate issue
+        if: steps.detect.outputs.action == 'notify'
+        id: dedup
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh issue list \
+            --repo "$GITHUB_REPOSITORY" \
+            --label "upstream-sync,skill:developers-amsterdam" \
+            --state open \
+            --json number \
+            --jq 'length')
+
+          if [ "$EXISTING" -gt 0 ]; then
+            echo "Open issue already exists, skipping"
+            echo "duplicate=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "duplicate=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create issue
+        if: steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_COUNT: ${{ steps.detect.outputs.commit_count }}
+          COMPARE_URL: ${{ steps.detect.outputs.compare_url }}
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+
+          printf '## Upstream Changes Detected\n\n' > /tmp/issue_body.md
+          printf '**%s** new commit(s) on [`Amsterdam/development-standards@develop`](https://github.com/Amsterdam/development-standards/tree/develop).\n\n' "$COMMIT_COUNT" >> /tmp/issue_body.md
+          printf '[View full diff](%s)\n\n' "$COMPARE_URL" >> /tmp/issue_body.md
+          printf '## Commits\n\n' >> /tmp/issue_body.md
+          cat /tmp/commit_table.md >> /tmp/issue_body.md
+          cat >> /tmp/issue_body.md <<'BODY'
+
+          ## Skill Files to Review
+
+          - [ ] `skills/developers-amsterdam/SKILL.md`
+          - [ ] `skills/developers-amsterdam/references/tech-stack.md`
+          - [ ] `skills/developers-amsterdam/references/git-workflow.md`
+          - [ ] `skills/developers-amsterdam/references/testing-standards.md`
+          - [ ] `skills/developers-amsterdam/references/security-checklist.md`
+          - [ ] `skills/developers-amsterdam/references/project-setup-checklist.md`
+
+          ## What to Look For
+
+          - New or updated development standards and conventions
+          - Changes to recommended tech stack or tooling
+          - Updated git workflow or branching strategy
+          - New testing requirements or patterns
+          - Security checklist additions or changes
+          - Project setup process changes
+
+          ## Instructions
+
+          1. Read the commit messages and diff above
+          2. Check the upstream repo for the full changed files
+          3. Update each skill file where the commits impact existing guidance
+          4. Do NOT remove existing patterns that still work — only add, update, or mark deprecated
+          5. Keep the same file structure and formatting conventions
+          BODY
+
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "upstream-sync: development-standards commits — $TODAY" \
+            --body-file /tmp/issue_body.md \
+            --label "copilot,upstream-sync,skill:developers-amsterdam"
+
+      - name: Update state
+        if: >-
+          steps.detect.outputs.action == 'seed' ||
+          steps.detect.outputs.action == 'advance' ||
+          (steps.detect.outputs.action == 'notify' && steps.dedup.outputs.duplicate != 'true')
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+          NEWEST_SHA: ${{ steps.detect.outputs.newest_sha }}
+        run: |
+          # Create or update repo variable (requires PAT with Variables permission)
+          gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DEV_STANDARDS_LAST_COMMIT" \
+            --method PATCH -f value="$NEWEST_SHA" 2>/dev/null \
+          || gh api "repos/${GITHUB_REPOSITORY}/actions/variables" \
+            --method POST -f name="DEV_STANDARDS_LAST_COMMIT" -f value="$NEWEST_SHA"
