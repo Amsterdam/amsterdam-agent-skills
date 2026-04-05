@@ -1,5 +1,7 @@
 # Amsterdam Design System — Component API Reference
 
+> Covers `@amsterdam/design-system-react` **v3.3.0** and `@amsterdam/design-system-css` **v3.3.0** (April 2026).
+
 All components from `@amsterdam/design-system-react`. Every component uses `forwardRef` and spreads `...restProps` on its root element.
 
 ## Layout
@@ -481,8 +483,13 @@ Top-of-form error summary with links to invalid fields.
 
 ### Breadcrumb
 
+Renders a hidden `<h2>` that provides an accessible name and is visible without CSS for progressive enhancement.
+
 ```tsx
-<Breadcrumb>
+<Breadcrumb
+  accessibleName="Kruimelpad"     // string — accessible name (default: "Kruimelpad")
+  accessibleNameId="breadcrumb-1" // string — custom id for the internal heading (auto-generated if omitted)
+>
   <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
   <Breadcrumb.Link href="/category">Categorie</Breadcrumb.Link>
   <Breadcrumb.Link>Huidige pagina</Breadcrumb.Link>
@@ -594,6 +601,8 @@ Navigation menu with accessible label.
 ```
 
 ### DescriptionList
+
+Terms use Heading 4 typography (larger, bolder) with `text-wrap: balance` for multi-line readability.
 
 ```tsx
 <DescriptionList
@@ -734,6 +743,10 @@ Amsterdam logo.
 <Logo brand="amsterdam" />        // LogoBrand | LogoBrandConfig
 ```
 
+**Available brands:** `'amsterdam'` | `'amsterdam-english'` | `'ggd-amsterdam'` | `'ggd-amsterdam-inspectie'` | `'museum-weesp'` | `'stadsarchief'` | `'stadsbank-van-lening'` | `'vga-verzekeringen'`
+
+For custom logos, pass a `LogoBrandConfig` object: `{ label: string, svg: ComponentType<SVGProps<SVGSVGElement>> }`.
+
 ### Lists
 
 ```tsx
@@ -757,19 +770,38 @@ Amsterdam logo.
 
 ### ProgressList
 
+Steps are collapsible (v3.3.0+). Completed steps collapse by default to reduce visual noise. Each step heading becomes a toggle button with a chevron icon. The chevron rotation animates (respects `prefers-reduced-motion`). All panels force-expand when printing.
+
 ```tsx
 <ProgressList headingLevel={2}>
   <ProgressList.Step heading="Stap 1" status="completed">
+    {/* Collapsed by default because status="completed" */}
     <Paragraph>Completed step.</Paragraph>
   </ProgressList.Step>
-  <ProgressList.Step heading="Stap 2" status="current" hasSubsteps>
+  <ProgressList.Step
+    heading="Stap 2"
+    status="current"
+    hasSubsteps
+    onToggle={(expanded) => console.log(expanded)}
+  >
     <ProgressList.Substeps>
       <ProgressList.Substep>Sub A</ProgressList.Substep>
       <ProgressList.Substep>Sub B</ProgressList.Substep>
     </ProgressList.Substeps>
   </ProgressList.Step>
-  <ProgressList.Step heading="Stap 3">
+  <ProgressList.Step heading="Stap 3" defaultCollapsed={true}>
+    {/* Explicitly collapsed despite no completed status */}
     <Paragraph>Upcoming step.</Paragraph>
   </ProgressList.Step>
 </ProgressList>
 ```
+
+**ProgressList.Step props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `heading` | `string` | required | Heading text for the step |
+| `status` | `'current' \| 'completed'` | — | Progress state |
+| `hasSubsteps` | `boolean` | `false` | Whether step contains substeps (for connector lines) |
+| `defaultCollapsed` | `boolean` | `true` if completed, `false` otherwise | Initial collapsed state (uncontrolled) |
+| `onToggle` | `(expanded: boolean) => void` | — | Callback when step is expanded or collapsed |

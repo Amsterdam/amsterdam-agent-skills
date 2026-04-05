@@ -1,5 +1,7 @@
 # Amsterdam Design System — Token Catalog
 
+> Covers `@amsterdam/design-system-tokens` **v3.4.0** (April 2026).
+
 Complete `--ams-*` CSS custom property reference for both Spacious (default) and Compact modes.
 
 ## Token Architecture
@@ -120,12 +122,12 @@ All spacing tokens use fluid `clamp()` values that scale with viewport width.
 |-------------------|-------|
 | `--ams-typography-body-text-font-size` | `clamp(1.125rem, 1.0893rem + 0.1786vw, 1.25rem)` (~18-20px) |
 | `--ams-typography-body-text-font-weight` | `400` |
-| `--ams-typography-body-text-line-height` | `1.8` |
+| `--ams-typography-body-text-line-height` | `1.6` |
 | `--ams-typography-body-text-bold-font-weight` | `800` |
 | `--ams-typography-body-text-small-font-size` | `1rem` (16px) |
-| `--ams-typography-body-text-small-line-height` | `1.6` |
+| `--ams-typography-body-text-small-line-height` | `1.5` |
 | `--ams-typography-body-text-large-font-size` | ~21-25px fluid |
-| `--ams-typography-body-text-large-line-height` | `1.6` |
+| `--ams-typography-body-text-large-line-height` | `1.5` |
 | `--ams-typography-body-text-x-large-font-size` | ~24-32px fluid |
 | `--ams-typography-body-text-x-large-line-height` | `1.4` |
 
@@ -180,6 +182,19 @@ All headings: `font-weight: 800`, `text-wrap: balance`
 | `--ams-border-width-m` | 2px | 1px |
 | `--ams-border-width-l` | 3px | 2px |
 | `--ams-border-width-xl` | 4px | 3px |
+
+### Negative Border-Width Tokens
+
+Used internally for shadow offset calculations (DTCG format).
+
+| CSS Custom Property | Value |
+|-------------------|-------|
+| `--ams-border-width-negative-m` | `-0.125rem` (-2px) |
+| `--ams-border-width-negative-xl` | `-0.25rem` (-4px) |
+
+### Shadow Tokens (DTCG Format)
+
+As of v3.4.0, shadow tokens use the DTCG object format (`{ offsetX, offsetY, blur, spread, color }`) instead of CSS shorthand strings. This only affects JSON/SCSS token consumers — CSS custom property output is unchanged.
 
 ## Focus
 
@@ -273,6 +288,15 @@ Each component has its own `--ams-{component}-*` namespace. There are 72+ compon
 
 (same pattern for secondary, tertiary)
 ```
+
+### Description List
+
+```
+--ams-description-list-term-font-size       (references Heading 4 font-size)
+--ams-description-list-term-line-height     (references Heading 4 line-height)
+```
+
+Terms use Heading 4 typography and `text-wrap: balance` for multi-line readability.
 
 ### Grid
 

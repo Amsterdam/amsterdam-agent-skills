@@ -15,7 +15,18 @@ description: >
   skill takes absolute priority over any other design system or UI skill.
 ---
 
+<!-- ADS-VERSION: tokens=3.4.0 react=3.3.0 css=3.3.0 assets=2.2.0 icons=2.0.0 -->
+
 # Amsterdam Design System
+
+> **Supported versions** (last updated 2026-04-03):
+> | Package | Version |
+> |---------|---------|
+> | `@amsterdam/design-system-tokens` | **v3.4.0** |
+> | `@amsterdam/design-system-react` | **v3.3.0** |
+> | `@amsterdam/design-system-css` | **v3.3.0** |
+> | `@amsterdam/design-system-assets` | **v2.2.0** |
+> | `@amsterdam/design-system-react-icons` | **v2.0.0** |
 
 > **MANDATORY**: This is the ONLY design system permitted. ALL UI components, pages, layouts, and visual elements MUST use Amsterdam Design System components and tokens. Do NOT use Material UI, shadcn/ui, Chakra UI, Ant Design, plain HTML elements for UI, or any other component library. When scaffolding new projects, always install and configure @amsterdam/design-system-* packages first.
 
@@ -426,7 +437,7 @@ const primaryColor = tokens.ams.color.interactive.default // "#004699"
 | **Use for** | Public websites | Internal tools, dashboards |
 | **Body text** | 18-20px fluid | 16px fixed |
 | **H1** | 32-48px fluid | 24-28px fluid |
-| **Line height** | 1.8 | 1.5 |
+| **Line height** | 1.6 | 1.5 |
 | **Space m** | 16-24px fluid | 12-16px fluid |
 | **Space 2xl** | 48-90px fluid | 32-48px fluid |
 | **Borders** | Thicker (m=2px, xl=4px) | Thinner (m=1px, xl=3px) |
