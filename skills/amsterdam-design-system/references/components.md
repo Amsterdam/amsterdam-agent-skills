@@ -4,6 +4,8 @@
 
 All components from `@amsterdam/design-system-react`. Every component uses `forwardRef` and spreads `...restProps` on its root element.
 
+> **Before writing JSX:** for app scaffolding, copy `assets/starter-vite-react/`. For aesthetic choices (color commitment, rhythm, motion, composition), read `references/aesthetic-discipline.md` first — answer the 5-question checklist there before picking components.
+
 ## Layout
 
 ### Grid
@@ -805,3 +807,134 @@ Steps are collapsible (v3.3.0+). Completed steps collapse by default to reduce v
 | `hasSubsteps` | `boolean` | `false` | Whether step contains substeps (for connector lines) |
 | `defaultCollapsed` | `boolean` | `true` if completed, `false` otherwise | Initial collapsed state (uncontrolled) |
 | `onToggle` | `(expanded: boolean) => void` | — | Callback when step is expanded or collapsed |
+
+## Components ADS Does Not Ship — Use Radix Primitives
+
+ADS covers 66 components but does not ship every interaction primitive. When you need a Popover, DropdownMenu, Tooltip, ContextMenu, or a Dialog with a custom trigger, **use Radix UI headless primitives** and style them with AMS tokens via a CVA wrapper. **Do not** reach for `shadcn/ui` directly — its design tokens conflict with ADS, and its variant system is opinionated about colors that ADS does not use.
+
+| Need | Radix package | ADS-shipped alternative? |
+|---|---|---|
+| Popover (anchored floating panel) | `@radix-ui/react-popover` | No |
+| Dropdown menu (button → menu of items) | `@radix-ui/react-dropdown-menu` | No (`<Menu>` is for navigation, not actions) |
+| Tooltip (hover/focus hint) | `@radix-ui/react-tooltip` | No |
+| Context menu (right-click) | `@radix-ui/react-context-menu` | No |
+| Dialog with custom trigger / non-modal flows | `@radix-ui/react-dialog` | Yes — use `<Dialog>` from ADS for modal forms; reach for Radix only when you need imperative control or non-modal behavior |
+
+### Pattern: token-styled Radix Popover
+
+```tsx
+import * as Popover from "@radix-ui/react-popover"
+import { Button } from "@amsterdam/design-system-react"
+
+export function HelpPopover() {
+  return (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <Button variant="tertiary">Help</Button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          sideOffset={8}
+          className="
+            bg-ams-bg
+            text-ams-text
+            border border-ams-separator
+            font-ams
+            p-ams-m
+            max-w-sm
+            shadow-md
+          "
+        >
+          Hier vindt u uitleg over dit onderdeel.
+          <Popover.Arrow className="fill-ams-bg" />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+}
+```
+
+**Rules:**
+
+1. **Trigger uses an ADS component.** Always wrap an `<ams-button>`, `<ams-icon-button>`, or `<ams-link>` in `<Radix.Trigger asChild>`. Never style a Radix Trigger as a button from scratch.
+2. **Content uses AMS tokens.** Background `bg-ams-bg`, text `text-ams-text`, borders `border-ams-separator`, padding `p-ams-m`, font `font-ams`. No hardcoded colors. The Tailwind utilities here come from the bridge in `references/tailwind-bridge.md`.
+3. **Portal to body.** Always use `<Radix.Portal>` for overlay primitives so they escape parent `overflow: hidden` containers.
+4. **One CVA wrapper per primitive.** If you use a Popover in three places, extract a `<TokenPopover>` component that pre-applies the AMS-styled className. Three loose `Popover.Content` elements with copy-pasted classNames will drift.
+5. **Animations are optional.** Radix exposes `data-state="open"` / `data-state="closed"` attributes. If you want a fade-in, add a `data-[state=open]:animate-in fade-in-0` utility from `tw-animate-css`. Match the timing to `aesthetic-discipline.md` § Motion (≤200ms for tooltips, ≤400ms for popovers).
+
+### Pattern: token-styled Radix DropdownMenu
+
+```tsx
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+import { IconButton } from "@amsterdam/design-system-react"
+import { MenuIcon } from "@amsterdam/design-system-react-icons"
+
+export function ActionMenu() {
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <IconButton svg={MenuIcon} label="Acties" />
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          sideOffset={4}
+          className="bg-ams-bg border border-ams-separator min-w-[12rem] py-ams-xs"
+        >
+          <DropdownMenu.Item className="px-ams-m py-ams-s text-ams-text font-ams data-[highlighted]:bg-ams-azure/10 outline-none cursor-pointer">
+            Bewerken
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="px-ams-m py-ams-s text-ams-text font-ams data-[highlighted]:bg-ams-azure/10 outline-none cursor-pointer">
+            Delen
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator className="h-px bg-ams-separator my-ams-xs" />
+          <DropdownMenu.Item className="px-ams-m py-ams-s text-ams-error font-ams data-[highlighted]:bg-ams-error/10 outline-none cursor-pointer">
+            Verwijderen
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  )
+}
+```
+
+### What about Tanstack Table?
+
+For sortable/filterable data tables, use `@tanstack/react-table` for **state and logic** while keeping ADS `<Table>` markup for the **rendered output**:
+
+```tsx
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table"
+import { Table } from "@amsterdam/design-system-react"
+
+export function DataTable({ data, columns }) {
+  const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() })
+
+  return (
+    <Table>
+      <Table.Header>
+        {table.getHeaderGroups().map((hg) => (
+          <Table.Row key={hg.id}>
+            {hg.headers.map((header) => (
+              <Table.HeaderCell key={header.id}>
+                {flexRender(header.column.columnDef.header, header.getContext())}
+              </Table.HeaderCell>
+            ))}
+          </Table.Row>
+        ))}
+      </Table.Header>
+      <Table.Body>
+        {table.getRowModel().rows.map((row) => (
+          <Table.Row key={row.id}>
+            {row.getVisibleCells().map((cell) => (
+              <Table.Cell key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </Table.Cell>
+            ))}
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  )
+}
+```
+
+This pattern keeps the visual styling (colors, spacing, hover states) under ADS and offloads sort/filter/paginate logic to Tanstack. Never replace `<Table.Cell>` with a styled `<td>` — you'll lose the ADS hover and zebra-stripe styling.

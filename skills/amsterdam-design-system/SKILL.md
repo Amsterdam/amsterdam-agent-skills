@@ -47,8 +47,31 @@ When the user's request is vague (e.g., "build me a page", "create a form", "mak
 | **Content structure** | Single section or multi-section with hierarchy | Determines whether to use flat `Column` or nested `Column` spacing pattern |
 | **Routing** | Next.js App Router, React Router, or plain HTML | Affects link components and SPA integration |
 | **Tailwind** | Using Tailwind alongside AMS or AMS-only | Requires bridge config if yes (see `references/tailwind-bridge.md`) |
+| **Aesthetic direction** | Minimal / editorial / dense-data / civic-confident | Determines dominant + accent in `references/aesthetic-discipline.md`. Ask only on open-ended briefs ("polished", "modern", "nice-looking"). |
 
 **Don't ask all at once.** Pick the 1-2 questions that the prompt leaves genuinely ambiguous. If the user says "internal dashboard" → Compact mode is implied, no need to ask.
+
+> **For any brief that mentions "polished", "modern", "nice-looking", or is open-ended about style — read `references/aesthetic-discipline.md` BEFORE writing JSX.** That file is the bridge between aesthetic intent and ADS-legal output.
+
+## Aesthetic Discipline
+
+ADS gives you materials. Aesthetic discipline is how you use them so the result is not a wireframe. **Before writing a single line of JSX on any non-trivial UI task**, read `references/aesthetic-discipline.md` and answer its 5-question checklist in one sentence each:
+
+1. **Dominant color** — which one `--ams-color-*` token covers 80%+ of the canvas?
+2. **Sharp accent** — which one `--ams-color-highlight-*` token appears on at most 2-3 elements?
+3. **Rhythm** — which sections are dense (`paddingVertical="large"`)? Which are airy (`"2x-large"`)?
+4. **Page-load moment** — what is the one staggered reveal sequence on top-level Grid cells?
+5. **Memorable element** — what is the one `<Breakout>`, `<Overlap>`, or asymmetric `start={}` moment per page?
+
+If you cannot answer these in one sentence each, the design is not committed yet. Re-read the discipline doc.
+
+This step is **additive** to the mechanical rules below — it does not override them. Amsterdam Sans, `--ams-*` tokens, and the 4/8/12 Grid are still mandatory. The discipline doc teaches *how to make them sing within those constraints*, by translating frontend-design principles (typography hierarchy, color commitment, motion orchestration, composition) into ADS-legal moves.
+
+### On the vendored `frontend-design` skill
+
+You may have access to a separate `frontend-design` skill in `.agents/skills/frontend-design/`. Its **principles** about typography hierarchy, color commitment, motion orchestration, and composition are sound and apply to all UI work. Its **specific guidance** (pick a distinctive font, break the grid, use purple gradients on white) does NOT apply in Amsterdam contexts because ADS overrides font, grid, and palette choices.
+
+`references/aesthetic-discipline.md` is the translation layer. **When in doubt, trust this skill, not the vendored one.**
 
 ## Overview
 
@@ -113,6 +136,49 @@ Amsterdam Sans uses weight 800 for bold, not the browser default 700. The `ams-b
   font-weight: var(--ams-typography-body-text-bold-font-weight); /* 800 */
 }
 ```
+
+## Scaffold a New App
+
+For a new standalone React app, **do not re-invent the setup**. Use the runnable starter at `assets/starter-vite-react/`. It ships:
+
+- **Bun + Vite 6** + `@vitejs/plugin-react-swc` (matches real Amsterdam apps)
+- **React Router v7** with an `<AppLayout>` outlet pattern
+- **Tanstack Query v5** pre-wired in `App.tsx`
+- **Tailwind v4** via `@tailwindcss/vite`, with the AMS bridge in `tailwind.config.js` and preflight disabled
+- **ADS v3.3.0 / v3.4.0** in **Compact mode** (most Amsterdam projects are internal tools)
+- **CVA + clsx + tailwind-merge** for custom component variants
+- **`tw-animate-css`** + a hand-rolled `.ams-reveal` page-load stagger
+- A sample `HomePage.tsx` that exercises every principle from `references/aesthetic-discipline.md`
+
+### How to use
+
+```bash
+cp -r {skill_dir}/assets/starter-vite-react ./<project-name>
+cd ./<project-name>
+bun install
+bun run dev
+```
+
+Then:
+1. Read `references/aesthetic-discipline.md` (the 5-question checklist).
+2. Replace `src/pages/HomePage.tsx` with the user's actual page, keeping the discipline checklist answered.
+3. Add routes in `src/router.tsx` as the app grows.
+
+### Switching to Spacious mode
+
+For public-facing sites (amsterdam.nl-style), remove **one** import from `src/styles/index.css`:
+
+```diff
+- @import "@amsterdam/design-system-tokens/dist/compact.css" layer(ams);
+```
+
+And swap the `tailwind.config.js` import from `compact.json` to `index.json`. That is the only change.
+
+### When NOT to use the starter
+
+- **Adding pages to an existing Amsterdam app** — open the existing app and follow its conventions.
+- **Next.js App Router projects** — the starter is Vite-based. For Next.js, follow the import order in the "Setup" section above and apply `references/tailwind-bridge.md` manually. (A Next.js starter may be added later if demand emerges.)
+- **Plain HTML / non-React** — use the BEM CSS classes documented in `references/layout-patterns.md` § "CSS Grid Classes (Non-React)".
 
 ## Component Patterns
 
@@ -666,6 +732,10 @@ export const List = Object.assign(ListRoot, { Item: ListItem })
 | Using Tailwind `bg-blue-500` instead of AMS tokens | Use `bg-ams-interactive` or AMS component |
 | Using deprecated `PageHeading` | Use `<Heading level={1}>` — PageHeading is deprecated |
 | Heading and paragraph with same spacing | Wrap content sections in nested `Column` — `gap="large"` between sections, `gap="small"` within |
+| Output looks like a wireframe | Read `references/aesthetic-discipline.md`, commit to a dominant + one accent token before writing JSX |
+| Every section has the same `paddingVertical` and `span` | Vary rhythm — alternate dense (`large`) and airy (`x-large`/`2x-large`); use asymmetric spans with `start={}` |
+| Scaffolding from scratch with Next.js or vanilla Vite | Use `assets/starter-vite-react/` — Bun + Vite + React Router + Tanstack Query is the real-world target |
+| Reaching for `shadcn/ui` for a Popover/DropdownMenu/Tooltip | ADS does not ship those — use `@radix-ui/react-*` headless primitives styled with AMS tokens (see `references/components.md` § "Components ADS Does Not Ship") |
 
 ## Icon Usage
 
@@ -754,8 +824,13 @@ These icons were renamed in v2.0.0 — use the new names:
 
 For detailed API docs, token catalogs, and templates, read the reference files in `references/`:
 
-- **`components.md`** — Full props and code examples for each component
+- **`aesthetic-discipline.md`** — How to apply frontend-design principles (typography hierarchy, color commitment, motion, composition, depth) within ADS constraints. **Read this before writing JSX on any non-trivial UI task.**
+- **`components.md`** — Full props and code examples for each component, plus the Radix primitives section for components ADS does not ship
 - **`tokens.md`** — Complete `--ams-*` token catalog with values for both modes
-- **`layout-patterns.md`** — Page layout templates (public site, dashboard, form page)
-- **`tailwind-bridge.md`** — Complete Tailwind v4 + AMS integration guide
+- **`layout-patterns.md`** — Page layout templates (public site, dashboard, form page, React Router + AppLayout outlet)
+- **`tailwind-bridge.md`** — Complete Tailwind v4 + AMS integration guide (Vite plugin, compact tokens, motion)
 - **`icons.md`** — Icon catalog from `@amsterdam/design-system-react-icons`
+
+**Assets:**
+
+- **`assets/starter-vite-react/`** — Runnable Bun + Vite + React + TS starter with ADS pre-configured in Compact mode. See the "Scaffold a New App" section above.

@@ -1,0 +1,33 @@
+/*
+ * Amsterdam Design System — canonical CSS entry point.
+ *
+ * Layer order matters. AMS goes BEFORE Tailwind utilities so that
+ * Tailwind can override anything you need to override at the page level.
+ */
+@layer theme, base, ams, components, utilities;
+
+@config "../../tailwind.config.js";
+
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+/* Animation utilities used by reveal.css and any custom motion */
+@import "tw-animate-css";
+
+/* AMS — order matters: fonts → css → tokens → compact override.
+   For Spacious mode (public-facing sites), DELETE the compact.css line. */
+@import "@amsterdam/design-system-assets/font/index.css" layer(ams);
+@import "@amsterdam/design-system-css/dist/index.css" layer(ams);
+@import "@amsterdam/design-system-tokens/dist/index.css" layer(ams);
+@import "@amsterdam/design-system-tokens/dist/compact.css" layer(ams);
+
+@import "./reveal.css";
+
+@layer base {
+  body {
+    font-family: var(--ams-typography-font-family);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+}
