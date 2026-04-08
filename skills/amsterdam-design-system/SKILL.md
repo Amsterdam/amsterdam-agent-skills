@@ -685,9 +685,15 @@ StatusBadge.displayName = "StatusBadge"
 - [ ] Extends relevant HTML element attributes
 - [ ] Uses `clsx` for className composition
 - [ ] Spreads `...restProps` on root element
-- [ ] BEM classes with `ams-` prefix
+- [ ] BEM classes with `ams-` prefix **— OR — token-mapped Tailwind utilities (see Tailwind-bridge alternative below)**
 - [ ] All styling via `--ams-*` tokens (no hardcoded values)
 - [ ] Sets `displayName`
+
+### Tailwind-bridge alternative (when `tailwind-bridge.md` is in use)
+
+When the project ships with the Tailwind + ADS bridge configured (see `references/tailwind-bridge.md` and the starter at `assets/starter-vite-react/`), the BEM-class root is **optional**. You may instead compose the same `--ams-*` tokens through CVA variants and Tailwind utilities mapped in `tailwind.config.js`. The token-only rule still holds — only `--ams-*`-backed utilities are allowed, never raw hex/px.
+
+The runnable example is `assets/starter-vite-react/src/components/StatCard.tsx`: a `forwardRef` component that uses `cva()` for the variant matrix and `cn()` (clsx + tailwind-merge) for class composition, with every color/spacing utility (`bg-ams-bg`, `border-ams-separator`, `p-ams-m`, `border-l-ams-magenta`, …) backed by an `--ams-*` token in `tailwind.config.js`. Pick this path when you want a CVA variant API; pick the BEM/CSS path when you need shared styles outside React or want a hand-written stylesheet to reason about.
 
 ## TypeScript Patterns
 

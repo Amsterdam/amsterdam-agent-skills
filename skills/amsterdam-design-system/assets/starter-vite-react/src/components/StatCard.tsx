@@ -3,15 +3,17 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/cn"
 
 /*
- * StatCard — example of a custom component built ON TOP of AMS tokens.
+ * StatCard — canonical example of the Tailwind-bridge alternative described
+ * in SKILL.md → "Custom Components" → "Tailwind-bridge alternative".
  *
- * Rules followed (see SKILL.md → "Custom Components"):
+ * Rules followed:
  *   • forwardRef + spread restProps
- *   • clsx (via cn helper) for className composition
- *   • BEM-style root class with `ams-` prefix would normally apply, but for
- *     a CVA-based variant component we use Tailwind utilities mapped to AMS
- *     tokens via tailwind.config.js — no hardcoded values
- *   • All colors and spacing reference --ams-* tokens, never raw hex
+ *   • cn() (clsx + tailwind-merge) for className composition
+ *   • CVA variants in place of BEM modifiers — sanctioned by SKILL.md when
+ *     the Tailwind + ADS bridge is in use (see references/tailwind-bridge.md)
+ *   • Every color/spacing utility (bg-ams-*, p-ams-*, border-l-ams-*) is
+ *     backed by an --ams-* token in tailwind.config.js — no raw hex/px
+ *   • displayName set
  *
  * The `accent` variant is the discipline-doc principle in code: ONE highlight
  * token per page, applied to a single element.

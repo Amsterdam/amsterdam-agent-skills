@@ -13,7 +13,7 @@ import {
  *
  * Use ONLY for `PageHeader.logoLinkComponent` — other ADS link components
  * (StandaloneLink, PageHeader.MenuLink, Breadcrumb.Link) do NOT accept a
- * linkComponent prop. See README "A note on routing" for the workaround.
+ * linkComponent prop. See README "Customizing the navigation" for the workaround.
  */
 const LogoLink: ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>> = ({
   href,

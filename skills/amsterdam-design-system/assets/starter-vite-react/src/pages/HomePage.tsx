@@ -27,7 +27,7 @@ import { StatCard } from "@/components/StatCard"
  *                         Three uses, no more.
  *   3. Rhythm           → hero 2x-large, KPI strip large, body x-large
  *   4. Page-load moment → .ams-reveal stagger on the four hero cells
- *   5. Memorable        → asymmetric column at start={3} on wide breakpoint
+ *   5. Memorable        → asymmetric editorial column at start={{ wide: 2 }} / span={{ wide: 7 }}
  *
  * Every element on this page maps to one of these. If you add an element
  * that does not, you are diluting the design.
@@ -55,7 +55,7 @@ export function HomePage() {
   })
 
   return (
-    <>
+    <main id="main">
       {/* HERO — dominant Spotlight band, staggered reveal cascade */}
       <Spotlight color="azure">
         <Grid paddingVertical="2x-large">
@@ -236,6 +236,6 @@ export function HomePage() {
           </Column>
         </Grid.Cell>
       </Grid>
-    </>
+    </main>
   )
 }

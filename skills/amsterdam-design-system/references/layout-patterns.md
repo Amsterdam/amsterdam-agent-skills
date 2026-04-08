@@ -474,23 +474,33 @@ For Next.js App Router, swap `Link from "react-router-dom"` for `next/link` and 
 
 2. **Wrap with React Router's `<Link>` as a parent.** This nests an `<a>` inside an `<a>`, which is invalid HTML — do NOT do this.
 
-3. **Build a custom click interceptor.** Wrap the ADS component in a custom component that uses `useNavigate()` and an `onClick` handler to call `navigate(href)` and `event.preventDefault()`. Example:
+3. **Build a custom click interceptor.** Wrap the ADS component in a custom component that uses `useNavigate()` and an `onClick` handler to call `navigate(href)` and `event.preventDefault()`. The guard must let the browser handle every click that *isn't* a plain in-app navigation — modifier keys (cmd/ctrl/shift/alt), non-primary mouse buttons, `target="_blank"`, `download`, and any non-relative URL all need to fall through to the default behavior. Example:
 
    ```tsx
    import { useNavigate } from "react-router-dom"
    import { StandaloneLink, type StandaloneLinkProps } from "@amsterdam/design-system-react"
 
-   export function RouterStandaloneLink({ href, onClick, ...rest }: StandaloneLinkProps) {
+   export function RouterStandaloneLink({ href, target, download, onClick, ...rest }: StandaloneLinkProps) {
      const navigate = useNavigate()
      return (
        <StandaloneLink
          href={href}
+         target={target}
+         download={download}
          onClick={(e) => {
-           // Let cmd/ctrl-click and external links pass through
-           if (e.metaKey || e.ctrlKey || !href || href.startsWith("http")) return
+           // Always let the user's onClick run first; bail out if it cancelled.
+           onClick?.(e)
+           if (e.defaultPrevented) return
+           // Only intercept plain left-clicks with no modifiers.
+           if (e.button !== 0) return
+           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+           // Let the browser handle "open in new tab/window" and downloads.
+           if (target && target !== "_self") return
+           if (download !== undefined) return
+           // Let the browser handle absolute / external / protocol URLs.
+           if (!href || /^([a-z][a-z0-9+.-]*:|\/\/)/i.test(href)) return
            e.preventDefault()
            navigate(href)
-           onClick?.(e)
          }}
          {...rest}
        />
@@ -498,7 +508,7 @@ For Next.js App Router, swap `Link from "react-router-dom"` for `next/link` and 
    }
    ```
 
-   Apply the same pattern for `Breadcrumb.Link`, `Card.Link`, `PageHeader.MenuLink`, etc. as needed. This is more code than the built-in slot, but it preserves SPA behavior cleanly.
+   Apply the same pattern for `Breadcrumb.Link`, `Card.Link`, `PageHeader.MenuLink`, etc. as needed. This is more code than the built-in slot, but it preserves SPA behavior cleanly without breaking the keyboard/middle-click escape hatches users rely on.
 
 **Pragmatic recommendation:** for an internal Amsterdam tool, accept the full reload on `PageHeader.MenuLink`, `PageFooter.MenuLink`, and `Breadcrumb.Link` (they're navigation, not in-page transitions). Use the click interceptor only on `StandaloneLink` and `Card.Link` inside the main content area, where in-app navigation is more frequent and the reload is jarring.
 

@@ -125,7 +125,15 @@ See the `appinsights-instrumentation` skill for setup.
 
 ## Customizing the navigation
 
-The AppLayout's PageHeader uses `linkComponent={Link}` to route through React Router. Apply the same pattern to any `<Breadcrumb.Link>`, `<StandaloneLink>`, or `<PageHeader.MenuLink>` you add — see `references/layout-patterns.md` → "Routing Link integration with React Router v7".
+ADS v3.3.0 only ships a router slot on **two** components: `PageHeader.logoLinkComponent` and `Pagination.linkComponent`. Both expect a `ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>>`, not React Router's `Link` directly — so `AppLayout.tsx` defines a tiny `LogoLink` adapter that maps ADS's `href` to React Router's `to`.
+
+Every other link-like component in this starter — `<StandaloneLink>`, `<PageHeader.MenuLink>`, `<PageFooter.MenuLink>`, `<Breadcrumb.Link>`, `<Card.Link>`, `<LinkList.Link>` — renders a plain `<a>` and **triggers a full page reload**. There is no `linkComponent` prop, no `asChild`, no render prop.
+
+You have three options when that reload is unacceptable:
+
+1. **Accept the reload.** Fine for navigation links (header menu, footer, breadcrumbs) on internal tools — the bundle is cached.
+2. **Use the adapter** on the two slots that exist (`PageHeader.logoLinkComponent`, `Pagination.linkComponent`).
+3. **Build a click interceptor wrapper** around the ADS link, calling `useNavigate()` on left-clicks without modifier keys. Full pattern (with proper modifier/button/target/download guards) is in `references/layout-patterns.md` → "Routing Link integration with React Router v7".
 
 ## Verification
 
