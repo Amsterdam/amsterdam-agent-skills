@@ -96,7 +96,7 @@ function PublicPage() {
 
 Internal tool layout with navigation sidebar and dense data display.
 
-**Note:** This layout uses compact mode tokens. Import `compact.css` after `index.css`.
+**Note:** This layout uses compact mode tokens. Import `compact.css` after `index.css`. For a runnable version of this shape (with React Router, Tanstack Query, and Tailwind bridge already wired), see `assets/starter-vite-react/`.
 
 ```tsx
 import {
@@ -350,6 +350,167 @@ function FormPage() {
   )
 }
 ```
+
+## React Router + AppLayout Outlet
+
+The most common shape for an Amsterdam internal tool: a single `<AppLayout>` route at the root, an `<Outlet>` for nested routes, and an optional `<AuthGate>` outlet wrapper for authenticated sections. This is what real Amsterdam projects (e.g. `srdo-2945`) use.
+
+```tsx
+// src/router.tsx
+import { createBrowserRouter, Outlet, Navigate, useLocation } from "react-router-dom"
+import { AppLayout } from "@/layouts/AppLayout"
+import { HomePage } from "@/pages/HomePage"
+import { LoginPage } from "@/pages/LoginPage"
+import { NotFoundPage } from "@/pages/NotFoundPage"
+
+function AuthGate() {
+  const isAuthed = useIsAuthenticated()  // your auth hook
+  const loc = useLocation()
+
+  if (!isAuthed) {
+    const from = `${loc.pathname}${loc.search}${loc.hash}`
+    return <Navigate to="/login" state={{ from }} replace />
+  }
+
+  return <Outlet />
+}
+
+export const router = createBrowserRouter([
+  {
+    element: <AppLayout />,           // <Page> + <PageHeader> + <Outlet/> + <PageFooter>
+    errorElement: <NotFoundPage />,
+    children: [
+      { path: "/login", element: <LoginPage /> },
+      {
+        element: <AuthGate />,         // protected sub-tree
+        children: [
+          { path: "/", element: <HomePage /> },
+          { path: "/dashboard", element: <DashboardPage /> },
+          { path: "*", element: <NotFoundPage /> },
+        ],
+      },
+    ],
+  },
+])
+```
+
+```tsx
+// src/layouts/AppLayout.tsx
+import type { AnchorHTMLAttributes, ComponentType } from "react"
+import { Outlet, Link } from "react-router-dom"
+import { Page, PageHeader, PageFooter, SkipLink } from "@amsterdam/design-system-react"
+
+// Adapter — React Router's <Link> needs `to`, ADS's logoLinkComponent expects `href`
+const LogoLink: ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>> = ({
+  href, children, ...rest
+}) => (
+  <Link to={href ?? "/"} {...rest}>{children}</Link>
+)
+
+export function AppLayout() {
+  return (
+    <>
+      <SkipLink href="#main">Ga naar inhoud</SkipLink>
+      <Page>
+        <PageHeader
+          brandName="Amsterdam"
+          logoLink="/"
+          logoLinkComponent={LogoLink}   // ← ONLY component with built-in routing slot
+          menuItems={
+            <PageHeader.MenuLink href="/dashboard">Dashboard</PageHeader.MenuLink>
+          }
+        />
+
+        <Outlet />                       {/* ← all child routes render here */}
+
+        <PageFooter>
+          <PageFooter.Menu>
+            <PageFooter.MenuLink href="/privacy">Privacy</PageFooter.MenuLink>
+          </PageFooter.Menu>
+        </PageFooter>
+      </Page>
+    </>
+  )
+}
+```
+
+**Key pattern:** `<Page>` is the outer wrapper that contains both header and outlet. The `Outlet` renders inside `<Page>` but outside any `<Grid>` — let each page define its own `<Grid as="main">` root so different routes can have different padding rhythms.
+
+For a runnable version of this exact pattern, see `assets/starter-vite-react/src/layouts/AppLayout.tsx` and `src/router.tsx`.
+
+### Routing Link integration with React Router v7 — be honest about the limitation
+
+**ADS v3.3.0 only ships a `linkComponent` slot on TWO components:**
+
+| Component | Prop | Slot type |
+|---|---|---|
+| `PageHeader` | `logoLinkComponent` | `ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>>` |
+| `Pagination` | `linkComponent` | `ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>>` |
+
+Everything else — `StandaloneLink`, `PageHeader.MenuLink`, `Breadcrumb.Link`, `Card.Link`, `LinkList.Link`, `Link` — is a plain `<a>` and **will trigger a full page reload** when clicked. There is no `linkComponent`, no `asChild`, no render prop.
+
+Both slot props use the `AnchorHTMLAttributes<HTMLAnchorElement>` shape, which means React Router's `Link` (which requires `to`, not `href`) is **not directly assignable**. You need a small adapter:
+
+```tsx
+import type { AnchorHTMLAttributes, ComponentType } from "react"
+import { Link } from "react-router-dom"
+
+const RouterAdapter: ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>> = ({
+  href, children, ...rest
+}) => (
+  <Link to={href ?? "#"} {...rest}>{children}</Link>
+)
+
+// Use it on the two slots that exist:
+<PageHeader logoLinkComponent={RouterAdapter} logoLink="/" /* … */ />
+<Pagination linkComponent={RouterAdapter} linkTemplate={(p) => `/page/${p}`} /* … */ />
+```
+
+For Next.js App Router, swap `Link from "react-router-dom"` for `next/link` and adjust the adapter to map `href` straight through (Next's Link uses `href`, not `to`).
+
+**For everything else, you have three options:**
+
+1. **Accept the full reload.** Acceptable for low-traffic public sites and footer links. The browser scroll position resets but the bundle is cached.
+
+2. **Wrap with React Router's `<Link>` as a parent.** This nests an `<a>` inside an `<a>`, which is invalid HTML — do NOT do this.
+
+3. **Build a custom click interceptor.** Wrap the ADS component in a custom component that uses `useNavigate()` and an `onClick` handler to call `navigate(href)` and `event.preventDefault()`. The guard must let the browser handle every click that *isn't* a plain in-app navigation — modifier keys (cmd/ctrl/shift/alt), non-primary mouse buttons, `target="_blank"`, `download`, and any non-relative URL all need to fall through to the default behavior. Example:
+
+   ```tsx
+   import { useNavigate } from "react-router-dom"
+   import { StandaloneLink, type StandaloneLinkProps } from "@amsterdam/design-system-react"
+
+   export function RouterStandaloneLink({ href, target, download, onClick, ...rest }: StandaloneLinkProps) {
+     const navigate = useNavigate()
+     return (
+       <StandaloneLink
+         href={href}
+         target={target}
+         download={download}
+         onClick={(e) => {
+           // Always let the user's onClick run first; bail out if it cancelled.
+           onClick?.(e)
+           if (e.defaultPrevented) return
+           // Only intercept plain left-clicks with no modifiers.
+           if (e.button !== 0) return
+           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+           // Let the browser handle "open in new tab/window" and downloads.
+           if (target && target !== "_self") return
+           if (download !== undefined) return
+           // Let the browser handle absolute / external / protocol URLs.
+           if (!href || /^([a-z][a-z0-9+.-]*:|\/\/)/i.test(href)) return
+           e.preventDefault()
+           navigate(href)
+         }}
+         {...rest}
+       />
+     )
+   }
+   ```
+
+   Apply the same pattern for `Breadcrumb.Link`, `Card.Link`, `PageHeader.MenuLink`, etc. as needed. This is more code than the built-in slot, but it preserves SPA behavior cleanly without breaking the keyboard/middle-click escape hatches users rely on.
+
+**Pragmatic recommendation:** for an internal Amsterdam tool, accept the full reload on `PageHeader.MenuLink`, `PageFooter.MenuLink`, and `Breadcrumb.Link` (they're navigation, not in-page transitions). Use the click interceptor only on `StandaloneLink` and `Card.Link` inside the main content area, where in-app navigation is more frequent and the reload is jarring.
 
 ## Article / Content Page
 

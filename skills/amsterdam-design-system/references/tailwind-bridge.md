@@ -8,37 +8,130 @@ Integration guide for using Tailwind CSS v4 alongside the Amsterdam Design Syste
 
 ## Setup
 
-### Import Order
+### Vite plugin (recommended)
 
-```css
-/* app.css */
-@import "tailwindcss";
+This is the path used by real Amsterdam apps. Add `@tailwindcss/vite` to your Vite config:
 
-/* AMS imports — AFTER Tailwind */
-@import "@amsterdam/design-system-assets/font/index.css";
-@import "@amsterdam/design-system-css/dist/index.css";
-@import "@amsterdam/design-system-tokens/dist/index.css";
+```ts
+// vite.config.ts
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react-swc"
+import tailwindcss from "@tailwindcss/vite"
 
-/* For compact mode (internal tools), add: */
-/* @import "@amsterdam/design-system-tokens/dist/compact.css"; */
+export default defineConfig({
+  plugins: [tailwindcss(), react()],
+})
 ```
 
-### Preflight Considerations
-
-Tailwind's preflight (CSS reset) may conflict with AMS base styles. If you see styling issues:
+Then point at the JS-based config from your CSS entry — the `@config` directive lets you keep the Tailwind theme in a JS file (where you can import compact tokens, see below):
 
 ```css
-/* Option 1: Disable Tailwind preflight entirely */
-@import "tailwindcss" layer(utilities);
-/* Then rely on AMS CSS for base styles */
+/* src/styles/index.css */
+@layer theme, base, ams, components, utilities;
 
-/* Option 2: Keep preflight but let AMS override */
-/* AMS imports after Tailwind handle most conflicts */
+@config "../../tailwind.config.js";
+
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+/* Animation utilities — see "Motion" below */
+@import "tw-animate-css";
+
+/* AMS — order matters: fonts → css → tokens → compact */
+@import "@amsterdam/design-system-assets/font/index.css" layer(ams);
+@import "@amsterdam/design-system-css/dist/index.css"    layer(ams);
+@import "@amsterdam/design-system-tokens/dist/index.css" layer(ams);
+@import "@amsterdam/design-system-tokens/dist/compact.css" layer(ams);
 ```
 
-## Theme Mapping
+For Spacious mode (public-facing sites), drop the last `compact.css` import — that is the only change.
 
-Map AMS design tokens to Tailwind's `@theme` so Tailwind utilities use AMS values:
+### PostCSS (legacy / non-Vite)
+
+Use this only if you cannot use the Vite plugin (e.g. Next.js without an opt-in):
+
+```js
+// postcss.config.js
+import tailwindcss from "@tailwindcss/postcss"
+
+export default {
+  plugins: [tailwindcss()],
+}
+```
+
+### Disable preflight — required
+
+Tailwind's preflight (CSS reset) **conflicts** with AMS base styles: it strips margins from `<p>`, removes the `<body>` font-family, and overrides `ams-body`. AMS provides its own reset via `@amsterdam/design-system-css`. Disable Tailwind's:
+
+```js
+// tailwind.config.js
+export default {
+  // ...
+  corePlugins: {
+    preflight: false,
+  },
+}
+```
+
+This is non-negotiable. If you skip it you will see broken paragraph spacing, missing Amsterdam Sans, and `ams-page-header` styling that does not apply.
+
+## Using compact tokens with Tailwind
+
+Real Amsterdam apps almost always use **Compact mode** (internal tools). The cleanest way to get Tailwind spacing utilities that resolve to *exact* compact values — instead of going through CSS variables — is to import `compact.json` directly into `tailwind.config.js` and spread it into `theme.extend.spacing`:
+
+```js
+// tailwind.config.js
+import compactTokens from "@amsterdam/design-system-tokens/dist/compact.json"
+
+const { ams } = compactTokens
+
+export default {
+  content: ["./src/**/*.{js,ts,jsx,tsx}", "./index.html"],
+  theme: {
+    extend: {
+      spacing: {
+        ...ams.space,                           // exact compact values
+        "ams-xs": "var(--ams-space-xs)",        // CSS-var aliases for the named tokens
+        "ams-s":  "var(--ams-space-s)",
+        "ams-m":  "var(--ams-space-m)",
+        "ams-l":  "var(--ams-space-l)",
+        "ams-xl": "var(--ams-space-xl)",
+        "ams-2xl": "var(--ams-space-2xl)",
+      },
+      colors: {
+        // Map every --ams-color-* token you use as a Tailwind utility.
+        // The CSS-var indirection means switching modes still works.
+        "ams-text":          "var(--ams-color-text)",
+        "ams-text-secondary": "var(--ams-color-text-secondary)",
+        "ams-bg":            "var(--ams-color-background)",
+        "ams-interactive":   "var(--ams-color-interactive)",
+        "ams-separator":     "var(--ams-color-separator)",
+        "ams-magenta":       "var(--ams-color-highlight-magenta)",
+        // ... etc
+      },
+      fontFamily: {
+        ams: "var(--ams-typography-font-family)",
+      },
+    },
+  },
+  corePlugins: {
+    preflight: false,
+  },
+}
+```
+
+For Spacious mode, swap the import:
+
+```js
+import tokens from "@amsterdam/design-system-tokens/dist/index.json"
+const { ams } = tokens
+```
+
+> **Why both `...ams.space` AND `ams-*: var(...)` keys?** The spread gives you exact values for utilities like `gap-2` (Tailwind's default scale, now overridden with ADS values). The named keys give you `gap-ams-m` semantics for custom layouts where you want to be explicit about which AMS token you mean. Pick the style that fits the line; do not mix them on the same component.
+
+## Theme Mapping (alternative — `@theme` directive)
+
+If you prefer keeping the bridge in CSS instead of JS, use Tailwind's `@theme` directive. This is the documented Tailwind v4 path but it does NOT give you access to `compact.json` literal values — only CSS variable indirection:
 
 ```css
 @theme {
@@ -139,6 +232,43 @@ Map AMS design tokens to Tailwind's `@theme` so Tailwind utilities use AMS value
 <div class="border-ams-s">  <!-- border-width: 1px -->
 <div class="border-ams-m">  <!-- border-width: 2px -->
 ```
+
+## Motion
+
+ADS ships no animation primitives. Real Amsterdam apps reach for **`tw-animate-css`** as the animation utility library — it gives you `animate-fade-in`, `animate-slide-up`, and similar utilities that compose cleanly with Tailwind.
+
+```bash
+bun add tw-animate-css
+```
+
+```css
+/* src/styles/index.css */
+@import "tw-animate-css";
+```
+
+For the **page-load reveal** pattern recommended in `references/aesthetic-discipline.md` (one staggered cascade per page, never scattered micro-interactions), use a hand-rolled CSS class instead of utilities — it gives you precise control over the stagger timing and the `prefers-reduced-motion` guard:
+
+```css
+@media (prefers-reduced-motion: no-preference) {
+  .ams-reveal {
+    opacity: 0;
+    transform: translateY(0.75rem);
+    animation: ams-reveal-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .ams-reveal:nth-child(1) { animation-delay:  60ms; }
+  .ams-reveal:nth-child(2) { animation-delay: 140ms; }
+  .ams-reveal:nth-child(3) { animation-delay: 220ms; }
+  .ams-reveal:nth-child(4) { animation-delay: 300ms; }
+}
+
+@keyframes ams-reveal-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+```
+
+Apply with `<Grid.Cell className="ams-reveal">`. The starter at `assets/starter-vite-react/src/styles/reveal.css` ships this exact file.
+
+**Do not** add `transition-colors duration-200` to AMS components — they already animate via component CSS. Stacking transitions creates double-easing artifacts.
 
 ## When to Use Tailwind vs AMS Components
 
