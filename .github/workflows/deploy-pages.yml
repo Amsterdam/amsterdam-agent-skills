@@ -1,0 +1,68 @@
+name: Deploy benchmark showcase
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "benchmarks/**"
+      - "site/**"
+      - "tools/bench/src/types/**"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, cancelling in-progress runs.
+# Don't cancel deployments that have already started — that could leave
+# Pages in a partially-published state.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.9
+
+      - name: Install site dependencies
+        working-directory: site
+        run: bun install --frozen-lockfile
+
+      - name: Regenerate manifest from current benchmarks/
+        working-directory: tools/bench
+        run: |
+          bun install --frozen-lockfile
+          bun run src/cli.ts manifest
+
+      - name: Build Astro site
+        working-directory: site
+        run: bun run build
+        env:
+          # The site URL is the GH Pages URL of this repo.
+          SITE_URL: https://amsterdam.github.io
+          SITE_BASE: /amsterdam-agent-skills/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

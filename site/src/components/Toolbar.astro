@@ -1,0 +1,445 @@
+---
+import type {
+  ManifestBenchmark,
+  DisplayItem,
+  CycleNeighbors,
+} from "../data/manifest.ts"
+import ScoreBadge from "./ScoreBadge.astro"
+
+interface Props {
+  benchmark: ManifestBenchmark
+  current: DisplayItem
+  neighbors: CycleNeighbors
+  /** Position in the cycle (1-based). */
+  index: number
+  total: number
+}
+
+const { benchmark, current, neighbors, index, total } = Astro.props
+const def = benchmark.definition
+const meta = current.meta
+---
+
+<header class="bench-toolbar">
+  <div class="row top">
+    <a class="back" href={`${import.meta.env.BASE_URL}`}>← All benchmarks</a>
+
+    <div class="title-block">
+      <span class="bench-id">#{def.id}</span>
+      <h1>{def.name}</h1>
+    </div>
+
+    <button id="bench-info-toggle" class="info-toggle" aria-expanded="false" aria-controls="bench-info-drawer">
+      Details
+      <span aria-hidden="true">▾</span>
+    </button>
+  </div>
+
+  <div class="row nav">
+    <button
+      class="nav-btn"
+      data-href={`${import.meta.env.BASE_URL}benchmark/${def.slug}/${neighbors.prev.id}/`}
+      aria-label={`Previous: ${neighbors.prev.label}`}
+      title={`← ${neighbors.prev.label}`}
+    >
+      ←
+    </button>
+
+    <div class="variant-info">
+      <div class="variant-label">{current.label}</div>
+      <div class="variant-meta">
+        <span class="counter">
+          {index} / {total}
+        </span>
+        {meta && (
+          <>
+            <span class="chip">{meta.model}</span>
+            <span class="chip">skills: {meta.skills}</span>
+            {meta.tokens?.total && (
+              <span class="chip">
+                {(meta.tokens.total / 1000).toFixed(1)}k tokens
+              </span>
+            )}
+            {meta.usage?.premiumRequests !== undefined && (
+              <span class="chip" title="Premium requests against the GitHub Copilot quota">
+                {meta.usage.premiumRequests} req
+              </span>
+            )}
+            {meta.usage?.linesAdded !== undefined && (
+              <span class="chip" title="Lines added by the agent">
+                +{meta.usage.linesAdded} loc
+              </span>
+            )}
+            {meta.durationMs && (
+              <span class="chip">
+                {(meta.durationMs / 1000).toFixed(0)}s
+              </span>
+            )}
+            {!meta.oneShot && <span class="chip warn">retried</span>}
+          </>
+        )}
+        {current.kind === "screenshot" && (
+          <span class="chip dim">legacy screenshot</span>
+        )}
+      </div>
+    </div>
+
+    <ScoreBadge meta={meta} rating={current.rating} />
+
+    <button
+      class="nav-btn"
+      data-href={`${import.meta.env.BASE_URL}benchmark/${def.slug}/${neighbors.next.id}/`}
+      aria-label={`Next: ${neighbors.next.label}`}
+      title={`${neighbors.next.label} →`}
+    >
+      →
+    </button>
+  </div>
+
+  <aside id="bench-info-drawer" class="drawer" hidden>
+    <div class="drawer-grid">
+      <section>
+        <h3>Prompt</h3>
+        <pre class="prompt">{def.prompt.trim()}</pre>
+      </section>
+
+      <section>
+        <h3>Skills tested</h3>
+        <ul class="skill-list">
+          {def.skillsTested.map((s) => (
+            <li>{s}</li>
+          ))}
+        </ul>
+
+        <h3>Persona</h3>
+        <p>{def.persona}</p>
+      </section>
+
+      {meta?.score && (
+        <section>
+          <h3>Score breakdown</h3>
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(meta.score.byCategory).map(([key, val]) => {
+                const cat = def.rubric[key]
+                return (
+                  <tr>
+                    <td>{cat?.label ?? key}</td>
+                    <td>
+                      {val.score} / {val.max}
+                    </td>
+                  </tr>
+                )
+              })}
+              <tr class="total">
+                <td>Total</td>
+                <td>
+                  {meta.score.total} / {meta.score.max}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="judge-source">
+            scored by {meta.score.source} · {new Date(meta.score.scoredAt).toLocaleDateString()}
+          </p>
+        </section>
+      )}
+
+      {meta?.sessionTranscript && (
+        <section>
+          <h3>Agent session</h3>
+          <a
+            class="external"
+            href={`${import.meta.env.BASE_URL}prototypes/${def.slug}/prototypes/${current.id}/${meta.sessionTranscript}`}
+          >
+            View full transcript →
+          </a>
+        </section>
+      )}
+    </div>
+  </aside>
+</header>
+
+<style>
+  .bench-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+  }
+  .row.top {
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .back {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+  .back:hover {
+    color: var(--text);
+  }
+
+  .title-block {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex: 1;
+    justify-content: center;
+  }
+  .bench-id {
+    font-family: var(--mono);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+  .title-block h1 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .info-toggle {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .info-toggle:hover {
+    color: var(--text);
+    border-color: var(--text-dim);
+  }
+  .info-toggle[aria-expanded="true"] {
+    background: var(--bg-elev-2);
+    color: var(--text);
+  }
+
+  .row.nav {
+    align-items: center;
+  }
+
+  .nav-btn {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+  .nav-btn:hover {
+    background: var(--bg-elev-2);
+    border-color: var(--text-dim);
+  }
+
+  .variant-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .variant-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .variant-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+  .counter {
+    font-variant-numeric: tabular-nums;
+    padding: 0.15rem 0.5rem;
+    background: var(--bg-elev-2);
+    border-radius: 999px;
+  }
+  .chip {
+    padding: 0.15rem 0.5rem;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+  }
+  .chip.warn {
+    color: var(--amber);
+    border-color: color-mix(in srgb, var(--amber) 40%, transparent);
+  }
+  .chip.dim {
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  .drawer {
+    background: var(--bg-elev-2);
+    border-top: 1px solid var(--border);
+    padding: 1rem;
+  }
+  .drawer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .drawer h3 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+  .drawer h3:not(:first-of-type) {
+    margin-top: 1rem;
+  }
+  .drawer p,
+  .drawer ul {
+    margin: 0;
+    font-size: 0.88rem;
+  }
+  .drawer ul {
+    padding-left: 1.2rem;
+  }
+  .prompt {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.8rem;
+    white-space: pre-wrap;
+    margin: 0;
+    color: var(--text);
+    max-height: 14rem;
+    overflow-y: auto;
+  }
+
+  .skill-list {
+    list-style: none;
+    padding: 0;
+  }
+  .skill-list li {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    padding: 0.2rem 0;
+    color: var(--text-dim);
+  }
+  .skill-list li::before {
+    content: "▸ ";
+    color: var(--accent);
+  }
+
+  .score-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .score-table th,
+  .score-table td {
+    text-align: left;
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .score-table th {
+    color: var(--text-dim);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .score-table tr.total td {
+    font-weight: 700;
+    border-bottom: none;
+    border-top: 2px solid var(--border);
+  }
+  .judge-source {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  .external {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+  .external:hover {
+    border-color: var(--accent);
+  }
+</style>
+
+<script>
+  // Drawer toggle
+  const toggle = document.getElementById("bench-info-toggle")
+  const drawer = document.getElementById("bench-info-drawer")
+  if (toggle && drawer) {
+    toggle.addEventListener("click", () => {
+      const open = drawer.hasAttribute("hidden")
+      if (open) {
+        drawer.removeAttribute("hidden")
+        toggle.setAttribute("aria-expanded", "true")
+      } else {
+        drawer.setAttribute("hidden", "")
+        toggle.setAttribute("aria-expanded", "false")
+      }
+    })
+  }
+
+  // Nav buttons follow data-href on click and on keyboard arrows.
+  const navButtons = document.querySelectorAll<HTMLButtonElement>(".nav-btn")
+  for (const btn of navButtons) {
+    btn.addEventListener("click", () => {
+      const href = btn.getAttribute("data-href")
+      if (href) window.location.href = href
+    })
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener("keydown", (e) => {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      return
+    }
+    if (e.key === "ArrowLeft") {
+      const prev = document.querySelector<HTMLButtonElement>('.nav-btn[aria-label^="Previous"]')
+      prev?.click()
+    } else if (e.key === "ArrowRight") {
+      const next = document.querySelector<HTMLButtonElement>('.nav-btn[aria-label^="Next"]')
+      next?.click()
+    } else if (e.key === "Escape") {
+      const drawer = document.getElementById("bench-info-drawer")
+      const toggle = document.getElementById("bench-info-toggle")
+      if (drawer && !drawer.hasAttribute("hidden")) {
+        drawer.setAttribute("hidden", "")
+        toggle?.setAttribute("aria-expanded", "false")
+      }
+    } else if (e.key === "i" || e.key === "?") {
+      const toggle = document.getElementById("bench-info-toggle") as HTMLButtonElement | null
+      toggle?.click()
+    }
+  })
+</script>

@@ -1,0 +1,185 @@
+{
+  "generatedAt": "2026-04-08T22:29:41.825Z",
+  "version": 1,
+  "benchmarks": [
+    {
+      "definition": {
+        "id": "001",
+        "slug": "zuidas-landing-page",
+        "name": "Zuidas Landing Page",
+        "difficulty": "beginner",
+        "persona": "Inexperienced developer, no knowledge of Amsterdam standards",
+        "skillsTested": [
+          "amsterdam-design-system",
+          "amsterdam-stijl"
+        ],
+        "prompt": "Hey, can you build me a landing page for the Amsterdam Zuidas area? It needs\nto focus on all the construction and developments happening there over the\nnext 5 years.\n\nI need 3 pages in total. Each page should have exactly 5 paragraphs of real,\ninformative text written in Dutch (no placeholder text). Also, make sure\nthere is a signup form for an email newsletter on the pages. Use a\nprofessional style.\n",
+        "variants": [
+          {
+            "id": "copilot_claude-opus-4-6_no-skills",
+            "label": "Copilot · Opus 4.6 · No skills",
+            "agent": "copilot",
+            "model": "claude-opus-4-6",
+            "skills": "none"
+          },
+          {
+            "id": "copilot_claude-opus-4-6_default",
+            "label": "Copilot · Opus 4.6 · Default skills",
+            "agent": "copilot",
+            "model": "claude-opus-4-6",
+            "skills": "default"
+          },
+          {
+            "id": "copilot_claude-opus-4-6_amsterdam",
+            "label": "Copilot · Opus 4.6 · Amsterdam skills",
+            "agent": "copilot",
+            "model": "claude-opus-4-6",
+            "skills": "amsterdam"
+          }
+        ],
+        "rubric": {
+          "designSystem": {
+            "label": "Design System",
+            "max": 12,
+            "criteria": [
+              {
+                "id": "ds-react",
+                "label": "Uses @amsterdam/design-system-react",
+                "max": 2
+              },
+              {
+                "id": "ds-tokens",
+                "label": "Uses --ams-* tokens or Tailwind bridge",
+                "max": 2
+              },
+              {
+                "id": "ds-grid",
+                "label": "Grid/Column 4/8/12 layout",
+                "max": 2
+              },
+              {
+                "id": "ds-headerfooter",
+                "label": "Header + Footer components",
+                "max": 2
+              },
+              {
+                "id": "ds-form",
+                "label": "Form uses ADS components",
+                "max": 2
+              },
+              {
+                "id": "ds-noBanned",
+                "label": "No banned libraries (MUI, shadcn, Chakra, etc.)",
+                "max": 2
+              }
+            ]
+          },
+          "language": {
+            "label": "Language & Content",
+            "max": 10,
+            "criteria": [
+              {
+                "id": "lang-dutch",
+                "label": "All text in Dutch",
+                "max": 2
+              },
+              {
+                "id": "lang-b1",
+                "label": "B1 reading level / Heldere Taal",
+                "max": 2
+              },
+              {
+                "id": "lang-paragraphs",
+                "label": "5 paragraphs per page",
+                "max": 2
+              },
+              {
+                "id": "lang-factual",
+                "label": "Factual Zuidas content",
+                "max": 2
+              },
+              {
+                "id": "lang-tone",
+                "label": "Consistent tone",
+                "max": 2
+              }
+            ]
+          },
+          "structure": {
+            "label": "Structure",
+            "max": 6,
+            "criteria": [
+              {
+                "id": "struct-routing",
+                "label": "3 routed pages",
+                "max": 2
+              },
+              {
+                "id": "struct-form",
+                "label": "Newsletter form present",
+                "max": 2
+              },
+              {
+                "id": "struct-nav",
+                "label": "Navigation between pages",
+                "max": 2
+              }
+            ]
+          }
+        },
+        "ratings": [
+          {
+            "min": 0,
+            "max": 8,
+            "label": "No skill influence",
+            "color": "red"
+          },
+          {
+            "min": 9,
+            "max": 16,
+            "label": "Partial",
+            "color": "amber"
+          },
+          {
+            "min": 17,
+            "max": 22,
+            "label": "Good",
+            "color": "lime"
+          },
+          {
+            "min": 23,
+            "max": 28,
+            "label": "Excellent",
+            "color": "green"
+          }
+        ],
+        "rationale": [
+          "Vague enough to let the agent make UI/style choices — exposes whether skills guide them.",
+          "Multi-page — tests project scaffolding.",
+          "Dutch text — should trigger language style guidance.",
+          "Newsletter form — tests component knowledge.",
+          "'Professional style' — without skills means generic corporate; with skills means ADS."
+        ]
+      },
+      "prototypes": [],
+      "legacyScreenshots": [
+        {
+          "variantLabel": "Amsterdam skills",
+          "path": "legacy-screenshots/amsterdam-skills.png"
+        },
+        {
+          "variantLabel": "Default skills (pass 1)",
+          "path": "legacy-screenshots/default-skills-pass1.png"
+        },
+        {
+          "variantLabel": "Default skills (pass 2)",
+          "path": "legacy-screenshots/default-skills-pass2.png"
+        },
+        {
+          "variantLabel": "No skills",
+          "path": "legacy-screenshots/no-skills.png"
+        }
+      ]
+    }
+  ]
+}
