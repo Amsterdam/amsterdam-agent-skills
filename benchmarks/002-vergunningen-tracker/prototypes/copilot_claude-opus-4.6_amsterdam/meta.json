@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "002",
+  "benchmarkSlug": "vergunningen-tracker",
+  "variantId": "copilot_claude-opus-4.6_amsterdam",
+  "variantLabel": "Copilot · Opus 4.6 · Amsterdam skills",
+  "agent": "copilot",
+  "model": "claude-opus-4.6",
+  "skills": "amsterdam",
+  "promptHash": "b4a9702977bb5eef",
+  "builtAt": "2026-04-09T08:11:36.352Z",
+  "durationMs": 431966,
+  "usage": {
+    "premiumRequests": 3,
+    "apiDurationMs": 346872,
+    "sessionDurationMs": 430129,
+    "linesAdded": 1528,
+    "linesRemoved": 7,
+    "filesModified": 2
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 50
+  }
+}

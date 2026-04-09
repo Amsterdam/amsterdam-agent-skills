@@ -1,0 +1,176 @@
+# Benchmark 002 — Vergunningen Tracker
+#
+# Expert-level prompt: a senior engineer who names the stack, specifies the
+# domain model, and asks for complex patterns (multi-step wizard, validation,
+# data table) — but still relies on the skills for ADS component APIs and
+# Dutch language guidance.
+#
+# Contrast with 001 (vague prompt from an inexperienced developer):
+#   001 tests whether skills ACTIVATE at all on an ambiguous brief.
+#   002 tests whether skills guide CORRECT COMPONENT COMPOSITION on a
+#   well-structured brief with deep form-handling requirements.
+
+id: "002"
+slug: vergunningen-tracker
+name: Vergunningen Tracker
+difficulty: advanced
+persona: Senior frontend engineer, 3 years at Gemeente Amsterdam, knows ADS exists but hasn't memorized the API
+skillsTested:
+  - amsterdam-design-system
+  - amsterdam-stijl
+
+prompt: |
+  Build an internal permit-tracking application (vergunningen tracker) for
+  Gemeente Amsterdam employees. Use Vite + React + TypeScript with React
+  Router for navigation. Use the Amsterdam Design System
+  (@amsterdam/design-system-react) in Compact mode.
+
+  The app has two main views:
+
+  1. **Dashboard** (route: /)
+     A table of all submitted permits with columns: Zaaknummer, Type,
+     Aanvrager, Datum ingediend, Status. The table should be sortable by
+     any column and filterable by Status (dropdown above the table).
+     Clicking a row navigates to the detail view.
+
+     Seed the table with 8-10 realistic example rows. Use these permit
+     types: Bouwvergunning, Evenementenvergunning, Terrasvergunning,
+     Kapvergunning. Statuses: Ingediend, In behandeling, Goedgekeurd,
+     Afgewezen.
+
+  2. **New permit form** (route: /nieuw)
+     A multi-step wizard with 4 steps:
+     - Stap 1 — Aanvrager: naam, e-mail, telefoon, organisatie (all text fields)
+     - Stap 2 — Locatie: adres, postcode, stadsdeel (dropdown with Amsterdam
+       stadsdelen: Centrum, West, Nieuw-West, Zuid, Oost, Noord, Zuidoost)
+     - Stap 3 — Vergunning: type (radio group with the 4 permit types),
+       gewenste startdatum (date input), beschrijving (textarea), akkoord
+       voorwaarden (checkbox)
+     - Stap 4 — Controleren: read-only summary of all entered data, submit
+       button
+
+     Each step must validate its fields before allowing navigation to the
+     next step. Show inline error messages per field and a summary alert
+     at the top when submitting a step with errors.
+
+  3. **Detail view** (route: /zaak/:id)
+     Shows the full permit data in a structured read-only layout. Include
+     the current status as a colored badge.
+
+  Requirements:
+  - All UI labels, error messages, and status text in Dutch following
+    Amsterdam's Heldere Taal guidelines (clear, B1-level, active voice)
+  - Header with the Amsterdam logo and navigation (Dashboard, Nieuwe aanvraag)
+  - Footer with standard municipality links
+  - Use TypeScript strict mode
+  - No external UI libraries besides the Amsterdam Design System
+
+variants:
+  # ── Claude Opus 4.6 ─────────────────────────────────────────────────────
+  - id: copilot_claude-opus-4.6_no-skills
+    label: Copilot · Opus 4.6 · No skills
+    agent: copilot
+    model: claude-opus-4.6
+    skills: none
+  - id: copilot_claude-opus-4.6_amsterdam
+    label: Copilot · Opus 4.6 · Amsterdam skills
+    agent: copilot
+    model: claude-opus-4.6
+    skills: amsterdam
+
+  # ── GPT-5.1 (high reasoning) ───────────────────────────────────────────
+  - id: copilot_gpt-5.1-high_no-skills
+    label: Copilot · GPT-5.1 (high) · No skills
+    agent: copilot
+    model: gpt-5.1
+    effort: high
+    skills: none
+  - id: copilot_gpt-5.1-high_amsterdam
+    label: Copilot · GPT-5.1 (high) · Amsterdam skills
+    agent: copilot
+    model: gpt-5.1
+    effort: high
+    skills: amsterdam
+
+rubric:
+  designSystem:
+    label: Design System
+    max: 14
+    criteria:
+      - id: ds-react
+        label: Uses @amsterdam/design-system-react components
+        max: 2
+      - id: ds-tokens
+        label: Uses --ams-* tokens or Tailwind bridge
+        max: 2
+      - id: ds-compact
+        label: Compact mode enabled (compact.css imported)
+        max: 2
+      - id: ds-headerfooter
+        label: PageHeader + PageFooter components
+        max: 2
+      - id: ds-form
+        label: Form uses ADS Field/Label/ErrorMessage composition
+        max: 2
+      - id: ds-table
+        label: Table uses ADS Table component
+        max: 2
+      - id: ds-noBanned
+        label: No banned libraries (MUI, shadcn, Chakra, etc.)
+        max: 2
+  formHandling:
+    label: Form Handling
+    max: 10
+    criteria:
+      - id: form-wizard
+        label: Multi-step wizard with step indicators
+        max: 2
+      - id: form-validation
+        label: Per-field validation with inline error messages
+        max: 2
+      - id: form-alert
+        label: Summary error alert on step submission
+        max: 2
+      - id: form-inputs
+        label: All 4 input types present (text, select/radio, date, checkbox)
+        max: 2
+      - id: form-summary
+        label: Step 4 read-only summary of entered data
+        max: 2
+  language:
+    label: Language & UX
+    max: 6
+    criteria:
+      - id: lang-dutch
+        label: All text in Dutch
+        max: 2
+      - id: lang-b1
+        label: B1 Heldere Taal (clear, active voice, no jargon)
+        max: 2
+      - id: lang-status
+        label: Status labels and error messages in Dutch
+        max: 2
+  structure:
+    label: Structure
+    max: 4
+    criteria:
+      - id: struct-routing
+        label: React Router with 3 routes (/, /nieuw, /zaak/:id)
+        max: 2
+      - id: struct-typescript
+        label: TypeScript strict mode
+        max: 2
+
+ratings:
+  - { min: 0,  max: 10, label: "No skill influence",     color: red }
+  - { min: 11, max: 20, label: "Partial",                color: amber }
+  - { min: 21, max: 28, label: "Good",                   color: lime }
+  - { min: 29, max: 34, label: "Excellent",              color: green }
+
+rationale:
+  - "Expert-level prompt — tests whether skills guide CORRECT COMPONENT COMPOSITION, not just activation."
+  - "Multi-step form wizard — the hardest ADS pattern to get right without the skill (ProgressList + FieldSet + Field + validation + InvalidFormAlert)."
+  - "Data table — tests Table + sorting + filtering + Badge for status."
+  - "Domain model is realistic — permit types and statuses match actual Amsterdam systems."
+  - "Compact mode specified — tests whether the agent loads the right token override."
+  - "TypeScript strict mode — tests project scaffolding quality."

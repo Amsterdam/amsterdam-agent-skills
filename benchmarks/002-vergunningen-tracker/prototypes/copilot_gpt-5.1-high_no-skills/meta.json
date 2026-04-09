@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "002",
+  "benchmarkSlug": "vergunningen-tracker",
+  "variantId": "copilot_gpt-5.1-high_no-skills",
+  "variantLabel": "Copilot · GPT-5.1 (high) · No skills",
+  "agent": "copilot",
+  "model": "gpt-5.1",
+  "skills": "none",
+  "promptHash": "b4a9702977bb5eef",
+  "builtAt": "2026-04-09T08:26:34.494Z",
+  "durationMs": 800038,
+  "usage": {
+    "premiumRequests": 1,
+    "apiDurationMs": 621634,
+    "sessionDurationMs": 797821,
+    "linesAdded": 1517,
+    "linesRemoved": 390,
+    "filesModified": 8
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 93
+  }
+}

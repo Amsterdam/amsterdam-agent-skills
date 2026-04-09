@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "002",
+  "benchmarkSlug": "vergunningen-tracker",
+  "variantId": "copilot_claude-opus-4.6_no-skills",
+  "variantLabel": "Copilot · Opus 4.6 · No skills",
+  "agent": "copilot",
+  "model": "claude-opus-4.6",
+  "skills": "none",
+  "promptHash": "b4a9702977bb5eef",
+  "builtAt": "2026-04-09T08:24:12.370Z",
+  "durationMs": 680422,
+  "usage": {
+    "premiumRequests": 3,
+    "apiDurationMs": 516944,
+    "sessionDurationMs": 678100,
+    "linesAdded": 1284,
+    "linesRemoved": 39,
+    "filesModified": 9
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 63
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "002",
+  "benchmarkSlug": "vergunningen-tracker",
+  "variantId": "copilot_gpt-5.1-high_amsterdam",
+  "variantLabel": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+  "agent": "copilot",
+  "model": "gpt-5.1",
+  "skills": "amsterdam",
+  "promptHash": "b4a9702977bb5eef",
+  "builtAt": "2026-04-09T08:29:26.197Z",
+  "durationMs": 983349,
+  "usage": {
+    "premiumRequests": 1,
+    "apiDurationMs": 656128,
+    "sessionDurationMs": 981409,
+    "linesAdded": 1396,
+    "linesRemoved": 214,
+    "filesModified": 6
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 69
+  }
+}
