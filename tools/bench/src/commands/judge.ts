@@ -16,7 +16,7 @@
  */
 
 import { spawn } from "node:child_process"
-import { mkdtemp, readFile, writeFile, rm } from "node:fs/promises"
+import { mkdtemp, readFile, writeFile, rm, cp } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -25,6 +25,7 @@ import { parseArgs, getString } from "../args.ts"
 import { loadBenchmark } from "../definition.ts"
 import { prototypeDir } from "../paths.ts"
 import { rebuildManifest } from "./manifest.ts"
+import { takeScreenshot } from "../screenshot.ts"
 import type {
   PrototypeMeta,
   PrototypeScore,
@@ -64,11 +65,24 @@ export async function judgeCommand(argv: string[]): Promise<number> {
     }
     console.log(`▶ Scoring ${variant.id} with ${judgeModel}...`)
     const meta = JSON.parse(await readFile(metaPath, "utf8")) as PrototypeMeta
+
+    // Take a screenshot for visual judging (best-effort — skip if Playwright fails).
+    let screenshotPath: string | undefined
+    try {
+      console.log(`  📸 Taking screenshot...`)
+      const result = await takeScreenshot({ prototypePath: protoPath })
+      screenshotPath = result.path
+      console.log(`  📸 Screenshot saved`)
+    } catch (err) {
+      console.warn(`  ⚠ Screenshot failed (${err instanceof Error ? err.message : err}) — judging from source only`)
+    }
+
     try {
       const score = await scorePrototype({
         benchmark: def,
         prototypePath: protoPath,
         judgeModel,
+        screenshotPath,
       })
       meta.score = score
       await writeFile(metaPath, JSON.stringify(meta, null, 2) + "\n")
@@ -91,10 +105,11 @@ interface ScoreOptions {
   benchmark: BenchmarkDefinition
   prototypePath: string
   judgeModel: string
+  screenshotPath?: string
 }
 
 async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
-  const { benchmark, prototypePath, judgeModel } = opts
+  const { benchmark, prototypePath, judgeModel, screenshotPath } = opts
 
   // For SPA builds (React/Vue/Next), index.html is just `<div id="root">`
   // with no visible content — useless for scoring. The session transcript
@@ -127,13 +142,34 @@ async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
   }
   const rubricBlock = rubricLines.join("\n")
 
+  // Build the visual scoring instruction if we have a screenshot.
+  const visualBlock = screenshotPath
+    ? [
+        ``,
+        `## IMPORTANT: Visual screenshot`,
+        `There is a file called screenshot.png in your current directory.`,
+        `Use your view/read tool to look at it. This is the ACTUAL rendered`,
+        `output of the prototype in a browser. Score based on what you SEE`,
+        `in the screenshot — not just what the source code INTENDS to do.`,
+        `If the screenshot shows a broken layout, missing styles, or errors,`,
+        `score accordingly even if the source code looks correct.`,
+        ``,
+      ]
+    : []
+
   const promptText = [
-    `You are an expert frontend reviewer. Score the agent's output against a rubric.`,
-    `Each criterion is 0 (missing), 1 (partial), or 2 (correct).`,
+    `You are an expert frontend reviewer for Gemeente Amsterdam. Score the agent's output against a rubric.`,
+    `Each criterion is scored 0, 1, or 2:`,
+    `  0 = missing entirely — the element/feature does not exist at all`,
+    `  1 = partial — the element exists in code but is VISUALLY BROKEN in the screenshot (unstyled, no CSS, broken layout, missing fonts, wrong colors, elements overlapping, no spacing)`,
+    `  2 = correct — the element exists AND looks visually correct in the screenshot (proper Amsterdam Design System styling, correct fonts, appropriate spacing, working layout)`,
+    ``,
+    `CRITICAL: The screenshot is the GROUND TRUTH. If the source code imports Amsterdam Design System components but the screenshot shows unstyled HTML (no borders on tables, no colored badges, no Amsterdam Sans font, raw text without formatting), score those criteria as 1 (partial), NOT 2. A component that renders without its CSS is not "correct".`,
     ``,
     `## Benchmark`,
     `Name: ${benchmark.name}`,
     `Difficulty: ${benchmark.difficulty}`,
+    ...visualBlock,
     ``,
     `## Original prompt the agent received`,
     "```",
@@ -162,7 +198,11 @@ async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
   ].join("\n")
 
   // Spawn copilot with the prompt; capture stdout.
+  // Copy the screenshot into the temp workdir so copilot's view tool can read it.
   const tempDir = await mkdtemp(join(tmpdir(), `bench-judge-`))
+  if (screenshotPath && existsSync(screenshotPath)) {
+    await cp(screenshotPath, join(tempDir, "screenshot.png"))
+  }
   try {
     const { stdout, exitCode } = await spawnCopilot([
       "-p",
@@ -172,7 +212,7 @@ async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
       "--yolo",
       "--no-ask-user",
       "--no-custom-instructions",
-      "--silent",
+      "--autopilot",
     ], tempDir)
 
     if (exitCode !== 0) {

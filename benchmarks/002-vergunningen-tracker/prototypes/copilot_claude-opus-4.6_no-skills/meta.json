@@ -26,19 +26,19 @@
     "copilotToolCallCount": 63
   },
   "score": {
-    "total": 33,
+    "total": 23,
     "max": 34,
     "byCategory": {
       "designSystem": {
-        "score": 14,
+        "score": 8,
         "max": 14
       },
       "formHandling": {
-        "score": 10,
+        "score": 5,
         "max": 10
       },
       "language": {
-        "score": 5,
+        "score": 6,
         "max": 6
       },
       "structure": {
@@ -49,93 +49,93 @@
     "criteria": [
       {
         "criterionId": "designSystem.ds-react",
-        "score": 2,
-        "notes": "Imports and uses Page, PageHeader, PageFooter, Grid, Table, Badge, Field, Label, ErrorMessage, TextInput, Select, Radio, DateInput, TextArea, Checkbox, InvalidFormAlert, ProgressList, DescriptionList from @amsterdam/design-system-react; TS build confirms correct usage."
+        "score": 1,
+        "notes": "ADS components (Page, PageHeader, Table, Badge, Field, etc.) are imported and used but render largely unstyled in the screenshot—no table borders, no colored badges, broken logo icons."
       },
       {
         "criterionId": "designSystem.ds-tokens",
-        "score": 2,
-        "notes": "Imports compact.theme.css and index.css from @amsterdam/design-system-tokens and font CSS from design-system-assets in main.tsx; HTML has amsterdam-theme class."
+        "score": 1,
+        "notes": "compact.theme.css with --ams-* tokens is imported and Amsterdam Sans font loads, but component-level token styling (colors, borders, spacing) is not visually apparent."
       },
       {
         "criterionId": "designSystem.ds-compact",
-        "score": 2,
-        "notes": "index.html edited to class=\"amsterdam-theme compact\" and compact token CSS is imported."
+        "score": 1,
+        "notes": "compact.css imported and HTML has class=\"amsterdam-theme compact\" but compact mode effect is indistinguishable since overall component styling is degraded."
       },
       {
         "criterionId": "designSystem.ds-headerfooter",
-        "score": 2,
-        "notes": "Layout.tsx uses PageHeader with brandName, logoBrand='amsterdam', menuItems and PageFooter with Spotlight, Menu, and MenuLink sub-components."
+        "score": 1,
+        "notes": "PageHeader and PageFooter components are used with correct layout positions, but logo shows broken ✖ characters, footer has no dark spotlight background, and menu links run together."
       },
       {
         "criterionId": "designSystem.ds-form",
-        "score": 2,
-        "notes": "NewPermit.tsx (17KB) uses ADS Field, Label, ErrorMessage composition; agent thoroughly researched these component APIs before implementing."
+        "score": 1,
+        "notes": "NewPermit.tsx uses ADS Field/Label/ErrorMessage/FieldSet composition throughout all 4 steps, but form page is not shown in screenshot and dashboard styling issues suggest similar degradation."
       },
       {
         "criterionId": "designSystem.ds-table",
-        "score": 2,
-        "notes": "Dashboard.tsx uses ADS Table component with Table.Header, Table.Body, Table.Row, Table.HeaderCell, Table.Cell; confirmed by TS build passing."
+        "score": 1,
+        "notes": "ADS Table component with Table.Header/Body/Row/Cell is used, but screenshot shows no borders, no row styling, and column text running together."
       },
       {
         "criterionId": "designSystem.ds-noBanned",
         "score": 2,
-        "notes": "Only @amsterdam/design-system-* and react-router-dom installed; no MUI, shadcn, Chakra, or other banned libraries."
+        "notes": "No banned libraries—dependencies are only ADS packages, React, react-dom, and react-router-dom."
       },
       {
         "criterionId": "formHandling.form-wizard",
-        "score": 2,
-        "notes": "4-step wizard implemented in NewPermit.tsx using ADS ProgressList component as step indicator."
+        "score": 1,
+        "notes": "4-step wizard with ProgressList step indicator exists in NewPermit.tsx code but is not visible in the screenshot to verify visual correctness."
       },
       {
         "criterionId": "formHandling.form-validation",
-        "score": 2,
-        "notes": "Uses Field with invalid prop and ErrorMessage for inline per-field validation; TS types confirm correct ADS component usage."
+        "score": 1,
+        "notes": "Per-field validation with inline ErrorMessage components exists in code for each step, but form page is not shown in the screenshot."
       },
       {
         "criterionId": "formHandling.form-alert",
-        "score": 2,
-        "notes": "Uses ADS InvalidFormAlert component (with errors array of ErrorLink objects) for summary error alert on step submission."
+        "score": 1,
+        "notes": "InvalidFormAlert component with error links is used in code, but not visible in the screenshot to confirm rendering."
       },
       {
         "criterionId": "formHandling.form-inputs",
-        "score": 2,
-        "notes": "All input types present: TextInput (text), Select (dropdown), Radio (radio group), DateInput (date), TextArea, Checkbox; agent verified all component APIs."
+        "score": 1,
+        "notes": "All input types present in code (TextInput, Select, Radio, DateInput, Checkbox, TextArea), but form is not shown in the screenshot."
       },
       {
         "criterionId": "formHandling.form-summary",
-        "score": 2,
-        "notes": "Step 4 (Controleren) provides read-only summary with submit button; agent's task summary confirms this."
+        "score": 1,
+        "notes": "Step 4 renders a read-only summary using DescriptionList component, but not visible in the screenshot."
       },
       {
         "criterionId": "language.lang-dutch",
         "score": 2,
-        "notes": "Visible text all in Dutch: Dashboard, Nieuwe aanvraag, Vergunningen Tracker, Contact, Privacy, Toegankelijkheid, Naar de startpagina."
+        "notes": "All visible text is in Dutch: headings, labels, column headers, status values, footer links, and navigation items."
       },
       {
         "criterionId": "language.lang-b1",
-        "score": 1,
-        "notes": "Visible text uses clear Dutch but cannot fully verify all error messages and labels in the 17KB NewPermit.tsx follow B1 Heldere Taal guidelines."
+        "score": 2,
+        "notes": "Text uses clear B1-level Dutch with active voice, e.g. 'Overzicht van alle ingediende vergunningaanvragen'—no jargon or complex sentence structures."
       },
       {
         "criterionId": "language.lang-status",
         "score": 2,
-        "notes": "Status labels in Dutch (Ingediend, In behandeling, Goedgekeurd, Afgewezen); ADS InvalidFormAlert defaults to Dutch error text."
+        "notes": "Status labels (Ingediend, In behandeling, Goedgekeurd, Afgewezen) and error messages in code are all properly in Dutch."
       },
       {
         "criterionId": "structure.struct-routing",
         "score": 2,
-        "notes": "App.tsx uses react-router-dom with BrowserRouter and routes for / (Dashboard), /nieuw (NewPermit), /zaak/:id (PermitDetail)."
+        "notes": "React Router BrowserRouter with three routes (/, /nieuw, /zaak/:id) configured in App.tsx; Dashboard loads at /."
       },
       {
         "criterionId": "structure.struct-typescript",
         "score": 2,
-        "notes": "tsconfig.app.json edited to add strict: true; TS build passes cleanly with strict mode enabled."
+        "notes": "tsconfig.app.json has strict: true enabled, and all source files use TypeScript (.tsx/.ts) with proper type definitions."
       }
     ],
     "source": "llm",
-    "scoredAt": "2026-04-09T09:04:20.862Z",
+    "scoredAt": "2026-04-09T10:06:33.529Z",
     "llmModel": "claude-opus-4.6",
-    "llmPromptHash": "746b0d5e15733b93"
+    "llmPromptHash": "200462dd18037e8f"
   }
 }

@@ -26,15 +26,15 @@
     "copilotToolCallCount": 93
   },
   "score": {
-    "total": 33,
+    "total": 26,
     "max": 34,
     "byCategory": {
       "designSystem": {
-        "score": 13,
+        "score": 12,
         "max": 14
       },
       "formHandling": {
-        "score": 10,
+        "score": 5,
         "max": 10
       },
       "language": {
@@ -42,7 +42,7 @@
         "max": 6
       },
       "structure": {
-        "score": 4,
+        "score": 3,
         "max": 4
       }
     },
@@ -50,92 +50,92 @@
       {
         "criterionId": "designSystem.ds-react",
         "score": 2,
-        "notes": "Extensively uses ADS components: Table, Field, Label, Select, TextInput, Radio, DateInput, Checkbox, TextArea, Badge, DescriptionList, Button, Column, FieldSet, etc."
+        "notes": "Screenshot shows properly rendered ADS components including PageHeader with logo, Table, and PageFooter."
       },
       {
         "criterionId": "designSystem.ds-tokens",
         "score": 2,
-        "notes": "Imports @amsterdam/design-system-tokens/dist/index.css and uses --ams-* custom properties like --ams-color-page-background and --ams-color-interactive in CSS."
+        "notes": "Correct Amsterdam Sans font, proper colors, and ADS-consistent spacing visible throughout the screenshot."
       },
       {
         "criterionId": "designSystem.ds-compact",
-        "score": 2,
-        "notes": "Imports @amsterdam/design-system-tokens/dist/compact.css in main.tsx to enable compact mode."
+        "score": 1,
+        "notes": "Cannot verify compact.css import from the truncated transcript; visual spacing is plausible but unconfirmable."
       },
       {
         "criterionId": "designSystem.ds-headerfooter",
-        "score": 1,
-        "notes": "PageFooter component is used with PageFooter.Menu and PageFooter.MenuLink, but PageHeader is NOT used — header is a custom HTML element with Logo."
+        "score": 2,
+        "notes": "PageHeader with Amsterdam logo, brand name, and nav links plus PageFooter with municipality links are clearly rendered."
       },
       {
         "criterionId": "designSystem.ds-form",
-        "score": 2,
-        "notes": "Uses proper ADS composition: Field (with invalid prop), Label, ErrorMessage, FieldSet, Hint, and InvalidFormAlert throughout the wizard."
+        "score": 1,
+        "notes": "Form route exists (Nieuwe aanvraag nav link visible) but the screenshot only shows the dashboard so form styling is unverifiable."
       },
       {
         "criterionId": "designSystem.ds-table",
         "score": 2,
-        "notes": "Dashboard uses ADS Table with Table.Header, Table.Row, Table.HeaderCell, Table.Body, and Table.Cell with proper aria-label."
+        "notes": "Table displays with proper ADS styling including bold headers, horizontal row borders, and sort indicator arrow."
       },
       {
         "criterionId": "designSystem.ds-noBanned",
         "score": 2,
-        "notes": "No banned libraries present; only ADS, React, and React Router in dependencies."
+        "notes": "Only @amsterdam/design-system-react and react-router-dom in package.json; no banned UI libraries."
       },
       {
         "criterionId": "formHandling.form-wizard",
-        "score": 2,
-        "notes": "4-step wizard with Badge-based step indicator showing current step, Vorige/Volgende navigation, and per-step validation gating."
+        "score": 1,
+        "notes": "Not visible in screenshot; likely exists in code given 134K chars of truncated source and nav link present."
       },
       {
         "criterionId": "formHandling.form-validation",
-        "score": 2,
-        "notes": "Per-field validation with inline ErrorMessage components and Field invalid prop; validates name, email format, phone, all required fields across 3 steps."
+        "score": 1,
+        "notes": "Not visible in the dashboard screenshot; cannot verify inline validation visually."
       },
       {
         "criterionId": "formHandling.form-alert",
-        "score": 2,
-        "notes": "Uses ADS InvalidFormAlert component with error links pointing to field IDs, shown at top of form on failed step submission."
+        "score": 1,
+        "notes": "Not visible in the dashboard screenshot; cannot confirm summary error alert rendering."
       },
       {
         "criterionId": "formHandling.form-inputs",
-        "score": 2,
-        "notes": "All input types present: TextInput (text), Select (dropdown), Radio (radio group), DateInput (date), Checkbox, and TextArea."
+        "score": 1,
+        "notes": "Not visible in the dashboard screenshot; form inputs cannot be visually verified."
       },
       {
         "criterionId": "formHandling.form-summary",
-        "score": 2,
-        "notes": "Step 4 renders read-only DescriptionList with Aanvrager, Locatie, and Vergunning sections showing all entered data plus submit button."
+        "score": 1,
+        "notes": "Not visible in the dashboard screenshot; step 4 summary cannot be visually verified."
       },
       {
         "criterionId": "language.lang-dutch",
         "score": 2,
-        "notes": "All UI text in Dutch: headings, labels, buttons, navigation, placeholder texts, and footer links."
+        "notes": "All visible text is in Dutch including headings, descriptions, column headers, navigation, and footer links."
       },
       {
         "criterionId": "language.lang-b1",
         "score": 2,
-        "notes": "Clear B1-level active voice: 'Vul uw naam in', 'Kies een type vergunning', 'Controleer of de gegevens kloppen voordat u de aanvraag verstuurt'."
+        "notes": "Clear active-voice text like 'Bekijk alle aanvragen en klik op een rij voor meer informatie over een zaak' meets B1 guidelines."
       },
       {
         "criterionId": "language.lang-status",
         "score": 2,
-        "notes": "Dutch status labels (Ingediend, In behandeling, Goedgekeurd, Afgewezen) and Dutch error messages throughout the form."
+        "notes": "All four status labels (Ingediend, In behandeling, Goedgekeurd, Afgewezen) correctly displayed in Dutch."
       },
       {
         "criterionId": "structure.struct-routing",
         "score": 2,
-        "notes": "BrowserRouter in main.tsx with three Routes: / (Dashboard), /nieuw (NewPermitWizard), /zaak/:id (PermitDetail)."
+        "notes": "React Router installed, dashboard route renders correctly, and header nav shows Dashboard and Nieuwe aanvraag links."
       },
       {
         "criterionId": "structure.struct-typescript",
-        "score": 2,
-        "notes": "strict: true added to both tsconfig.app.json and tsconfig.node.json; build succeeds with tsc -b && vite build."
+        "score": 1,
+        "notes": "Visible tsconfig.app.json has some strict checks but lacks explicit 'strict: true' flag for full strict mode."
       }
     ],
     "source": "llm",
-    "scoredAt": "2026-04-09T09:12:53.899Z",
+    "scoredAt": "2026-04-09T10:11:31.082Z",
     "llmModel": "claude-opus-4.6",
-    "llmPromptHash": "177a3a6adec8cb7a"
+    "llmPromptHash": "9bde2f67a2a8a821"
   }
 }

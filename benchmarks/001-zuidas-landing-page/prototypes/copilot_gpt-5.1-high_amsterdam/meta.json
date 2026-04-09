@@ -26,7 +26,7 @@
     "copilotToolCallCount": 32
   },
   "score": {
-    "total": 28,
+    "total": 27,
     "max": 28,
     "byCategory": {
       "designSystem": {
@@ -34,7 +34,7 @@
         "max": 12
       },
       "language": {
-        "score": 10,
+        "score": 9,
         "max": 10
       },
       "structure": {
@@ -46,77 +46,77 @@
       {
         "criterionId": "designSystem.ds-react",
         "score": 2,
-        "notes": "Extensively uses @amsterdam/design-system-react: Page, PageHeader, PageFooter, Grid, Grid.Cell, Column, Heading, Paragraph, Button, Field, Label, TextInput, ErrorMessage, Hint."
+        "notes": "Extensively uses @amsterdam/design-system-react: Page, PageHeader, PageFooter, Grid, Column, Heading, Paragraph, Button, Field, Label, TextInput, ErrorMessage, Hint."
       },
       {
         "criterionId": "designSystem.ds-tokens",
         "score": 2,
-        "notes": "Uses --ams-* tokens in index.css (--ams-space-l, --ams-space-s, --ams-typography-body-text-bold-font-weight) and imports tokens CSS."
+        "notes": "Custom CSS uses --ams-space-l, --ams-space-s, --ams-typography-body-text-bold-font-weight tokens; token CSS imported in main.tsx."
       },
       {
         "criterionId": "designSystem.ds-grid",
         "score": 2,
-        "notes": "Uses Grid and Grid.Cell with span={{ narrow: 4, medium: 8, wide: 9 }} and span={{ narrow: 4, medium: 8, wide: 3 }} totaling 12 columns on wide."
+        "notes": "Uses Grid and Grid.Cell with span narrow:4/medium:8/wide:9 and narrow:4/medium:8/wide:3 for main+sidebar layout visible in screenshot."
       },
       {
         "criterionId": "designSystem.ds-headerfooter",
         "score": 2,
-        "notes": "Uses PageHeader with brandName/logoLink and PageFooter with PageFooter.Menu and PageFooter.MenuLink components."
+        "notes": "PageHeader with Gemeente Amsterdam logo and brandName visible; PageFooter with MenuLinks at bottom of screenshot."
       },
       {
         "criterionId": "designSystem.ds-form",
         "score": 2,
-        "notes": "Newsletter form uses ADS components: Field, Label, TextInput, ErrorMessage, Hint, and Button."
+        "notes": "Newsletter form uses ADS Field, Label, TextInput, ErrorMessage, Hint, and Button components."
       },
       {
         "criterionId": "designSystem.ds-noBanned",
         "score": 2,
-        "notes": "No banned libraries present; only @amsterdam/design-system-* and react-router-dom used."
+        "notes": "No banned libraries used; only Amsterdam Design System and React Router as dependencies."
       },
       {
         "criterionId": "language.lang-dutch",
         "score": 2,
-        "notes": "All user-facing text is written in Dutch including headings, paragraphs, form labels, and navigation."
+        "notes": "All visible text in screenshot is Dutch: headings, paragraphs, navigation, form labels, footer links."
       },
       {
         "criterionId": "language.lang-b1",
-        "score": 2,
-        "notes": "Text uses short, clear sentences with common words; formal 'u' form consistently applied, suitable for B1 reading level."
+        "score": 1,
+        "notes": "Generally clear but contains complex compound words like 'kennisinstellingen', 'bouwwerkzaamheden', 'maatschappelijke functies' that exceed B1 level."
       },
       {
         "criterionId": "language.lang-paragraphs",
         "score": 2,
-        "notes": "Each of the 3 pages has exactly 5 Paragraph components with substantive content."
+        "notes": "Each of the 3 pages has exactly 5 Paragraph components; 5 paragraphs visible on overview page in screenshot."
       },
       {
         "criterionId": "language.lang-factual",
         "score": 2,
-        "notes": "References real Zuidas projects: Zuidasdok, station Amsterdam Zuid, A10 tunnel, Gustav Mahlerlaan, Ravel woonproject."
+        "notes": "References real Zuidas projects: Zuidasdok, A10 Zuid, station Amsterdam Zuid, Gustav Mahlerlaan, Ravel development."
       },
       {
         "criterionId": "language.lang-tone",
         "score": 2,
-        "notes": "Consistent professional, informative tone across all pages with formal 'u' address throughout."
+        "notes": "Consistent formal municipal tone using 'u' form across all pages, professional and informative."
       },
       {
         "criterionId": "structure.struct-routing",
         "score": 2,
-        "notes": "Three routed pages via React Router: / (overview), /projecten (projects), /leefbaarheid (living)."
+        "notes": "Three routes defined via React Router: / (OverviewPage), /projecten (ProjectsPage), /leefbaarheid (LivingPage)."
       },
       {
         "criterionId": "structure.struct-form",
         "score": 2,
-        "notes": "NewsletterForm component with email validation and success feedback is included on every page."
+        "notes": "Newsletter email form clearly visible in screenshot with label, input, and submit button; included on all 3 pages."
       },
       {
         "criterionId": "structure.struct-nav",
         "score": 2,
-        "notes": "NavLink-based navigation sidebar with active state styling connects all three pages."
+        "notes": "Sidebar navigation with 3 NavLink items visible in screenshot with active-state bold styling."
       }
     ],
     "source": "llm",
-    "scoredAt": "2026-04-09T09:12:35.641Z",
+    "scoredAt": "2026-04-09T09:54:17.760Z",
     "llmModel": "claude-opus-4.6",
-    "llmPromptHash": "cd006b8a702673b0"
+    "llmPromptHash": "57891a15c6ac62d5"
   }
 }

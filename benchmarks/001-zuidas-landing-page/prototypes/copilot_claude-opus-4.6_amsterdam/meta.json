@@ -26,19 +26,19 @@
     "copilotToolCallCount": 31
   },
   "score": {
-    "total": 20,
+    "total": 28,
     "max": 28,
     "byCategory": {
       "designSystem": {
-        "score": 9,
+        "score": 12,
         "max": 12
       },
       "language": {
-        "score": 6,
+        "score": 10,
         "max": 10
       },
       "structure": {
-        "score": 5,
+        "score": 6,
         "max": 6
       }
     },
@@ -46,77 +46,77 @@
       {
         "criterionId": "designSystem.ds-react",
         "score": 2,
-        "notes": "@amsterdam/design-system-react installed and TypeScript type-check passes, confirming valid ADS component imports."
+        "notes": "Uses @amsterdam/design-system-react components (PageHeader, PageFooter, Grid, Column, Spotlight, Breadcrumb, etc.) clearly rendered in the screenshot."
       },
       {
         "criterionId": "designSystem.ds-tokens",
-        "score": 1,
-        "notes": "@amsterdam/design-system-tokens and design-system-css installed, but cannot verify actual --ams-* token usage in code since file contents not visible."
+        "score": 2,
+        "notes": "Amsterdam Design System tokens and CSS imported; screenshot shows correct Amsterdam Sans font, blue brand colors, and proper spacing."
       },
       {
         "criterionId": "designSystem.ds-grid",
-        "score": 1,
-        "notes": "Agent claims Grid/Column 4/8/12 layout and tsc passes, but cannot directly verify grid structure without file contents."
+        "score": 2,
+        "notes": "Screenshot shows a clear main-content/sidebar grid layout (~8/4 column split) using ADS Grid and Column components."
       },
       {
         "criterionId": "designSystem.ds-headerfooter",
         "score": 2,
-        "notes": "Agent claims PageHeader and PageFooter usage; tsc --noEmit passing confirms these ADS components are correctly imported and typed."
+        "notes": "PageHeader with Gemeente Amsterdam logo and nav links visible at top; PageFooter with Contact, Bezoekadres, and Volg Zuidas sections plus privacy links at bottom."
       },
       {
         "criterionId": "designSystem.ds-form",
-        "score": 1,
-        "notes": "NewsletterSignup.tsx exists (2312 chars) but cannot verify whether it uses ADS form components or plain HTML form elements."
+        "score": 2,
+        "notes": "Newsletter form uses ADS-styled label, text input, and blue button consistent with Amsterdam Design System form components."
       },
       {
         "criterionId": "designSystem.ds-noBanned",
         "score": 2,
-        "notes": "package.json shown explicitly — only ADS, React, react-router-dom; no MUI, shadcn, Chakra, or other banned libraries."
+        "notes": "No banned libraries (MUI, shadcn, Chakra) present; only ADS, React, React Router, and Vite in dependencies."
       },
       {
         "criterionId": "language.lang-dutch",
         "score": 2,
-        "notes": "Dutch file names (InfrastructuurPage, WonenWerkenPage), agent claims all-Dutch content; build succeeds with 6000+ char pages consistent with Dutch text."
+        "notes": "All visible text—headings, paragraphs, navigation, footer, form labels—is entirely in Dutch."
       },
       {
         "criterionId": "language.lang-b1",
-        "score": 1,
-        "notes": "Agent claims B1 level and 'u' form, but actual text content not visible in transcript to verify reading level."
+        "score": 2,
+        "notes": "Text uses clear, accessible Dutch with short sentences, common vocabulary, and consistent 'u' form consistent with B1/Heldere Taal."
       },
       {
         "criterionId": "language.lang-paragraphs",
-        "score": 1,
-        "notes": "Agent claims exactly 5 paragraphs per page; file sizes (~6200-6500 chars) are consistent but cannot count paragraphs without seeing content."
+        "score": 2,
+        "notes": "Homepage shows exactly 5 substantive paragraphs with distinct headings; transcript confirms same structure for all 3 pages."
       },
       {
         "criterionId": "language.lang-factual",
-        "score": 1,
-        "notes": "Agent summary references specific Zuidas facts (Zuidasdok, 9000 homes, station expansion) but actual page text is not visible to verify."
+        "score": 2,
+        "notes": "Content references real projects (Zuidasdok, A10 Zuid tunnel, Ravel en Valley, Brittenpassage), specific figures (9,000 homes, 40% social housing, 4 miljard euro)."
       },
       {
         "criterionId": "language.lang-tone",
-        "score": 1,
-        "notes": "Cannot verify tone consistency without seeing the actual Dutch text content."
+        "score": 2,
+        "notes": "Consistent professional/governmental tone throughout, using formal 'u' form and neutral informative style."
       },
       {
         "criterionId": "structure.struct-routing",
         "score": 2,
-        "notes": "react-router-dom installed, 3 separate page files created (HomePage, InfrastructuurPage, WonenWerkenPage), App.tsx likely contains routes, tsc passes."
+        "notes": "Three routed pages visible via react-router-dom: / (Overzicht), /infrastructuur, /wonen-werken, with nav links in header."
       },
       {
         "criterionId": "structure.struct-form",
         "score": 2,
-        "notes": "NewsletterSignup.tsx component created (2312 chars), agent claims email validation and placement on every page."
+        "notes": "Newsletter signup form clearly visible at page bottom with 'Blijf op de hoogte' heading, email input, and 'Aanmelden' button."
       },
       {
         "criterionId": "structure.struct-nav",
-        "score": 1,
-        "notes": "Agent claims Breadcrumb and StandaloneLink sidebar navigation but cannot verify actual navigation links between pages."
+        "score": 2,
+        "notes": "Header navigation with Overzicht/Infrastructuur/Wonen en werken links plus sidebar with StandaloneLink navigation to other pages."
       }
     ],
     "source": "llm",
-    "scoredAt": "2026-04-09T09:09:41.731Z",
+    "scoredAt": "2026-04-09T09:51:10.094Z",
     "llmModel": "claude-opus-4.6",
-    "llmPromptHash": "ac831000f599d811"
+    "llmPromptHash": "cb774bd359315d71"
   }
 }

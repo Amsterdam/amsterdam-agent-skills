@@ -46,77 +46,77 @@
       {
         "criterionId": "designSystem.ds-react",
         "score": 0,
-        "notes": "Plain HTML/CSS/JS was used; no React or @amsterdam/design-system-react installed."
+        "notes": "Plain HTML/CSS/JS used; no React or @amsterdam/design-system-react present."
       },
       {
         "criterionId": "designSystem.ds-tokens",
         "score": 0,
-        "notes": "Custom CSS properties used but no --ams-* tokens or Tailwind bridge referenced."
+        "notes": "Custom CSS properties used but no --ams-* tokens or Tailwind bridge."
       },
       {
         "criterionId": "designSystem.ds-grid",
         "score": 0,
-        "notes": "No Amsterdam Design System Grid/Column 4/8/12 layout used; custom CSS layout only."
+        "notes": "Custom CSS layout; no ADS Grid/Column 4/8/12 system."
       },
       {
         "criterionId": "designSystem.ds-headerfooter",
         "score": 0,
-        "notes": "HTML header/footer elements likely present but not ADS Header/Footer components."
+        "notes": "Custom header and footer built from scratch, not ADS components."
       },
       {
         "criterionId": "designSystem.ds-form",
         "score": 0,
-        "notes": "Newsletter form is custom HTML, not built with ADS form components."
+        "notes": "Newsletter form uses plain HTML inputs, not ADS form components."
       },
       {
         "criterionId": "designSystem.ds-noBanned",
         "score": 2,
-        "notes": "No banned libraries used; agent explicitly states 'no framework dependencies'."
+        "notes": "No banned libraries (MUI, shadcn, Chakra, etc.) are used."
       },
       {
         "criterionId": "language.lang-dutch",
         "score": 2,
-        "notes": "Page names (projecten, toekomst) and described content are all in Dutch."
+        "notes": "All visible text in the screenshot is written in Dutch."
       },
       {
         "criterionId": "language.lang-b1",
         "score": 1,
-        "notes": "Dutch text produced but no explicit effort toward B1 reading level or Heldere Taal guidelines."
+        "notes": "Dutch is clear but uses complex vocabulary and long sentences, not consistently B1 level."
       },
       {
         "criterionId": "language.lang-paragraphs",
         "score": 2,
-        "notes": "Grep verification confirmed exactly 5 content cards per page across all three pages."
+        "notes": "Verified 5 content cards per page; screenshot shows 5 distinct paragraph sections."
       },
       {
         "criterionId": "language.lang-factual",
         "score": 2,
-        "notes": "References real projects like Zuidasdok, Valley tower, Ravel district, and Station Amsterdam Zuid."
+        "notes": "References real projects (Zuidasdok, Valley, ABN AMRO, EBA) and plausible figures."
       },
       {
         "criterionId": "language.lang-tone",
         "score": 2,
-        "notes": "Professional style maintained consistently across all three pages as described."
+        "notes": "Consistent professional, informative tone throughout all visible content."
       },
       {
         "criterionId": "structure.struct-routing",
         "score": 2,
-        "notes": "Three separate HTML pages (index, projecten, toekomst) serve as navigable routes."
+        "notes": "Three separate HTML pages (index, projecten, toekomst) linked via navigation."
       },
       {
         "criterionId": "structure.struct-form",
         "score": 2,
-        "notes": "Newsletter form verified present on all three pages via grep count."
+        "notes": "Newsletter form clearly visible at bottom with email input and Aanmelden button."
       },
       {
         "criterionId": "structure.struct-nav",
         "score": 2,
-        "notes": "Sticky navigation with links between pages confirmed in agent summary."
+        "notes": "Navigation with Home, Projecten, Toekomst links in header and footer."
       }
     ],
     "source": "llm",
-    "scoredAt": "2026-04-09T09:08:00.521Z",
+    "scoredAt": "2026-04-09T09:50:07.576Z",
     "llmModel": "claude-opus-4.6",
-    "llmPromptHash": "885a93a5e1f55290"
+    "llmPromptHash": "d85a19c0558643c3"
   }
 }

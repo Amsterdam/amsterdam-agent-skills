@@ -26,11 +26,11 @@
     "copilotToolCallCount": 69
   },
   "score": {
-    "total": 22,
+    "total": 26,
     "max": 34,
     "byCategory": {
       "designSystem": {
-        "score": 10,
+        "score": 12,
         "max": 14
       },
       "formHandling": {
@@ -38,7 +38,7 @@
         "max": 10
       },
       "language": {
-        "score": 4,
+        "score": 6,
         "max": 6
       },
       "structure": {
@@ -50,92 +50,92 @@
       {
         "criterionId": "designSystem.ds-react",
         "score": 2,
-        "notes": "App.tsx clearly imports and uses Grid, Heading, Menu, Page, PageHeader, PageFooter, Paragraph, SkipLink from @amsterdam/design-system-react."
+        "notes": "Multiple ADS components (PageHeader, Page, Grid, Heading, Table, Menu, PageFooter) imported and rendering correctly with proper styling."
       },
       {
         "criterionId": "designSystem.ds-tokens",
-        "score": 1,
-        "notes": "ADS CSS/token packages installed; main.tsx and index.css were edited but new content not visible in transcript to verify --ams-* token usage."
+        "score": 2,
+        "notes": "Screenshot shows Amsterdam brand colors (red logo, blue nav), Amsterdam Sans typography, and proper ADS spacing consistent with token usage."
       },
       {
         "criterionId": "designSystem.ds-compact",
         "score": 1,
-        "notes": "Package @amsterdam/design-system-css installed and main.tsx edited, but compact.css import cannot be verified from transcript."
+        "notes": "Agent edited main.tsx (content not shown in transcript) and likely intended compact.css import, but spacing in screenshot appears generous and doesn't clearly confirm compact mode is active."
       },
       {
         "criterionId": "designSystem.ds-headerfooter",
         "score": 2,
-        "notes": "PageHeader and PageFooter clearly used in App.tsx with brandName, logoAccessibleName, navigation, and footer menu links."
+        "notes": "PageHeader with Amsterdam logo, 'Vergunningen' brand, and blue navigation panel; PageFooter with Privacy/Toegankelijkheid/Contact links both properly styled."
       },
       {
         "criterionId": "designSystem.ds-form",
         "score": 1,
-        "notes": "NewPermitWizard.tsx created (19760 chars) after reading Field/Label/ErrorMessage docs, but file content not visible and build fails."
+        "notes": "NewPermitWizard.tsx created (19,760 chars) and agent consulted Field/Label/ErrorMessage docs, but form is not visible in the screenshot to verify visual correctness."
       },
       {
         "criterionId": "designSystem.ds-table",
-        "score": 1,
-        "notes": "Dashboard.tsx created (6098 chars) after reading ADS Table docs, but actual Table component usage cannot be verified from transcript."
+        "score": 2,
+        "notes": "ADS Table clearly visible with proper header row, 8 body rows, horizontal separators, bold column headers, and sort indicator."
       },
       {
         "criterionId": "designSystem.ds-noBanned",
         "score": 2,
-        "notes": "Only react-router-dom and ADS packages installed; no MUI, shadcn, Chakra or other banned libraries in package.json."
+        "notes": "Only @amsterdam/design-system-* and react-router-dom installed; no MUI, shadcn, Chakra, or other banned libraries."
       },
       {
         "criterionId": "formHandling.form-wizard",
         "score": 1,
-        "notes": "NewPermitWizard.tsx created at 19760 chars suggesting multi-step implementation, but step indicators cannot be verified; build fails."
+        "notes": "NewPermitWizard.tsx exists with substantial code (19,760 chars) but the wizard is not visible in the screenshot to verify step indicators."
       },
       {
         "criterionId": "formHandling.form-validation",
         "score": 1,
-        "notes": "Agent read Field/ErrorMessage/InvalidFormAlert docs before creating wizard file, but inline validation implementation not verifiable."
+        "notes": "Agent consulted ErrorMessage component docs and validation is likely coded, but not visible in the screenshot."
       },
       {
         "criterionId": "formHandling.form-alert",
         "score": 1,
-        "notes": "Agent studied InvalidFormAlert component docs; likely implemented but content of NewPermitWizard.tsx not visible in transcript."
+        "notes": "Agent consulted InvalidFormAlert reference and likely implemented it, but not visible in the screenshot."
       },
       {
         "criterionId": "formHandling.form-inputs",
         "score": 1,
-        "notes": "Agent read TextInput, Select, Radio, DateInput, Checkbox, TextArea docs; likely all 4 types present but cannot verify from transcript."
+        "notes": "Agent consulted TextInput, Select, Radio, DateInput, Checkbox docs; inputs likely coded but not visible in screenshot."
       },
       {
         "criterionId": "formHandling.form-summary",
         "score": 1,
-        "notes": "Step 4 summary was explicitly planned; file size suggests implementation but content not visible in transcript."
+        "notes": "Step 4 summary likely implemented in wizard code but not visible in the screenshot."
       },
       {
         "criterionId": "language.lang-dutch",
         "score": 2,
-        "notes": "All visible text in App.tsx is Dutch: 'Ga naar de inhoud', 'Hoofdnavigatie', 'Nieuwe aanvraag', 'Hier ziet u aanvragen voor vergunningen'."
+        "notes": "All visible text fully in Dutch: headings, paragraphs, column headers, status values, navigation labels, filter, and footer links."
       },
       {
         "criterionId": "language.lang-b1",
-        "score": 1,
-        "notes": "Visible App.tsx text uses clear active-voice Dutch at B1 level, but cannot verify language quality across all created component files."
+        "score": 2,
+        "notes": "Clear B1-level Dutch with active voice: 'Hier ziet u aanvragen...' and 'Dit is het overzicht van alle vergunningaanvragen...'"
       },
       {
         "criterionId": "language.lang-status",
-        "score": 1,
-        "notes": "PermitsContext.tsx (7785 chars) likely contains Dutch status labels but file content not visible in transcript."
+        "score": 2,
+        "notes": "Status labels in Dutch (Ingediend, In behandeling, Goedgekeurd, Afgewezen) and filter labels ('Filter op status', 'Alle statussen')."
       },
       {
         "criterionId": "structure.struct-routing",
         "score": 2,
-        "notes": "React Router clearly configured with three routes: '/', '/nieuw', '/zaak/:id' visible in App.tsx."
+        "notes": "React Router configured with three routes ('/', '/nieuw', '/zaak/:id') and navigation links visible and functional in screenshot."
       },
       {
         "criterionId": "structure.struct-typescript",
         "score": 1,
-        "notes": "tsconfig.app.json was edited (likely adding strict:true) but build fails with TS errors, so strict mode not fully verified."
+        "notes": "Agent edited tsconfig.app.json to add strict mode (build caught type errors proving TS checking active), but the build failed and code doesn't compile cleanly."
       }
     ],
     "source": "llm",
-    "scoredAt": "2026-04-09T09:15:02.417Z",
+    "scoredAt": "2026-04-09T11:11:05.126Z",
     "llmModel": "claude-opus-4.6",
-    "llmPromptHash": "3ae124fdef63dd5a"
+    "llmPromptHash": "9e10d1e9d8a0cd9e"
   }
 }
