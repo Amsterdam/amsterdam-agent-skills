@@ -48,6 +48,8 @@ export interface CopilotRunOptions {
   prompt: string
   model: string
   skills: SkillsMode
+  /** Reasoning effort level — passed as `--effort <level>` to copilot. */
+  effort?: string
   /** Bubble subprocess stdout/stderr to the parent for live progress. */
   verbose?: boolean
 }
@@ -111,7 +113,7 @@ async function discoverUserMcpServers(): Promise<string[]> {
  * `.github/instructions/` (via skills.ts) before calling this.
  */
 export async function runCopilot(opts: CopilotRunOptions): Promise<CopilotRunResult> {
-  const { workdir, prompt, model, skills, verbose = false } = opts
+  const { workdir, prompt, model, skills, effort, verbose = false } = opts
   const sessionTranscript = join(workdir, "copilot-session.md")
   const logDir = join(workdir, "logs")
   await mkdir(logDir, { recursive: true })
@@ -136,6 +138,9 @@ export async function runCopilot(opts: CopilotRunOptions): Promise<CopilotRunRes
   ]
   for (const name of userMcps) {
     args.push("--disable-mcp-server", name)
+  }
+  if (effort) {
+    args.push("--effort", effort)
   }
   if (skills === "none") {
     args.push("--no-custom-instructions")

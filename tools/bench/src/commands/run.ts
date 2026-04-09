@@ -8,7 +8,7 @@
  * 5. Hand off to postProcess() to publish the prototype + meta.json.
  */
 
-import { mkdir, mkdtemp, rm } from "node:fs/promises"
+import { mkdir, mkdtemp, rm, readFile } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
@@ -17,6 +17,23 @@ import { loadBenchmark, pickVariant } from "../definition.ts"
 import { loadSkills } from "../skills.ts"
 import { runCopilot } from "../runners/copilot.ts"
 import { postProcess } from "../postprocess.ts"
+
+/** Print the last N lines of a log file, indented, if it has any content. */
+async function printLogTail(label: string, path: string, lines = 8): Promise<void> {
+  if (!existsSync(path)) return
+  try {
+    const content = await readFile(path, "utf8")
+    const trimmed = content.trim()
+    if (!trimmed) return
+    const tail = trimmed.split("\n").slice(-lines).join("\n")
+    console.error(`  ── ${label} (${path}) ──`)
+    for (const line of tail.split("\n")) {
+      console.error(`     ${line}`)
+    }
+  } catch {
+    // Best-effort — never crash the runner over a log read.
+  }
+}
 
 export async function runCommand(argv: string[]): Promise<number> {
   const args = parseArgs(argv)
@@ -64,12 +81,27 @@ export async function runCommand(argv: string[]): Promise<number> {
     await loadSkills(workdir, variant.skills)
 
     // 2. Copilot
+    // Wrap the benchmark prompt with a short runner instruction that ensures
+    // the agent creates real files instead of outputting code blocks in its
+    // response. This is NOT part of the benchmark prompt (which stays vague);
+    // it's the runner's job to ensure all models produce comparable artifacts.
+    const wrappedPrompt = [
+      "IMPORTANT: You MUST create real files in this directory using your file editing and writing tools.",
+      "Do NOT just output code blocks in your response — actually write the files to disk.",
+      "Build a complete, runnable project that can be opened in a browser.",
+      "",
+      "---",
+      "",
+      def.prompt,
+    ].join("\n")
+
     console.log(`  Invoking copilot...`)
     const runResult = await runCopilot({
       workdir,
-      prompt: def.prompt,
+      prompt: wrappedPrompt,
       model: variant.model,
       skills: variant.skills,
+      effort: variant.effort,
       verbose,
     })
     console.log(
@@ -78,6 +110,10 @@ export async function runCommand(argv: string[]): Promise<number> {
     )
     if (runResult.exitCode !== 0) {
       console.error("  ✘ copilot failed — leaving workdir for inspection")
+      // Surface stderr and the last few JSONL events automatically so you
+      // don't have to go fishing through the workdir on every failure.
+      await printLogTail("stderr", join(workdir, "copilot-stderr.log"))
+      await printLogTail("stdout (last events)", join(workdir, "copilot-stdout.jsonl"), 4)
       cleanup = false
       return runResult.exitCode
     }

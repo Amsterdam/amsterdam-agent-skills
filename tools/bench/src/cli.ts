@@ -20,6 +20,7 @@ import { matrixCommand } from "./commands/matrix.ts"
 import { judgeCommand } from "./commands/judge.ts"
 import { manifestCommand } from "./commands/manifest.ts"
 import { listCommand } from "./commands/list.ts"
+import { repairCommand } from "./commands/repair.ts"
 
 const HELP = `bench — Amsterdam agent skill benchmark runner
 
@@ -42,6 +43,9 @@ COMMANDS
     --model <model>         Override the model used for scoring
 
   manifest                Regenerate benchmarks/benchmarks.json from disk
+
+  repair <id>             Fix published prototypes without re-running Copilot
+    --variant <id>          Repair one variant only (default: all)
 
   list                    List all benchmarks and their declared variants
 
@@ -78,6 +82,8 @@ async function main(): Promise<number> {
       return judgeCommand(rest)
     case "manifest":
       return manifestCommand(rest)
+    case "repair":
+      return repairCommand(rest)
     case "list":
       return listCommand(rest)
     default:

@@ -29,7 +29,7 @@
  * with clear separators so the agent gets the full skill body in one place.
  */
 
-import { mkdir, writeFile, readFile, readdir, stat } from "node:fs/promises"
+import { mkdir, writeFile, readFile, readdir, stat, cp } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import { join, basename } from "node:path"
 import type { SkillsMode } from "./types/manifest.ts"
@@ -88,12 +88,7 @@ export async function loadSkills(workdir: string, mode: SkillsMode): Promise<voi
           `Cannot load skill '${skillName}': ${skillRoot} does not exist`,
         )
       }
-      const body = await assembleSkillBody(skillRoot)
-      await writeFile(
-        join(instructionsDir, `${skillName}.instructions.md`),
-        body,
-        "utf8",
-      )
+      await loadAmsterdamSkill(workdir, skillRoot, skillName, instructionsDir)
     }
     return
   }
@@ -104,35 +99,57 @@ export async function loadSkills(workdir: string, mode: SkillsMode): Promise<voi
 }
 
 /**
- * Concatenate a skill's SKILL.md and any references/*.md into a single
- * instructions file. Section headers preserve the file boundaries so the
- * agent can navigate between them.
+ * Load an Amsterdam skill in two parts:
+ *
+ *   1. SKILL.md → .github/instructions/{name}.instructions.md (~26 KB)
+ *      This is what Copilot loads as context. Small enough for any model.
+ *
+ *   2. references/ → skills/{name}/references/ in the workdir root
+ *      Separate browsable files the agent can `cat` on demand. SKILL.md
+ *      already contains pointers like "read references/components.md" —
+ *      with this layout the agent finds them naturally.
+ *
+ * Previous approach concatenated everything into one 92+ KB instructions
+ * file, which GPT-5.3 Codex reported as "too large to read at once" and
+ * then failed to apply the design system. Splitting restores the intended
+ * on-demand browsing pattern.
  */
-async function assembleSkillBody(skillRoot: string): Promise<string> {
-  const parts: string[] = []
-  const skillName = basename(skillRoot)
-  parts.push(`# Skill: ${skillName}\n`)
-  parts.push(
-    `> Loaded into Copilot via .github/instructions/ by tools/bench. ` +
-      `Source: skills/${skillName}/.\n`,
+async function loadAmsterdamSkill(
+  workdir: string,
+  skillRoot: string,
+  skillName: string,
+  instructionsDir: string,
+): Promise<void> {
+  // 1. SKILL.md → instructions file (lightweight context for the model)
+  const skillMdPath = join(skillRoot, "SKILL.md")
+  if (!existsSync(skillMdPath)) {
+    throw new Error(`${skillRoot}/SKILL.md not found`)
+  }
+  const header =
+    `# Skill: ${skillName}\n\n` +
+    `> Loaded by the benchmark runner. SKILL.md is the core instruction.\n` +
+    `> Reference files are available at skills/${skillName}/references/ in this project.\n` +
+    `> Read them on demand when you need component APIs, token catalogs, or layout patterns.\n\n`
+  const skillMd = await readFile(skillMdPath, "utf8")
+  await writeFile(
+    join(instructionsDir, `${skillName}.instructions.md`),
+    header + skillMd,
+    "utf8",
   )
 
-  const skillMdPath = join(skillRoot, "SKILL.md")
-  if (existsSync(skillMdPath)) {
-    parts.push("## SKILL.md\n")
-    parts.push(await readFile(skillMdPath, "utf8"))
-    parts.push("\n")
-  }
-
+  // 2. references/ → workdir/skills/{name}/references/ (browsable on demand)
   const refsDir = join(skillRoot, "references")
   if (existsSync(refsDir) && (await stat(refsDir)).isDirectory()) {
-    const files = (await readdir(refsDir)).filter((f) => f.endsWith(".md")).sort()
-    for (const file of files) {
-      parts.push(`## references/${file}\n`)
-      parts.push(await readFile(join(refsDir, file), "utf8"))
-      parts.push("\n")
-    }
+    const destRefs = join(workdir, "skills", skillName, "references")
+    await mkdir(destRefs, { recursive: true })
+    await cp(refsDir, destRefs, { recursive: true })
   }
 
-  return parts.join("\n")
+  // 3. Also copy assets/ if present (e.g. starter templates)
+  const assetsDir = join(skillRoot, "assets")
+  if (existsSync(assetsDir) && (await stat(assetsDir)).isDirectory()) {
+    const destAssets = join(workdir, "skills", skillName, "assets")
+    await mkdir(destAssets, { recursive: true })
+    await cp(assetsDir, destAssets, { recursive: true })
+  }
 }

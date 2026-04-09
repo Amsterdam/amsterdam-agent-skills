@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "001",
+  "benchmarkSlug": "zuidas-landing-page",
+  "variantId": "copilot_gpt-5.1-high_amsterdam",
+  "variantLabel": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+  "agent": "copilot",
+  "model": "gpt-5.1",
+  "skills": "amsterdam",
+  "promptHash": "b377f2c68cc55488",
+  "builtAt": "2026-04-09T07:50:49.828Z",
+  "durationMs": 968706,
+  "usage": {
+    "premiumRequests": 1,
+    "apiDurationMs": 347685,
+    "sessionDurationMs": 966785,
+    "linesAdded": 282,
+    "linesRemoved": 115,
+    "filesModified": 3
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 32
+  }
+}

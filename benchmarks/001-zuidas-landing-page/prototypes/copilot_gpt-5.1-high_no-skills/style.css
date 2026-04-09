@@ -1,0 +1,265 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1f2933;
+  background-color: #f5f7fa;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.site-header {
+  background-color: #0b3b5c;
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+}
+
+.logo {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+}
+
+.main-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: #e5eff7;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding-bottom: 0.15rem;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-link-active {
+  border-bottom-color: #f59e0b;
+}
+
+.site-main {
+  padding-bottom: 3rem;
+}
+
+.hero {
+  background: linear-gradient(135deg, #0b3b5c, #145b82);
+  color: #ffffff;
+  padding: 2.75rem 0 2.5rem;
+}
+
+.hero h1 {
+  margin: 0 0 0.35rem;
+  font-size: 2rem;
+}
+
+.hero-subtitle {
+  max-width: 40rem;
+  font-size: 1.02rem;
+  opacity: 0.9;
+}
+
+.content {
+  background-color: #ffffff;
+  margin-top: -1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  padding: 2.25rem 0 2.5rem;
+}
+
+.content h2 {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  font-size: 1.4rem;
+}
+
+.content p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.newsletter {
+  margin-top: 2rem;
+}
+
+.newsletter .container {
+  background-color: #0f172a;
+  color: #e5eff7;
+  border-radius: 0.75rem;
+  padding: 2rem 1.5rem 2.25rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+}
+
+.newsletter h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.newsletter-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row-inline {
+  grid-column: 1 / -1;
+}
+
+label {
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+}
+
+input[type='text'],
+input[type='email'],
+select {
+  border-radius: 0.4rem;
+  border: 1px solid #cbd2e1;
+  padding: 0.55rem 0.6rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+input[type='text']:focus,
+input[type='email']:focus,
+select:focus {
+  outline: 2px solid #f59e0b;
+  outline-offset: 1px;
+  border-color: #f59e0b;
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+}
+
+.checkbox input[type='checkbox'] {
+  margin-top: 0.25rem;
+}
+
+.btn-primary {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #111827;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, filter 0.08s ease-out;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.03);
+  box-shadow: 0 5px 15px rgba(15, 23, 42, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+}
+
+.form-message {
+  grid-column: 1 / -1;
+  font-size: 0.9rem;
+  min-height: 1.1rem;
+  margin-top: 0.3rem;
+}
+
+.form-message.success {
+  color: #bbf7d0;
+}
+
+.form-message.error {
+  color: #fecaca;
+}
+
+.site-footer {
+  border-top: 1px solid #d8e2f0;
+  padding: 1.25rem 0 2rem;
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .main-nav {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.75rem;
+  }
+
+  .hero {
+    padding: 2.2rem 0 2.1rem;
+  }
+
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .newsletter-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

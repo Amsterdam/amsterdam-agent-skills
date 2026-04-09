@@ -46,6 +46,8 @@ export interface VariantDefinition {
   agent: AgentName
   model: string
   skills: SkillsMode
+  /** Reasoning effort level passed to `copilot --effort`. */
+  effort?: "low" | "medium" | "high" | "xhigh"
 }
 
 /** Top-level benchmark.yaml shape. */

@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "001",
+  "benchmarkSlug": "zuidas-landing-page",
+  "variantId": "copilot_claude-opus-4.6_default",
+  "variantLabel": "Copilot · Opus 4.6 · Default skills",
+  "agent": "copilot",
+  "model": "claude-opus-4.6",
+  "skills": "default",
+  "promptHash": "b377f2c68cc55488",
+  "builtAt": "2026-04-09T05:55:40.135Z",
+  "durationMs": 249137,
+  "usage": {
+    "premiumRequests": 3,
+    "apiDurationMs": 243125,
+    "sessionDurationMs": 246870,
+    "linesAdded": 739,
+    "linesRemoved": 0,
+    "filesModified": 0
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "static",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 14
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "001",
+  "benchmarkSlug": "zuidas-landing-page",
+  "variantId": "copilot_claude-opus-4.6_amsterdam",
+  "variantLabel": "Copilot · Opus 4.6 · Amsterdam skills",
+  "agent": "copilot",
+  "model": "claude-opus-4.6",
+  "skills": "amsterdam",
+  "promptHash": "b377f2c68cc55488",
+  "builtAt": "2026-04-09T06:12:08.193Z",
+  "durationMs": 986919,
+  "usage": {
+    "premiumRequests": 3,
+    "apiDurationMs": 278162,
+    "sessionDurationMs": 984775,
+    "linesAdded": 609,
+    "linesRemoved": 1,
+    "filesModified": 1
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 31
+  }
+}

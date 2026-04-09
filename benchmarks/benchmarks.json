@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-08T22:29:41.825Z",
+  "generatedAt": "2026-04-09T07:55:41.182Z",
   "version": 1,
   "benchmarks": [
     {
@@ -16,24 +16,48 @@
         "prompt": "Hey, can you build me a landing page for the Amsterdam Zuidas area? It needs\nto focus on all the construction and developments happening there over the\nnext 5 years.\n\nI need 3 pages in total. Each page should have exactly 5 paragraphs of real,\ninformative text written in Dutch (no placeholder text). Also, make sure\nthere is a signup form for an email newsletter on the pages. Use a\nprofessional style.\n",
         "variants": [
           {
-            "id": "copilot_claude-opus-4-6_no-skills",
+            "id": "copilot_claude-opus-4.6_no-skills",
             "label": "Copilot · Opus 4.6 · No skills",
             "agent": "copilot",
-            "model": "claude-opus-4-6",
+            "model": "claude-opus-4.6",
             "skills": "none"
           },
           {
-            "id": "copilot_claude-opus-4-6_default",
+            "id": "copilot_claude-opus-4.6_default",
             "label": "Copilot · Opus 4.6 · Default skills",
             "agent": "copilot",
-            "model": "claude-opus-4-6",
+            "model": "claude-opus-4.6",
             "skills": "default"
           },
           {
-            "id": "copilot_claude-opus-4-6_amsterdam",
+            "id": "copilot_claude-opus-4.6_amsterdam",
             "label": "Copilot · Opus 4.6 · Amsterdam skills",
             "agent": "copilot",
-            "model": "claude-opus-4-6",
+            "model": "claude-opus-4.6",
+            "skills": "amsterdam"
+          },
+          {
+            "id": "copilot_gpt-5.1-high_no-skills",
+            "label": "Copilot · GPT-5.1 (high) · No skills",
+            "agent": "copilot",
+            "model": "gpt-5.1",
+            "effort": "high",
+            "skills": "none"
+          },
+          {
+            "id": "copilot_gpt-5.1-high_default",
+            "label": "Copilot · GPT-5.1 (high) · Default skills",
+            "agent": "copilot",
+            "model": "gpt-5.1",
+            "effort": "high",
+            "skills": "default"
+          },
+          {
+            "id": "copilot_gpt-5.1-high_amsterdam",
+            "label": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+            "agent": "copilot",
+            "model": "gpt-5.1",
+            "effort": "high",
             "skills": "amsterdam"
           }
         ],
@@ -161,7 +185,176 @@
           "'Professional style' — without skills means generic corporate; with skills means ADS."
         ]
       },
-      "prototypes": [],
+      "prototypes": [
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_claude-opus-4.6_no-skills",
+          "variantLabel": "Copilot · Opus 4.6 · No skills",
+          "agent": "copilot",
+          "model": "claude-opus-4.6",
+          "skills": "none",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T05:51:30.972Z",
+          "durationMs": 215993,
+          "usage": {
+            "premiumRequests": 3,
+            "apiDurationMs": 208614,
+            "sessionDurationMs": 213533,
+            "linesAdded": 530,
+            "linesRemoved": 0,
+            "filesModified": 0
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "static",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 13
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_claude-opus-4.6_default",
+          "variantLabel": "Copilot · Opus 4.6 · Default skills",
+          "agent": "copilot",
+          "model": "claude-opus-4.6",
+          "skills": "default",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T05:55:40.135Z",
+          "durationMs": 249137,
+          "usage": {
+            "premiumRequests": 3,
+            "apiDurationMs": 243125,
+            "sessionDurationMs": 246870,
+            "linesAdded": 739,
+            "linesRemoved": 0,
+            "filesModified": 0
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "static",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 14
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_claude-opus-4.6_amsterdam",
+          "variantLabel": "Copilot · Opus 4.6 · Amsterdam skills",
+          "agent": "copilot",
+          "model": "claude-opus-4.6",
+          "skills": "amsterdam",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T06:12:08.193Z",
+          "durationMs": 986919,
+          "usage": {
+            "premiumRequests": 3,
+            "apiDurationMs": 278162,
+            "sessionDurationMs": 984775,
+            "linesAdded": 609,
+            "linesRemoved": 1,
+            "filesModified": 1
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "vite",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 31
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_gpt-5.1-high_no-skills",
+          "variantLabel": "Copilot · GPT-5.1 (high) · No skills",
+          "agent": "copilot",
+          "model": "gpt-5.1",
+          "skills": "none",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T07:55:22.532Z",
+          "durationMs": 134400,
+          "usage": {
+            "premiumRequests": 1,
+            "apiDurationMs": 130444,
+            "sessionDurationMs": 132447,
+            "linesAdded": 603,
+            "linesRemoved": 0,
+            "filesModified": 0
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "static",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 13
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_gpt-5.1-high_default",
+          "variantLabel": "Copilot · GPT-5.1 (high) · Default skills",
+          "agent": "copilot",
+          "model": "gpt-5.1",
+          "skills": "default",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T07:55:41.163Z",
+          "durationMs": 146565,
+          "usage": {
+            "premiumRequests": 2,
+            "apiDurationMs": 143389,
+            "sessionDurationMs": 144760,
+            "linesAdded": 564,
+            "linesRemoved": 0,
+            "filesModified": 0
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "static",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 10
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_gpt-5.1-high_amsterdam",
+          "variantLabel": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+          "agent": "copilot",
+          "model": "gpt-5.1",
+          "skills": "amsterdam",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T07:50:49.828Z",
+          "durationMs": 968706,
+          "usage": {
+            "premiumRequests": 1,
+            "apiDurationMs": 347685,
+            "sessionDurationMs": 966785,
+            "linesAdded": 282,
+            "linesRemoved": 115,
+            "filesModified": 3
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "vite",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 32
+          }
+        }
+      ],
       "legacyScreenshots": [
         {
           "variantLabel": "Amsterdam skills",

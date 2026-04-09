@@ -86,6 +86,18 @@ const meta = current.meta
 
     <ScoreBadge meta={meta} rating={current.rating} />
 
+    {meta?.sessionTranscript && (
+      <a
+        class="session-btn"
+        href={`${import.meta.env.BASE_URL}prototypes/${def.slug}/prototypes/${current.id}/${meta.sessionTranscript}`}
+        target="_blank"
+        rel="noopener"
+        title="View the full agent session transcript"
+      >
+        Session
+      </a>
+    )}
+
     <button
       class="nav-btn"
       data-href={`${import.meta.env.BASE_URL}benchmark/${def.slug}/${neighbors.next.id}/`}
@@ -247,6 +259,22 @@ const meta = current.meta
   .nav-btn:hover {
     background: var(--bg-elev-2);
     border-color: var(--text-dim);
+  }
+
+  .session-btn {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .session-btn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    text-decoration: none;
   }
 
   .variant-info {

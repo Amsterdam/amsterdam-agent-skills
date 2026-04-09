@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "001",
+  "benchmarkSlug": "zuidas-landing-page",
+  "variantId": "copilot_claude-opus-4.6_no-skills",
+  "variantLabel": "Copilot · Opus 4.6 · No skills",
+  "agent": "copilot",
+  "model": "claude-opus-4.6",
+  "skills": "none",
+  "promptHash": "b377f2c68cc55488",
+  "builtAt": "2026-04-09T05:51:30.972Z",
+  "durationMs": 215993,
+  "usage": {
+    "premiumRequests": 3,
+    "apiDurationMs": 208614,
+    "sessionDurationMs": 213533,
+    "linesAdded": 530,
+    "linesRemoved": 0,
+    "filesModified": 0
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "static",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 13
+  }
+}

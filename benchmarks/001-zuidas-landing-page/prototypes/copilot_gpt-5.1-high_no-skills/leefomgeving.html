@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang='nl'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Amsterdam Zuidas - Wonen, werken en leefomgeving</title>
+  <link rel='stylesheet' href='style.css'>
+</head>
+<body>
+  <header class='site-header'>
+    <div class='container header-inner'>
+      <div class='logo' aria-label='Amsterdam Zuidas leefomgeving'>Zuidas 2026-2031</div>
+      <nav class='main-nav' aria-label='Hoofdmenu'>
+        <a href='index.html' class='nav-link'>Overzicht</a>
+        <a href='projecten.html' class='nav-link'>Projecten</a>
+        <a href='leefomgeving.html' class='nav-link nav-link-active'>Leefomgeving</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class='site-main'>
+    <section class='hero'>
+      <div class='container'>
+        <h1>Wonen, werken en ontmoeten</h1>
+        <div class='hero-subtitle'>Hoe de komende ontwikkelingen de dagelijkse leefkwaliteit in de Zuidas beïnvloeden.</div>
+      </div>
+    </section>
+
+    <section class='content'>
+      <div class='container'>
+        <h2>Leefomgeving en voorzieningen</h2>
+        <p>De Zuidas ontwikkelt zich van een overwegend zakelijk district naar een gemengd stedelijk gebied met een groeiende groep bewoners, studenten en bezoekers. In de komende vijf jaar worden duizenden extra woningen toegevoegd, variërend van studenten- en middenhuur tot vrije sector en koop. Door functies te stapelen en voorzieningen in de plint van gebouwen te plaatsen, ontstaat meer levendigheid op straat, ook buiten kantooruren. Dit draagt bij aan een veiliger en aantrekkelijker woon- en verblijfsklimaat.</p>
+        <p>De inrichting van de openbare ruimte speelt een sleutelrol in de kwaliteit van de leefomgeving. Nieuwe pleinen, pocketparken en groene verblijfsstroken langs belangrijke looproutes zorgen ervoor dat er meer ruimte komt om te verblijven, elkaar te ontmoeten en te bewegen. Bij de herinrichting wordt gelet op voldoende zitgelegenheid, goede verlichting en logische verbindingen met omliggende wijken zoals Buitenveldert en de Rivierenbuurt, zodat de Zuidas minder als eiland wordt ervaren.</p>
+        <p>Voor werknemers en studenten wordt ingezet op voorzieningen die een gezonde en productieve dag ondersteunen, zoals sportfaciliteiten, horeca met uiteenlopend aanbod en plekken om informeel te overleggen. In plinten van nieuwbouw ontstaan combinaties van werkplekken, studieomgevingen en publieksfuncties, waardoor er minder scherpe grenzen zijn tussen kantoor, onderwijs en publieke ruimte. Dit past bij de trend van flexibel werken en studeren, waarbij mensen zich gedurende de dag op meerdere plekken in het gebied bewegen.</p>
+        <p>Ook op het gebied van duurzaamheid en gezondheid worden bewuste keuzes gemaakt. Nieuwe ontwikkelingen moeten voldoen aan strenge energie- en geluidsnormen en houden rekening met luchtkwaliteit en hittestress. Door meer groen toe te voegen, schaduwrijke verblijfsplekken te creëren en voorzieningen als watertappunten en sportroutes te integreren, wordt het verblijf in de Zuidas aantrekkelijker op warme dagen. Daarnaast krijgen fietsenstallingen en kleinschalige deelmobiliteitsvoorzieningen een prominente plek, zodat de keuze voor duurzame verplaatsingen wordt vergemakkelijkt.</p>
+        <p>Participatie van bewoners, ondernemers en gebruikers uit de omgeving wordt steeds belangrijker bij het vormgeven van de toekomstige Zuidas. Via bijeenkomsten, digitale platforms en kleinschalige proefopstellingen wordt opgehaald hoe mensen de ruimte ervaren en welke aanpassingen gewenst zijn. De inzichten uit deze trajecten worden meegenomen bij de verdere uitwerking van plannen, zodat de groei van het gebied hand in hand gaat met aandacht voor sociale samenhang, toegankelijkheid en een prettig dagelijks gebruik van de stad.</p>
+      </div>
+    </section>
+
+    <section class='newsletter'>
+      <div class='container'>
+        <h2>Nieuws over leefomgeving ontvangen</h2>
+        <form class='newsletter-form' novalidate>
+          <div class='form-row'>
+            <label for='name-leefomgeving'>Naam</label>
+            <input id='name-leefomgeving' name='name' type='text' autocomplete='name'>
+          </div>
+          <div class='form-row'>
+            <label for='email-leefomgeving'>E-mailadres*</label>
+            <input id='email-leefomgeving' name='email' type='email' required autocomplete='email'>
+          </div>
+          <div class='form-row'>
+            <label for='interest-leefomgeving'>Interessegebied</label>
+            <select id='interest-leefomgeving' name='interest'>
+              <option value='wonen'>Wonen en voorzieningen</option>
+              <option value='openbare-ruimte'>Openbare ruimte en groen</option>
+              <option value='gezondheid'>Gezondheid en duurzaamheid</option>
+            </select>
+          </div>
+          <div class='form-row form-row-inline'>
+            <label class='checkbox'>
+              <input type='checkbox' name='consent' required>
+              <span>Ik geef toestemming om per e-mail informatie over de leefomgeving in de Zuidas te ontvangen.</span>
+            </label>
+          </div>
+          <button type='submit' class='btn-primary'>Aanmelden voor leefomgevingsnieuws</button>
+          <div class='form-message' aria-live='polite'></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class='site-footer'>
+    <div class='container'>
+      <small>&copy; 2026 Informatieplatform Amsterdam Zuidas. Gericht op inzicht in leefkwaliteit en dagelijks gebruik.</small>
+    </div>
+  </footer>
+
+  <script src='script.js' defer></script>
+</body>
+</html>

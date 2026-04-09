@@ -24,22 +24,49 @@ prompt: |
 
 # Variants the runner can build for this benchmark.
 # Each variant becomes one prototype directory under prototypes/.
-# Run with: bun bench run 001 --variant copilot_claude-opus-4-6_amsterdam
+# Run with: bun bench run 001 --variant copilot_claude-opus-4.6_amsterdam
+#
+# NOTE: GitHub Copilot CLI uses PERIOD-separated version numbers
+#       (claude-opus-4.6, gpt-5.3-codex), not hyphens. The variant ids
+#       below match exactly what `copilot --model` expects.
 variants:
-  - id: copilot_claude-opus-4-6_no-skills
+  # ── Claude Opus 4.6 ─────────────────────────────────────────────────────
+  - id: copilot_claude-opus-4.6_no-skills
     label: Copilot · Opus 4.6 · No skills
     agent: copilot
-    model: claude-opus-4-6
+    model: claude-opus-4.6
     skills: none
-  - id: copilot_claude-opus-4-6_default
+  - id: copilot_claude-opus-4.6_default
     label: Copilot · Opus 4.6 · Default skills
     agent: copilot
-    model: claude-opus-4-6
+    model: claude-opus-4.6
     skills: default
-  - id: copilot_claude-opus-4-6_amsterdam
+  - id: copilot_claude-opus-4.6_amsterdam
     label: Copilot · Opus 4.6 · Amsterdam skills
     agent: copilot
-    model: claude-opus-4-6
+    model: claude-opus-4.6
+    skills: amsterdam
+
+  # ── GPT-5.1 (high reasoning) ─────────────────────────────────────────────
+  # Primary software engineering model at the City of Amsterdam.
+  # Reasoning effort forced to "high" via --effort flag.
+  - id: copilot_gpt-5.1-high_no-skills
+    label: Copilot · GPT-5.1 (high) · No skills
+    agent: copilot
+    model: gpt-5.1
+    effort: high
+    skills: none
+  - id: copilot_gpt-5.1-high_default
+    label: Copilot · GPT-5.1 (high) · Default skills
+    agent: copilot
+    model: gpt-5.1
+    effort: high
+    skills: default
+  - id: copilot_gpt-5.1-high_amsterdam
+    label: Copilot · GPT-5.1 (high) · Amsterdam skills
+    agent: copilot
+    model: gpt-5.1
+    effort: high
     skills: amsterdam
 
 # Scoring rubric — used by humans AND by `bun bench judge` (LLM scorer).

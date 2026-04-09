@@ -1,0 +1,28 @@
+{
+  "benchmarkId": "001",
+  "benchmarkSlug": "zuidas-landing-page",
+  "variantId": "copilot_gpt-5.1-high_no-skills",
+  "variantLabel": "Copilot · GPT-5.1 (high) · No skills",
+  "agent": "copilot",
+  "model": "gpt-5.1",
+  "skills": "none",
+  "promptHash": "b377f2c68cc55488",
+  "builtAt": "2026-04-09T07:55:22.532Z",
+  "durationMs": 134400,
+  "usage": {
+    "premiumRequests": 1,
+    "apiDurationMs": 130444,
+    "sessionDurationMs": 132447,
+    "linesAdded": 603,
+    "linesRemoved": 0,
+    "filesModified": 0
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "static",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 13
+  }
+}
