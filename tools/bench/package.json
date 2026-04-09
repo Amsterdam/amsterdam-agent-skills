@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^22.19.3",
+    "playwright": "^1.59.1",
     "typescript": "^5.9.3"
   }
 }
