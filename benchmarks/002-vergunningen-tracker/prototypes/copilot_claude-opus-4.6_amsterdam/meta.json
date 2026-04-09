@@ -1,0 +1,141 @@
+{
+  "benchmarkId": "002",
+  "benchmarkSlug": "vergunningen-tracker",
+  "variantId": "copilot_claude-opus-4.6_amsterdam",
+  "variantLabel": "Copilot · Opus 4.6 · Amsterdam skills",
+  "agent": "copilot",
+  "model": "claude-opus-4.6",
+  "skills": "amsterdam",
+  "promptHash": "b4a9702977bb5eef",
+  "builtAt": "2026-04-09T08:11:36.352Z",
+  "durationMs": 431966,
+  "usage": {
+    "premiumRequests": 3,
+    "apiDurationMs": 346872,
+    "sessionDurationMs": 430129,
+    "linesAdded": 1528,
+    "linesRemoved": 7,
+    "filesModified": 2
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 50
+  },
+  "score": {
+    "total": 33,
+    "max": 34,
+    "byCategory": {
+      "designSystem": {
+        "score": 13,
+        "max": 14
+      },
+      "formHandling": {
+        "score": 10,
+        "max": 10
+      },
+      "language": {
+        "score": 6,
+        "max": 6
+      },
+      "structure": {
+        "score": 4,
+        "max": 4
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "Extensive use of ADS React components (PageHeader, PageFooter, Grid, Table, Field, Label, ErrorMessage, Select, etc.) all rendering correctly in screenshot."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 1,
+        "notes": "ADS component props use tokens internally, but custom CSS (StatusBadge inline styles, app.css) uses hardcoded color values instead of --ams-* tokens."
+      },
+      {
+        "criterionId": "designSystem.ds-compact",
+        "score": 2,
+        "notes": "main.tsx (493 chars) includes compact.css import; screenshot shows compact-density table rows and typography consistent with compact mode."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 2,
+        "notes": "PageHeader with Amsterdam logo, brand name, and navigation renders correctly; PageFooter with Spotlight section and menu links is properly styled in dark theme."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 2,
+        "notes": "NieuweAanvraag.tsx uses proper ADS Field/Label/ErrorMessage composition with InvalidFormAlert; form page not shown in screenshot but ADS CSS is clearly loaded."
+      },
+      {
+        "criterionId": "designSystem.ds-table",
+        "score": 2,
+        "notes": "ADS Table component with Header, Body, Row, HeaderCell, Cell subcomponents renders with proper styling, row separators, and bold headers visible in screenshot."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "Only @amsterdam/design-system-react, react, react-dom, and react-router-dom are used; no MUI, shadcn, Chakra, or other banned libraries."
+      },
+      {
+        "criterionId": "formHandling.form-wizard",
+        "score": 2,
+        "notes": "WizardSteps component with 4 labeled steps and current-step highlighting exists; NieuweAanvraag implements full step navigation with state management."
+      },
+      {
+        "criterionId": "formHandling.form-validation",
+        "score": 2,
+        "notes": "Per-field validation in validateStep functions for all 4 steps with inline ADS ErrorMessage components and Field invalid prop binding."
+      },
+      {
+        "criterionId": "formHandling.form-alert",
+        "score": 2,
+        "notes": "InvalidFormAlert component used with heading, headingLevel, errors array, and focusOnRender for summary error display on step submission."
+      },
+      {
+        "criterionId": "formHandling.form-inputs",
+        "score": 2,
+        "notes": "All required input types present: TextInput (text/email/tel), Select (stadsdeel), Radio (permit type), DateInput (startdatum), Checkbox (akkoord), TextArea (beschrijving)."
+      },
+      {
+        "criterionId": "formHandling.form-summary",
+        "score": 2,
+        "notes": "Step 4 'Controleren' uses DescriptionList component to show read-only summary of all entered data with a submit button."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All visible text in screenshot is Dutch: headings, labels, column names, footer content, navigation links, and descriptive paragraphs."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 2,
+        "notes": "Clear B1-level text with active voice: 'Hier vindt u alle ingediende vergunningaanvragen', 'Klik op een rij om de details te bekijken', 'Bel 14 020'."
+      },
+      {
+        "criterionId": "language.lang-status",
+        "score": 2,
+        "notes": "Status labels in Dutch visible in screenshot (Ingediend, In behandeling, Goedgekeurd, Afgewezen) with colored badges; error messages in code also in Dutch."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "App.tsx uses BrowserRouter with Routes for / (Dashboard), /nieuw (NieuweAanvraag), and /zaak/:id (ZaakDetail) with Layout wrapper."
+      },
+      {
+        "criterionId": "structure.struct-typescript",
+        "score": 2,
+        "notes": "tsconfig.json with strict mode; proper TypeScript types (FormData interface, Stadsdeel/VergunningType type aliases); tsc --noEmit passes clean."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T10:08:43.946Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "c078412fa038b2f9"
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "benchmarkId": "002",
+  "benchmarkSlug": "vergunningen-tracker",
+  "variantId": "copilot_gpt-5.1-high_amsterdam",
+  "variantLabel": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+  "agent": "copilot",
+  "model": "gpt-5.1",
+  "skills": "amsterdam",
+  "promptHash": "b4a9702977bb5eef",
+  "builtAt": "2026-04-09T08:29:26.197Z",
+  "durationMs": 983349,
+  "usage": {
+    "premiumRequests": 1,
+    "apiDurationMs": 656128,
+    "sessionDurationMs": 981409,
+    "linesAdded": 1396,
+    "linesRemoved": 214,
+    "filesModified": 6
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 69
+  },
+  "score": {
+    "total": 26,
+    "max": 34,
+    "byCategory": {
+      "designSystem": {
+        "score": 12,
+        "max": 14
+      },
+      "formHandling": {
+        "score": 5,
+        "max": 10
+      },
+      "language": {
+        "score": 6,
+        "max": 6
+      },
+      "structure": {
+        "score": 3,
+        "max": 4
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "Multiple ADS components (PageHeader, Page, Grid, Heading, Table, Menu, PageFooter) imported and rendering correctly with proper styling."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 2,
+        "notes": "Screenshot shows Amsterdam brand colors (red logo, blue nav), Amsterdam Sans typography, and proper ADS spacing consistent with token usage."
+      },
+      {
+        "criterionId": "designSystem.ds-compact",
+        "score": 1,
+        "notes": "Agent edited main.tsx (content not shown in transcript) and likely intended compact.css import, but spacing in screenshot appears generous and doesn't clearly confirm compact mode is active."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 2,
+        "notes": "PageHeader with Amsterdam logo, 'Vergunningen' brand, and blue navigation panel; PageFooter with Privacy/Toegankelijkheid/Contact links both properly styled."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 1,
+        "notes": "NewPermitWizard.tsx created (19,760 chars) and agent consulted Field/Label/ErrorMessage docs, but form is not visible in the screenshot to verify visual correctness."
+      },
+      {
+        "criterionId": "designSystem.ds-table",
+        "score": 2,
+        "notes": "ADS Table clearly visible with proper header row, 8 body rows, horizontal separators, bold column headers, and sort indicator."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "Only @amsterdam/design-system-* and react-router-dom installed; no MUI, shadcn, Chakra, or other banned libraries."
+      },
+      {
+        "criterionId": "formHandling.form-wizard",
+        "score": 1,
+        "notes": "NewPermitWizard.tsx exists with substantial code (19,760 chars) but the wizard is not visible in the screenshot to verify step indicators."
+      },
+      {
+        "criterionId": "formHandling.form-validation",
+        "score": 1,
+        "notes": "Agent consulted ErrorMessage component docs and validation is likely coded, but not visible in the screenshot."
+      },
+      {
+        "criterionId": "formHandling.form-alert",
+        "score": 1,
+        "notes": "Agent consulted InvalidFormAlert reference and likely implemented it, but not visible in the screenshot."
+      },
+      {
+        "criterionId": "formHandling.form-inputs",
+        "score": 1,
+        "notes": "Agent consulted TextInput, Select, Radio, DateInput, Checkbox docs; inputs likely coded but not visible in screenshot."
+      },
+      {
+        "criterionId": "formHandling.form-summary",
+        "score": 1,
+        "notes": "Step 4 summary likely implemented in wizard code but not visible in the screenshot."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All visible text fully in Dutch: headings, paragraphs, column headers, status values, navigation labels, filter, and footer links."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 2,
+        "notes": "Clear B1-level Dutch with active voice: 'Hier ziet u aanvragen...' and 'Dit is het overzicht van alle vergunningaanvragen...'"
+      },
+      {
+        "criterionId": "language.lang-status",
+        "score": 2,
+        "notes": "Status labels in Dutch (Ingediend, In behandeling, Goedgekeurd, Afgewezen) and filter labels ('Filter op status', 'Alle statussen')."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "React Router configured with three routes ('/', '/nieuw', '/zaak/:id') and navigation links visible and functional in screenshot."
+      },
+      {
+        "criterionId": "structure.struct-typescript",
+        "score": 1,
+        "notes": "Agent edited tsconfig.app.json to add strict mode (build caught type errors proving TS checking active), but the build failed and code doesn't compile cleanly."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T11:11:05.126Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "9e10d1e9d8a0cd9e"
+  }
+}

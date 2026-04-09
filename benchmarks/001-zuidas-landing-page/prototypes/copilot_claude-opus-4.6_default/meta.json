@@ -1,0 +1,122 @@
+{
+  "benchmarkId": "001",
+  "benchmarkSlug": "zuidas-landing-page",
+  "variantId": "copilot_claude-opus-4.6_default",
+  "variantLabel": "Copilot · Opus 4.6 · Default skills",
+  "agent": "copilot",
+  "model": "claude-opus-4.6",
+  "skills": "default",
+  "promptHash": "b377f2c68cc55488",
+  "builtAt": "2026-04-09T05:55:40.135Z",
+  "durationMs": 249137,
+  "usage": {
+    "premiumRequests": 3,
+    "apiDurationMs": 243125,
+    "sessionDurationMs": 246870,
+    "linesAdded": 739,
+    "linesRemoved": 0,
+    "filesModified": 0
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "static",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 14
+  },
+  "score": {
+    "total": 17,
+    "max": 28,
+    "byCategory": {
+      "designSystem": {
+        "score": 2,
+        "max": 12
+      },
+      "language": {
+        "score": 9,
+        "max": 10
+      },
+      "structure": {
+        "score": 6,
+        "max": 6
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 0,
+        "notes": "Plain HTML/CSS/JS used; no React or @amsterdam/design-system-react present."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 0,
+        "notes": "Custom CSS properties used but no --ams-* tokens or Tailwind bridge."
+      },
+      {
+        "criterionId": "designSystem.ds-grid",
+        "score": 0,
+        "notes": "Custom CSS layout; no ADS Grid/Column 4/8/12 system."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 0,
+        "notes": "Custom header and footer built from scratch, not ADS components."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 0,
+        "notes": "Newsletter form uses plain HTML inputs, not ADS form components."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "No banned libraries (MUI, shadcn, Chakra, etc.) are used."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All visible text in the screenshot is written in Dutch."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 1,
+        "notes": "Dutch is clear but uses complex vocabulary and long sentences, not consistently B1 level."
+      },
+      {
+        "criterionId": "language.lang-paragraphs",
+        "score": 2,
+        "notes": "Verified 5 content cards per page; screenshot shows 5 distinct paragraph sections."
+      },
+      {
+        "criterionId": "language.lang-factual",
+        "score": 2,
+        "notes": "References real projects (Zuidasdok, Valley, ABN AMRO, EBA) and plausible figures."
+      },
+      {
+        "criterionId": "language.lang-tone",
+        "score": 2,
+        "notes": "Consistent professional, informative tone throughout all visible content."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "Three separate HTML pages (index, projecten, toekomst) linked via navigation."
+      },
+      {
+        "criterionId": "structure.struct-form",
+        "score": 2,
+        "notes": "Newsletter form clearly visible at bottom with email input and Aanmelden button."
+      },
+      {
+        "criterionId": "structure.struct-nav",
+        "score": 2,
+        "notes": "Navigation with Home, Projecten, Toekomst links in header and footer."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:50:07.576Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "d85a19c0558643c3"
+  }
+}

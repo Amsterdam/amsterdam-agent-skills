@@ -1,0 +1,70 @@
+---
+import type { PrototypeMeta, RatingBand } from "../data/manifest.ts"
+
+interface Props {
+  meta: PrototypeMeta | undefined
+  rating: RatingBand | undefined
+}
+const { meta, rating } = Astro.props
+
+const colorVar = (() => {
+  switch (rating?.color) {
+    case "green":
+      return "var(--green)"
+    case "lime":
+      return "var(--lime)"
+    case "amber":
+      return "var(--amber)"
+    case "red":
+      return "var(--red)"
+    default:
+      return "var(--text-dim)"
+  }
+})()
+
+const total = meta?.score?.total
+const max = meta?.score?.max
+---
+
+<span class="score-badge" style={`--color: ${colorVar}`}>
+  {total !== undefined && max !== undefined ? (
+    <>
+      <span class="num">{total}</span>
+      <span class="of">/{max}</span>
+      {rating && <span class="label">· {rating.label}</span>}
+    </>
+  ) : (
+    <span class="unscored">unscored</span>
+  )}
+</span>
+
+<style>
+  .score-badge {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25em;
+    padding: 0.2em 0.6em;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color) 18%, transparent);
+    color: var(--color);
+    font-size: 0.85em;
+    font-weight: 600;
+    border: 1px solid color-mix(in srgb, var(--color) 35%, transparent);
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+  .of {
+    opacity: 0.7;
+    font-weight: 400;
+  }
+  .label {
+    margin-left: 0.3em;
+    font-weight: 500;
+  }
+  .unscored {
+    opacity: 0.6;
+    font-style: italic;
+    font-weight: 400;
+  }
+</style>

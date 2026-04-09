@@ -1,0 +1,64 @@
+/*
+ * Global styles for the showcase. Deliberately minimal — the iframed
+ * prototypes do their own styling, the showcase chrome is system-font + flat.
+ */
+
+:root {
+  --bg: #0e0f12;
+  --bg-elev: #16181d;
+  --bg-elev-2: #1d2027;
+  --border: #2a2f38;
+  --text: #e8eaed;
+  --text-dim: #9aa0a6;
+  --accent: #ff5d8f; /* nod to ams highlight magenta — used very sparingly */
+  --green: #00c389;
+  --lime: #bed200;
+  --amber: #ffb300;
+  --red: #ec5757;
+  --radius: 6px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--text);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang='nl'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Amsterdam Zuidas - Bouw- en infrastructuurprojecten</title>
+  <link rel='stylesheet' href='style.css'>
+</head>
+<body>
+  <header class='site-header'>
+    <div class='container header-inner'>
+      <div class='logo' aria-label='Amsterdam Zuidas projecten'>Zuidas 2026-2031</div>
+      <nav class='main-nav' aria-label='Hoofdmenu'>
+        <a href='index.html' class='nav-link'>Overzicht</a>
+        <a href='projecten.html' class='nav-link nav-link-active'>Projecten</a>
+        <a href='leefomgeving.html' class='nav-link'>Leefomgeving</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class='site-main'>
+    <section class='hero'>
+      <div class='container'>
+        <h1>Belangrijkste projecten en planning</h1>
+        <div class='hero-subtitle'>Inzicht in de grote bouw- en infrastructuurprojecten die de Zuidas de komende jaren vormen.</div>
+      </div>
+    </section>
+
+    <section class='content'>
+      <div class='container'>
+        <h2>Bouw- en infraprojecten</h2>
+        <p>Rond Station Amsterdam Zuid en de A10 vinden de komende vijf jaar ingrijpende werkzaamheden plaats aan spoor, weg en publieke ruimte. Grote projecten, waaronder de aanpassing van de snelweg en het uitbreiden van de stationscapaciteit, zijn erop gericht om de groei van het aantal reizigers en gebruikers van het gebied op te vangen. Tijdens de verschillende bouwfasen verschuiven toegangen tot perrons, worden tijdelijke looproutes ingericht en veranderen de zichtlijnen in het gebied regelmatig.</p>
+        <p>Parallel aan de infrastructuur worden meerdere hoogbouwprojecten gerealiseerd met een mix van kantoren, woningen, hotels en voorzieningen in de plint. Nieuwe torens langs de Zuidas-as zorgen voor extra werk- en woonruimte, maar vragen ook om zorgvuldige inpassing in het bestaande stedelijke weefsel. Ontwikkelaars besteden daarom meer aandacht aan transparante entrees, actieve plinten en het betrekken van de begane grond bij het openbare leven op straat.</p>
+        <p>In verschillende deelgebieden, zoals rond de Gershwin- en de Kenniskwartierlocaties, worden nieuwe woonblokken, onderwijsgebouwen en publieke functies toegevoegd. De nadruk ligt daarbij op stedelijke dichtheid in combinatie met kwalitatief hoogwaardige buitenruimtes. Binnen de plannen is ruimte ingeruimd voor ondergrondse parkeervoorzieningen, logistieke oplossingen voor leveringen en gedeelde mobiliteitsconcepten, zodat de bovengrondse ruimte zoveel mogelijk beschikbaar blijft voor voetgangers en groen.</p>
+        <p>Omdat werkzaamheden aan weg en spoor direct effect hebben op de bereikbaarheid, worden bouwstappen zorgvuldig afgestemd met vervoerders en hulpdiensten. Weekend- en nachtafsluitingen worden zo veel mogelijk geclusterd en ruim van tevoren aangekondigd, zodat reizigers hun reisgedrag kunnen aanpassen. Voor bedrijven in de Zuidas worden vaak specifieke bereikbaarheidsadviezen opgesteld, bijvoorbeeld rondom grote schakelmomenten waarin rijbanen verschuiven of perrons tijdelijk buiten gebruik zijn.</p>
+        <p>De projectorganisatie rond de Zuidas kiest steeds vaker voor bouwmethoden die de overlast voor de omgeving beperken, zoals prefabricage en het beperken van zwaar bouwverkeer in spitsuren. Tegelijkertijd worden eisen gesteld aan geluidsbeperking, stofreductie en veilige bouwlogistiek. Door lessen uit eerdere fasen te benutten, ontstaat een lerende aanpak waarbij omwonenden en gebruikers beter worden betrokken en informatievoorziening via digitale kanalen, publieksbalies en omgevingsmanagers wordt verbeterd.</p>
+      </div>
+    </section>
+
+    <section class='newsletter'>
+      <div class='container'>
+        <h2>Nieuws over projecten ontvangen</h2>
+        <form class='newsletter-form' novalidate>
+          <div class='form-row'>
+            <label for='name-projecten'>Naam</label>
+            <input id='name-projecten' name='name' type='text' autocomplete='name'>
+          </div>
+          <div class='form-row'>
+            <label for='email-projecten'>E-mailadres*</label>
+            <input id='email-projecten' name='email' type='email' required autocomplete='email'>
+          </div>
+          <div class='form-row'>
+            <label for='interest-projecten'>Voorkeur</label>
+            <select id='interest-projecten' name='interest'>
+              <option value='bereikbaarheid'>Bereikbaarheid en omleidingen</option>
+              <option value='hoogbouw'>Hoogbouw en kantoren</option>
+              <option value='infrastructuur'>Infrastructuur en station</option>
+            </select>
+          </div>
+          <div class='form-row form-row-inline'>
+            <label class='checkbox'>
+              <input type='checkbox' name='consent' required>
+              <span>Ik geef toestemming om per e-mail projectupdates over de Zuidas te ontvangen.</span>
+            </label>
+          </div>
+          <button type='submit' class='btn-primary'>Aanmelden voor projectnieuws</button>
+          <div class='form-message' aria-live='polite'></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class='site-footer'>
+    <div class='container'>
+      <small>&copy; 2026 Informatieplatform Amsterdam Zuidas. Informatie onder voorbehoud van wijzigingen in planning en besluitvorming.</small>
+    </div>
+  </footer>
+
+  <script src='script.js' defer></script>
+</body>
+</html>

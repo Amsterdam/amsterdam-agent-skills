@@ -1,0 +1,122 @@
+{
+  "benchmarkId": "001",
+  "benchmarkSlug": "zuidas-landing-page",
+  "variantId": "copilot_claude-opus-4.6_amsterdam",
+  "variantLabel": "Copilot · Opus 4.6 · Amsterdam skills",
+  "agent": "copilot",
+  "model": "claude-opus-4.6",
+  "skills": "amsterdam",
+  "promptHash": "b377f2c68cc55488",
+  "builtAt": "2026-04-09T06:12:08.193Z",
+  "durationMs": 986919,
+  "usage": {
+    "premiumRequests": 3,
+    "apiDurationMs": 278162,
+    "sessionDurationMs": 984775,
+    "linesAdded": 609,
+    "linesRemoved": 1,
+    "filesModified": 1
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 31
+  },
+  "score": {
+    "total": 28,
+    "max": 28,
+    "byCategory": {
+      "designSystem": {
+        "score": 12,
+        "max": 12
+      },
+      "language": {
+        "score": 10,
+        "max": 10
+      },
+      "structure": {
+        "score": 6,
+        "max": 6
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "Uses @amsterdam/design-system-react components (PageHeader, PageFooter, Grid, Column, Spotlight, Breadcrumb, etc.) clearly rendered in the screenshot."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 2,
+        "notes": "Amsterdam Design System tokens and CSS imported; screenshot shows correct Amsterdam Sans font, blue brand colors, and proper spacing."
+      },
+      {
+        "criterionId": "designSystem.ds-grid",
+        "score": 2,
+        "notes": "Screenshot shows a clear main-content/sidebar grid layout (~8/4 column split) using ADS Grid and Column components."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 2,
+        "notes": "PageHeader with Gemeente Amsterdam logo and nav links visible at top; PageFooter with Contact, Bezoekadres, and Volg Zuidas sections plus privacy links at bottom."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 2,
+        "notes": "Newsletter form uses ADS-styled label, text input, and blue button consistent with Amsterdam Design System form components."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "No banned libraries (MUI, shadcn, Chakra) present; only ADS, React, React Router, and Vite in dependencies."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All visible text—headings, paragraphs, navigation, footer, form labels—is entirely in Dutch."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 2,
+        "notes": "Text uses clear, accessible Dutch with short sentences, common vocabulary, and consistent 'u' form consistent with B1/Heldere Taal."
+      },
+      {
+        "criterionId": "language.lang-paragraphs",
+        "score": 2,
+        "notes": "Homepage shows exactly 5 substantive paragraphs with distinct headings; transcript confirms same structure for all 3 pages."
+      },
+      {
+        "criterionId": "language.lang-factual",
+        "score": 2,
+        "notes": "Content references real projects (Zuidasdok, A10 Zuid tunnel, Ravel en Valley, Brittenpassage), specific figures (9,000 homes, 40% social housing, 4 miljard euro)."
+      },
+      {
+        "criterionId": "language.lang-tone",
+        "score": 2,
+        "notes": "Consistent professional/governmental tone throughout, using formal 'u' form and neutral informative style."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "Three routed pages visible via react-router-dom: / (Overzicht), /infrastructuur, /wonen-werken, with nav links in header."
+      },
+      {
+        "criterionId": "structure.struct-form",
+        "score": 2,
+        "notes": "Newsletter signup form clearly visible at page bottom with 'Blijf op de hoogte' heading, email input, and 'Aanmelden' button."
+      },
+      {
+        "criterionId": "structure.struct-nav",
+        "score": 2,
+        "notes": "Header navigation with Overzicht/Infrastructuur/Wonen en werken links plus sidebar with StandaloneLink navigation to other pages."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:51:10.094Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "cb774bd359315d71"
+  }
+}

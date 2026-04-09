@@ -50,6 +50,8 @@ done
 
 ## Benchmark: Do Skills Actually Work?
 
+> **Live showcase:** [amsterdam.github.io/amsterdam-agent-skills](https://amsterdam.github.io/amsterdam-agent-skills/) — interactive gallery, prev/next through every prototype.
+
 We gave the same model (Claude Opus 4.6) the same vague prompt — *"build me a landing page for the Amsterdam Zuidas area"* — under three configurations. The prompt mentioned no design system, no component library, no language guidelines. Results:
 
 | | No Skills | Default Skills | Amsterdam Skills |
@@ -63,29 +65,59 @@ We gave the same model (Claude Opus 4.6) the same vague prompt — *"build me a 
 
 <table>
 <tr>
-<td><strong>No Skills (12/28)</strong><br>Static HTML, generic corporate palette, emoji, marketing Dutch<br><img src="benchmarks/results/001-no-skills-home.png" width="280"></td>
-<td><strong>Default Skills (10/28)</strong><br>Next.js+Tailwind, bare on first pass, generic blue on second<br><img src="benchmarks/results/001-default-skills-pass2.png" width="280"></td>
-<td><strong>Amsterdam Skills (26/28)</strong><br>ADS React, XXX logo, Amsterdam Sans, Heldere Taal, one-shot<br><img src="benchmarks/results/001-ams-skills-home.png" width="280"></td>
+<td><strong>No Skills (12/28)</strong><br>Static HTML, generic corporate palette, emoji, marketing Dutch<br><img src="benchmarks/001-zuidas-landing-page/legacy-screenshots/no-skills.png" width="280"></td>
+<td><strong>Default Skills (10/28)</strong><br>Next.js+Tailwind, bare on first pass, generic blue on second<br><img src="benchmarks/001-zuidas-landing-page/legacy-screenshots/default-skills-pass2.png" width="280"></td>
+<td><strong>Amsterdam Skills (26/28)</strong><br>ADS React, XXX logo, Amsterdam Sans, Heldere Taal, one-shot<br><img src="benchmarks/001-zuidas-landing-page/legacy-screenshots/amsterdam-skills.png" width="280"></td>
 </tr>
 </table>
 
 Generic best-practice skills scored *worse* than no skills — more tokens, more time, an extra pass, and still no domain knowledge. Domain-specific skills hit 26/28 in a single shot.
 
-Full methodology and scoring: [`benchmarks/001-zuidas-landing-page.md`](benchmarks/001-zuidas-landing-page.md)
+Full methodology and scoring: [`benchmarks/001-zuidas-landing-page/`](benchmarks/001-zuidas-landing-page/)
+
+### Reproducing benchmarks
+
+The runner is a Bun CLI that wraps the GitHub Copilot CLI. Run any benchmark variant against your own Copilot install with one command:
+
+```bash
+cd tools/bench
+bun install
+
+# Build one prototype
+bun run src/cli.ts run 001 --variant copilot_claude-opus-4-6_amsterdam
+
+# Build the entire matrix
+bun run src/cli.ts matrix 001
+
+# Score with the LLM judge
+bun run src/cli.ts judge 001
+```
+
+Outputs land under `benchmarks/{slug}/prototypes/{variant}/` as iframable static bundles. The Astro showcase at `site/` reads them via `benchmarks/benchmarks.json`. Full reference: [`tools/bench/README.md`](tools/bench/README.md).
 
 ## Structure
 
 ```
-skills/
+skills/                         # The skills themselves
 ├── amsterdam-design-system/    # AMS React + tokens + layout
-│   ├── SKILL.md
-│   └── references/             # Component APIs, token catalog, templates
 ├── amsterdam-stijl/            # Writing style, tone, language guidelines
-│   ├── SKILL.md
-│   └── references/             # Word lists, examples, templates
-├── developers-amsterdam/       # Engineering standards (developers.amsterdam)
-│   ├── SKILL.md
-│   └── references/             # Tech stack, Git, testing, security, project setup
+└── developers-amsterdam/       # Engineering standards (developers.amsterdam)
+
+benchmarks/                     # Reproducible benchmark definitions + outputs
+├── 001-zuidas-landing-page/
+│   ├── benchmark.yaml          # Prompt, variants matrix, scoring rubric
+│   ├── benchmark.md            # Human prose narrative
+│   ├── prototypes/             # Built static bundles (one per variant)
+│   └── legacy-screenshots/     # Pre-runner manual captures
+└── benchmarks.json             # Manifest the showcase reads (generated)
+
+tools/bench/                    # Bun CLI runner (wraps the Copilot CLI)
+└── src/cli.ts                  # bench run | matrix | judge | manifest | list
+
+site/                           # Astro showcase site (deployed to GH Pages)
+└── src/pages/
+    ├── index.astro             # Grid of benchmark cards
+    └── benchmark/[slug]/[variant].astro  # iframe + overlay toolbar
 ```
 
 ## Adding a New Skill

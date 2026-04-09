@@ -1,0 +1,122 @@
+{
+  "benchmarkId": "001",
+  "benchmarkSlug": "zuidas-landing-page",
+  "variantId": "copilot_gpt-5.1-high_default",
+  "variantLabel": "Copilot · GPT-5.1 (high) · Default skills",
+  "agent": "copilot",
+  "model": "gpt-5.1",
+  "skills": "default",
+  "promptHash": "b377f2c68cc55488",
+  "builtAt": "2026-04-09T07:55:41.163Z",
+  "durationMs": 146565,
+  "usage": {
+    "premiumRequests": 2,
+    "apiDurationMs": 143389,
+    "sessionDurationMs": 144760,
+    "linesAdded": 564,
+    "linesRemoved": 0,
+    "filesModified": 0
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "static",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 10
+  },
+  "score": {
+    "total": 17,
+    "max": 28,
+    "byCategory": {
+      "designSystem": {
+        "score": 2,
+        "max": 12
+      },
+      "language": {
+        "score": 9,
+        "max": 10
+      },
+      "structure": {
+        "score": 6,
+        "max": 6
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 0,
+        "notes": "Plain static HTML/CSS/JS site; no React or @amsterdam/design-system-react used."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 0,
+        "notes": "Custom CSS styling with no --ams-* design tokens or Tailwind bridge."
+      },
+      {
+        "criterionId": "designSystem.ds-grid",
+        "score": 0,
+        "notes": "No ADS Grid/Column 4/8/12 layout system used; layout is custom CSS."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 0,
+        "notes": "Header and footer are present visually but built with plain HTML, not ADS components."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 0,
+        "notes": "Form uses plain HTML inputs and labels, not ADS form components."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "No banned libraries (MUI, shadcn, Chakra, etc.) are used; pure HTML/CSS/JS."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All visible text in the screenshot is in Dutch including headings, paragraphs, form labels, and footer."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 1,
+        "notes": "Dutch is clear but some sentences are long and complex, not consistently at B1/Heldere Taal level."
+      },
+      {
+        "criterionId": "language.lang-paragraphs",
+        "score": 2,
+        "notes": "Grep confirms 5 paragraph tags per page; screenshot shows substantial paragraph content on index."
+      },
+      {
+        "criterionId": "language.lang-factual",
+        "score": 2,
+        "notes": "Content references real Zuidas features: station Amsterdam Zuid, A10 Zuid, woningbouw, kantorengebied."
+      },
+      {
+        "criterionId": "language.lang-tone",
+        "score": 2,
+        "notes": "Consistent professional, informative tone throughout the visible content."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "Three separate HTML pages created: index.html, projecten.html, leefomgeving.html."
+      },
+      {
+        "criterionId": "structure.struct-form",
+        "score": 2,
+        "notes": "Newsletter form clearly visible with Naam, E-mailadres, consent checkbox, and Aanmelden button."
+      },
+      {
+        "criterionId": "structure.struct-nav",
+        "score": 2,
+        "notes": "Top navigation bar with Overzicht, Projecten, Leefomgeving links visible in screenshot."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:53:06.086Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "5f95c3cbbf75112f"
+  }
+}

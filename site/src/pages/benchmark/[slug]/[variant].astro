@@ -1,0 +1,116 @@
+---
+import Base from "../../../layouts/Base.astro"
+import Toolbar from "../../../components/Toolbar.astro"
+import {
+  getAllBenchmarks,
+  getDisplayItems,
+  neighborsFor,
+} from "../../../data/manifest.ts"
+
+export function getStaticPaths() {
+  const paths: Array<{
+    params: { slug: string; variant: string }
+    props: { slug: string; variant: string }
+  }> = []
+  for (const b of getAllBenchmarks()) {
+    const items = getDisplayItems(b)
+    for (const item of items) {
+      paths.push({
+        params: { slug: b.definition.slug, variant: item.id },
+        props: { slug: b.definition.slug, variant: item.id },
+      })
+    }
+  }
+  return paths
+}
+
+interface Props {
+  slug: string
+  variant: string
+}
+const { slug, variant } = Astro.props as Props
+
+const benchmark = getAllBenchmarks().find((b) => b.definition.slug === slug)
+if (!benchmark) throw new Error(`Benchmark ${slug} not found`)
+const items = getDisplayItems(benchmark)
+const current = items.find((i) => i.id === variant)
+if (!current) throw new Error(`Variant ${variant} not found`)
+const neighbors = neighborsFor(items, variant)
+const index = items.findIndex((i) => i.id === variant) + 1
+
+const itemUrl = `${import.meta.env.BASE_URL}${current.url}`
+---
+
+<Base
+  title={`${benchmark.definition.name} — ${current.label}`}
+  description={`Benchmark prototype: ${current.label}`}
+>
+  <div class="layout">
+    <Toolbar
+      benchmark={benchmark}
+      current={current}
+      neighbors={neighbors}
+      index={index}
+      total={items.length}
+    />
+
+    <main class="frame-host">
+      {current.kind === "prototype" ? (
+        <iframe
+          class="prototype-frame"
+          src={itemUrl}
+          title={current.label}
+          loading="lazy"
+          sandbox="allow-scripts allow-forms allow-popups"
+        ></iframe>
+      ) : (
+        <div class="screenshot-host">
+          <img
+            class="screenshot"
+            src={itemUrl}
+            alt={current.label}
+            loading="lazy"
+          />
+        </div>
+      )}
+    </main>
+  </div>
+</Base>
+
+<style>
+  .layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .frame-host {
+    flex: 1;
+    min-height: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .prototype-frame {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: white;
+  }
+
+  .screenshot-host {
+    flex: 1;
+    overflow: auto;
+    padding: 1rem;
+    text-align: center;
+  }
+  .screenshot {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+</style>

@@ -1,0 +1,1699 @@
+{
+  "generatedAt": "2026-04-09T11:11:05.149Z",
+  "version": 1,
+  "benchmarks": [
+    {
+      "definition": {
+        "id": "001",
+        "slug": "zuidas-landing-page",
+        "name": "Zuidas Landing Page",
+        "difficulty": "beginner",
+        "persona": "Inexperienced developer, no knowledge of Amsterdam standards",
+        "skillsTested": [
+          "amsterdam-design-system",
+          "amsterdam-stijl"
+        ],
+        "prompt": "Hey, can you build me a landing page for the Amsterdam Zuidas area? It needs\nto focus on all the construction and developments happening there over the\nnext 5 years.\n\nI need 3 pages in total. Each page should have exactly 5 paragraphs of real,\ninformative text written in Dutch (no placeholder text). Also, make sure\nthere is a signup form for an email newsletter on the pages. Use a\nprofessional style.\n",
+        "variants": [
+          {
+            "id": "copilot_claude-opus-4.6_no-skills",
+            "label": "Copilot · Opus 4.6 · No skills",
+            "agent": "copilot",
+            "model": "claude-opus-4.6",
+            "skills": "none"
+          },
+          {
+            "id": "copilot_claude-opus-4.6_default",
+            "label": "Copilot · Opus 4.6 · Default skills",
+            "agent": "copilot",
+            "model": "claude-opus-4.6",
+            "skills": "default"
+          },
+          {
+            "id": "copilot_claude-opus-4.6_amsterdam",
+            "label": "Copilot · Opus 4.6 · Amsterdam skills",
+            "agent": "copilot",
+            "model": "claude-opus-4.6",
+            "skills": "amsterdam"
+          },
+          {
+            "id": "copilot_gpt-5.1-high_no-skills",
+            "label": "Copilot · GPT-5.1 (high) · No skills",
+            "agent": "copilot",
+            "model": "gpt-5.1",
+            "effort": "high",
+            "skills": "none"
+          },
+          {
+            "id": "copilot_gpt-5.1-high_default",
+            "label": "Copilot · GPT-5.1 (high) · Default skills",
+            "agent": "copilot",
+            "model": "gpt-5.1",
+            "effort": "high",
+            "skills": "default"
+          },
+          {
+            "id": "copilot_gpt-5.1-high_amsterdam",
+            "label": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+            "agent": "copilot",
+            "model": "gpt-5.1",
+            "effort": "high",
+            "skills": "amsterdam"
+          }
+        ],
+        "rubric": {
+          "designSystem": {
+            "label": "Design System",
+            "max": 12,
+            "criteria": [
+              {
+                "id": "ds-react",
+                "label": "Uses @amsterdam/design-system-react",
+                "max": 2
+              },
+              {
+                "id": "ds-tokens",
+                "label": "Uses --ams-* tokens or Tailwind bridge",
+                "max": 2
+              },
+              {
+                "id": "ds-grid",
+                "label": "Grid/Column 4/8/12 layout",
+                "max": 2
+              },
+              {
+                "id": "ds-headerfooter",
+                "label": "Header + Footer components",
+                "max": 2
+              },
+              {
+                "id": "ds-form",
+                "label": "Form uses ADS components",
+                "max": 2
+              },
+              {
+                "id": "ds-noBanned",
+                "label": "No banned libraries (MUI, shadcn, Chakra, etc.)",
+                "max": 2
+              }
+            ]
+          },
+          "language": {
+            "label": "Language & Content",
+            "max": 10,
+            "criteria": [
+              {
+                "id": "lang-dutch",
+                "label": "All text in Dutch",
+                "max": 2
+              },
+              {
+                "id": "lang-b1",
+                "label": "B1 reading level / Heldere Taal",
+                "max": 2
+              },
+              {
+                "id": "lang-paragraphs",
+                "label": "5 paragraphs per page",
+                "max": 2
+              },
+              {
+                "id": "lang-factual",
+                "label": "Factual Zuidas content",
+                "max": 2
+              },
+              {
+                "id": "lang-tone",
+                "label": "Consistent tone",
+                "max": 2
+              }
+            ]
+          },
+          "structure": {
+            "label": "Structure",
+            "max": 6,
+            "criteria": [
+              {
+                "id": "struct-routing",
+                "label": "3 routed pages",
+                "max": 2
+              },
+              {
+                "id": "struct-form",
+                "label": "Newsletter form present",
+                "max": 2
+              },
+              {
+                "id": "struct-nav",
+                "label": "Navigation between pages",
+                "max": 2
+              }
+            ]
+          }
+        },
+        "ratings": [
+          {
+            "min": 0,
+            "max": 8,
+            "label": "No skill influence",
+            "color": "red"
+          },
+          {
+            "min": 9,
+            "max": 16,
+            "label": "Partial",
+            "color": "amber"
+          },
+          {
+            "min": 17,
+            "max": 22,
+            "label": "Good",
+            "color": "lime"
+          },
+          {
+            "min": 23,
+            "max": 28,
+            "label": "Excellent",
+            "color": "green"
+          }
+        ],
+        "rationale": [
+          "Vague enough to let the agent make UI/style choices — exposes whether skills guide them.",
+          "Multi-page — tests project scaffolding.",
+          "Dutch text — should trigger language style guidance.",
+          "Newsletter form — tests component knowledge.",
+          "'Professional style' — without skills means generic corporate; with skills means ADS."
+        ]
+      },
+      "prototypes": [
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_claude-opus-4.6_no-skills",
+          "variantLabel": "Copilot · Opus 4.6 · No skills",
+          "agent": "copilot",
+          "model": "claude-opus-4.6",
+          "skills": "none",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T05:51:30.972Z",
+          "durationMs": 215993,
+          "usage": {
+            "premiumRequests": 3,
+            "apiDurationMs": 208614,
+            "sessionDurationMs": 213533,
+            "linesAdded": 530,
+            "linesRemoved": 0,
+            "filesModified": 0
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "static",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 13
+          },
+          "score": {
+            "total": 17,
+            "max": 28,
+            "byCategory": {
+              "designSystem": {
+                "score": 2,
+                "max": 12
+              },
+              "language": {
+                "score": 9,
+                "max": 10
+              },
+              "structure": {
+                "score": 6,
+                "max": 6
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 0,
+                "notes": "Plain HTML/CSS site with no React or @amsterdam/design-system-react used."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 0,
+                "notes": "Custom CSS only; no --ams-* design tokens or Tailwind bridge present."
+              },
+              {
+                "criterionId": "designSystem.ds-grid",
+                "score": 0,
+                "notes": "No ADS Grid/Column 4/8/12 layout system used; layout is custom CSS."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 0,
+                "notes": "Header and footer are custom HTML elements, not ADS Header/Footer components."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 0,
+                "notes": "Newsletter form uses plain HTML input/button, not ADS form components."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "No banned libraries (MUI, shadcn, Chakra, etc.) are used; it's plain HTML/CSS."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text in the screenshot is written in Dutch."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 1,
+                "notes": "Sentences are often long and complex with technical jargon like 'BREEAM-certificering' and 'klimaatadaptatie', above B1 level."
+              },
+              {
+                "criterionId": "language.lang-paragraphs",
+                "score": 2,
+                "notes": "Screenshot shows 5 substantive content paragraphs; agent verified 5 per page programmatically."
+              },
+              {
+                "criterionId": "language.lang-factual",
+                "score": 2,
+                "notes": "Content references real projects (Zuidasdok, Valley-toren, EDGE Zuid, ABN AMRO, Beatrixpark) with plausible figures."
+              },
+              {
+                "criterionId": "language.lang-tone",
+                "score": 2,
+                "notes": "Consistent professional, informative tone throughout the page."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "Three separate HTML pages (index, projecten, toekomst) linked via navigation."
+              },
+              {
+                "criterionId": "structure.struct-form",
+                "score": 2,
+                "notes": "Newsletter signup form clearly visible with email input and 'Aanmelden' button."
+              },
+              {
+                "criterionId": "structure.struct-nav",
+                "score": 2,
+                "notes": "Top navigation bar with Home, Projecten, and Toekomstvisie links visible in screenshot."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T09:48:59.038Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "e88599df865f59e5"
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_claude-opus-4.6_default",
+          "variantLabel": "Copilot · Opus 4.6 · Default skills",
+          "agent": "copilot",
+          "model": "claude-opus-4.6",
+          "skills": "default",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T05:55:40.135Z",
+          "durationMs": 249137,
+          "usage": {
+            "premiumRequests": 3,
+            "apiDurationMs": 243125,
+            "sessionDurationMs": 246870,
+            "linesAdded": 739,
+            "linesRemoved": 0,
+            "filesModified": 0
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "static",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 14
+          },
+          "score": {
+            "total": 17,
+            "max": 28,
+            "byCategory": {
+              "designSystem": {
+                "score": 2,
+                "max": 12
+              },
+              "language": {
+                "score": 9,
+                "max": 10
+              },
+              "structure": {
+                "score": 6,
+                "max": 6
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 0,
+                "notes": "Plain HTML/CSS/JS used; no React or @amsterdam/design-system-react present."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 0,
+                "notes": "Custom CSS properties used but no --ams-* tokens or Tailwind bridge."
+              },
+              {
+                "criterionId": "designSystem.ds-grid",
+                "score": 0,
+                "notes": "Custom CSS layout; no ADS Grid/Column 4/8/12 system."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 0,
+                "notes": "Custom header and footer built from scratch, not ADS components."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 0,
+                "notes": "Newsletter form uses plain HTML inputs, not ADS form components."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "No banned libraries (MUI, shadcn, Chakra, etc.) are used."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text in the screenshot is written in Dutch."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 1,
+                "notes": "Dutch is clear but uses complex vocabulary and long sentences, not consistently B1 level."
+              },
+              {
+                "criterionId": "language.lang-paragraphs",
+                "score": 2,
+                "notes": "Verified 5 content cards per page; screenshot shows 5 distinct paragraph sections."
+              },
+              {
+                "criterionId": "language.lang-factual",
+                "score": 2,
+                "notes": "References real projects (Zuidasdok, Valley, ABN AMRO, EBA) and plausible figures."
+              },
+              {
+                "criterionId": "language.lang-tone",
+                "score": 2,
+                "notes": "Consistent professional, informative tone throughout all visible content."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "Three separate HTML pages (index, projecten, toekomst) linked via navigation."
+              },
+              {
+                "criterionId": "structure.struct-form",
+                "score": 2,
+                "notes": "Newsletter form clearly visible at bottom with email input and Aanmelden button."
+              },
+              {
+                "criterionId": "structure.struct-nav",
+                "score": 2,
+                "notes": "Navigation with Home, Projecten, Toekomst links in header and footer."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T09:50:07.576Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "d85a19c0558643c3"
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_claude-opus-4.6_amsterdam",
+          "variantLabel": "Copilot · Opus 4.6 · Amsterdam skills",
+          "agent": "copilot",
+          "model": "claude-opus-4.6",
+          "skills": "amsterdam",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T06:12:08.193Z",
+          "durationMs": 986919,
+          "usage": {
+            "premiumRequests": 3,
+            "apiDurationMs": 278162,
+            "sessionDurationMs": 984775,
+            "linesAdded": 609,
+            "linesRemoved": 1,
+            "filesModified": 1
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "vite",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 31
+          },
+          "score": {
+            "total": 28,
+            "max": 28,
+            "byCategory": {
+              "designSystem": {
+                "score": 12,
+                "max": 12
+              },
+              "language": {
+                "score": 10,
+                "max": 10
+              },
+              "structure": {
+                "score": 6,
+                "max": 6
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 2,
+                "notes": "Uses @amsterdam/design-system-react components (PageHeader, PageFooter, Grid, Column, Spotlight, Breadcrumb, etc.) clearly rendered in the screenshot."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 2,
+                "notes": "Amsterdam Design System tokens and CSS imported; screenshot shows correct Amsterdam Sans font, blue brand colors, and proper spacing."
+              },
+              {
+                "criterionId": "designSystem.ds-grid",
+                "score": 2,
+                "notes": "Screenshot shows a clear main-content/sidebar grid layout (~8/4 column split) using ADS Grid and Column components."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 2,
+                "notes": "PageHeader with Gemeente Amsterdam logo and nav links visible at top; PageFooter with Contact, Bezoekadres, and Volg Zuidas sections plus privacy links at bottom."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 2,
+                "notes": "Newsletter form uses ADS-styled label, text input, and blue button consistent with Amsterdam Design System form components."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "No banned libraries (MUI, shadcn, Chakra) present; only ADS, React, React Router, and Vite in dependencies."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text—headings, paragraphs, navigation, footer, form labels—is entirely in Dutch."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 2,
+                "notes": "Text uses clear, accessible Dutch with short sentences, common vocabulary, and consistent 'u' form consistent with B1/Heldere Taal."
+              },
+              {
+                "criterionId": "language.lang-paragraphs",
+                "score": 2,
+                "notes": "Homepage shows exactly 5 substantive paragraphs with distinct headings; transcript confirms same structure for all 3 pages."
+              },
+              {
+                "criterionId": "language.lang-factual",
+                "score": 2,
+                "notes": "Content references real projects (Zuidasdok, A10 Zuid tunnel, Ravel en Valley, Brittenpassage), specific figures (9,000 homes, 40% social housing, 4 miljard euro)."
+              },
+              {
+                "criterionId": "language.lang-tone",
+                "score": 2,
+                "notes": "Consistent professional/governmental tone throughout, using formal 'u' form and neutral informative style."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "Three routed pages visible via react-router-dom: / (Overzicht), /infrastructuur, /wonen-werken, with nav links in header."
+              },
+              {
+                "criterionId": "structure.struct-form",
+                "score": 2,
+                "notes": "Newsletter signup form clearly visible at page bottom with 'Blijf op de hoogte' heading, email input, and 'Aanmelden' button."
+              },
+              {
+                "criterionId": "structure.struct-nav",
+                "score": 2,
+                "notes": "Header navigation with Overzicht/Infrastructuur/Wonen en werken links plus sidebar with StandaloneLink navigation to other pages."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T09:51:10.094Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "cb774bd359315d71"
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_gpt-5.1-high_no-skills",
+          "variantLabel": "Copilot · GPT-5.1 (high) · No skills",
+          "agent": "copilot",
+          "model": "gpt-5.1",
+          "skills": "none",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T07:55:22.532Z",
+          "durationMs": 134400,
+          "usage": {
+            "premiumRequests": 1,
+            "apiDurationMs": 130444,
+            "sessionDurationMs": 132447,
+            "linesAdded": 603,
+            "linesRemoved": 0,
+            "filesModified": 0
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "static",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 13
+          },
+          "score": {
+            "total": 17,
+            "max": 28,
+            "byCategory": {
+              "designSystem": {
+                "score": 2,
+                "max": 12
+              },
+              "language": {
+                "score": 9,
+                "max": 10
+              },
+              "structure": {
+                "score": 6,
+                "max": 6
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 0,
+                "notes": "Plain static HTML/CSS site with no React or @amsterdam/design-system-react usage."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 0,
+                "notes": "Custom CSS only; no --ams-* design tokens or Tailwind bridge used."
+              },
+              {
+                "criterionId": "designSystem.ds-grid",
+                "score": 0,
+                "notes": "No Amsterdam Design System Grid/Column 4/8/12 layout; uses custom CSS layout."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 0,
+                "notes": "Header and footer are custom HTML elements, not ADS Header/Footer components."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 0,
+                "notes": "Form uses plain HTML inputs, not ADS form components."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "No banned libraries used; only plain HTML/CSS/JS."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text in the screenshot is in Dutch."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 1,
+                "notes": "Text uses complex vocabulary like 'klimaatadaptieve' and long compound sentences, closer to B2 than B1."
+              },
+              {
+                "criterionId": "language.lang-paragraphs",
+                "score": 2,
+                "notes": "Screenshot shows exactly 5 content paragraphs on the page; grep confirmed 5 per file."
+              },
+              {
+                "criterionId": "language.lang-factual",
+                "score": 2,
+                "notes": "Content discusses real Zuidas topics: Station Zuid densification, sustainability, mixed-use redevelopment."
+              },
+              {
+                "criterionId": "language.lang-tone",
+                "score": 2,
+                "notes": "Consistent professional and informative tone throughout."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "Three separate HTML pages (index, projecten, leefomgeving) linked via navigation."
+              },
+              {
+                "criterionId": "structure.struct-form",
+                "score": 2,
+                "notes": "Newsletter form clearly visible with name, email, interest dropdown, consent checkbox, and submit button."
+              },
+              {
+                "criterionId": "structure.struct-nav",
+                "score": 2,
+                "notes": "Top navigation bar with Overzicht, Projecten, and Leefomgeving links visible in screenshot."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T09:52:09.232Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "9a582b27717e16a4"
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_gpt-5.1-high_default",
+          "variantLabel": "Copilot · GPT-5.1 (high) · Default skills",
+          "agent": "copilot",
+          "model": "gpt-5.1",
+          "skills": "default",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T07:55:41.163Z",
+          "durationMs": 146565,
+          "usage": {
+            "premiumRequests": 2,
+            "apiDurationMs": 143389,
+            "sessionDurationMs": 144760,
+            "linesAdded": 564,
+            "linesRemoved": 0,
+            "filesModified": 0
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "static",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 10
+          },
+          "score": {
+            "total": 17,
+            "max": 28,
+            "byCategory": {
+              "designSystem": {
+                "score": 2,
+                "max": 12
+              },
+              "language": {
+                "score": 9,
+                "max": 10
+              },
+              "structure": {
+                "score": 6,
+                "max": 6
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 0,
+                "notes": "Plain static HTML/CSS/JS site; no React or @amsterdam/design-system-react used."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 0,
+                "notes": "Custom CSS styling with no --ams-* design tokens or Tailwind bridge."
+              },
+              {
+                "criterionId": "designSystem.ds-grid",
+                "score": 0,
+                "notes": "No ADS Grid/Column 4/8/12 layout system used; layout is custom CSS."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 0,
+                "notes": "Header and footer are present visually but built with plain HTML, not ADS components."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 0,
+                "notes": "Form uses plain HTML inputs and labels, not ADS form components."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "No banned libraries (MUI, shadcn, Chakra, etc.) are used; pure HTML/CSS/JS."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text in the screenshot is in Dutch including headings, paragraphs, form labels, and footer."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 1,
+                "notes": "Dutch is clear but some sentences are long and complex, not consistently at B1/Heldere Taal level."
+              },
+              {
+                "criterionId": "language.lang-paragraphs",
+                "score": 2,
+                "notes": "Grep confirms 5 paragraph tags per page; screenshot shows substantial paragraph content on index."
+              },
+              {
+                "criterionId": "language.lang-factual",
+                "score": 2,
+                "notes": "Content references real Zuidas features: station Amsterdam Zuid, A10 Zuid, woningbouw, kantorengebied."
+              },
+              {
+                "criterionId": "language.lang-tone",
+                "score": 2,
+                "notes": "Consistent professional, informative tone throughout the visible content."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "Three separate HTML pages created: index.html, projecten.html, leefomgeving.html."
+              },
+              {
+                "criterionId": "structure.struct-form",
+                "score": 2,
+                "notes": "Newsletter form clearly visible with Naam, E-mailadres, consent checkbox, and Aanmelden button."
+              },
+              {
+                "criterionId": "structure.struct-nav",
+                "score": 2,
+                "notes": "Top navigation bar with Overzicht, Projecten, Leefomgeving links visible in screenshot."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T09:53:06.086Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "5f95c3cbbf75112f"
+          }
+        },
+        {
+          "benchmarkId": "001",
+          "benchmarkSlug": "zuidas-landing-page",
+          "variantId": "copilot_gpt-5.1-high_amsterdam",
+          "variantLabel": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+          "agent": "copilot",
+          "model": "gpt-5.1",
+          "skills": "amsterdam",
+          "promptHash": "b377f2c68cc55488",
+          "builtAt": "2026-04-09T07:50:49.828Z",
+          "durationMs": 968706,
+          "usage": {
+            "premiumRequests": 1,
+            "apiDurationMs": 347685,
+            "sessionDurationMs": 966785,
+            "linesAdded": 282,
+            "linesRemoved": 115,
+            "filesModified": 3
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "vite",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 32
+          },
+          "score": {
+            "total": 27,
+            "max": 28,
+            "byCategory": {
+              "designSystem": {
+                "score": 12,
+                "max": 12
+              },
+              "language": {
+                "score": 9,
+                "max": 10
+              },
+              "structure": {
+                "score": 6,
+                "max": 6
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 2,
+                "notes": "Extensively uses @amsterdam/design-system-react: Page, PageHeader, PageFooter, Grid, Column, Heading, Paragraph, Button, Field, Label, TextInput, ErrorMessage, Hint."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 2,
+                "notes": "Custom CSS uses --ams-space-l, --ams-space-s, --ams-typography-body-text-bold-font-weight tokens; token CSS imported in main.tsx."
+              },
+              {
+                "criterionId": "designSystem.ds-grid",
+                "score": 2,
+                "notes": "Uses Grid and Grid.Cell with span narrow:4/medium:8/wide:9 and narrow:4/medium:8/wide:3 for main+sidebar layout visible in screenshot."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 2,
+                "notes": "PageHeader with Gemeente Amsterdam logo and brandName visible; PageFooter with MenuLinks at bottom of screenshot."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 2,
+                "notes": "Newsletter form uses ADS Field, Label, TextInput, ErrorMessage, Hint, and Button components."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "No banned libraries used; only Amsterdam Design System and React Router as dependencies."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text in screenshot is Dutch: headings, paragraphs, navigation, form labels, footer links."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 1,
+                "notes": "Generally clear but contains complex compound words like 'kennisinstellingen', 'bouwwerkzaamheden', 'maatschappelijke functies' that exceed B1 level."
+              },
+              {
+                "criterionId": "language.lang-paragraphs",
+                "score": 2,
+                "notes": "Each of the 3 pages has exactly 5 Paragraph components; 5 paragraphs visible on overview page in screenshot."
+              },
+              {
+                "criterionId": "language.lang-factual",
+                "score": 2,
+                "notes": "References real Zuidas projects: Zuidasdok, A10 Zuid, station Amsterdam Zuid, Gustav Mahlerlaan, Ravel development."
+              },
+              {
+                "criterionId": "language.lang-tone",
+                "score": 2,
+                "notes": "Consistent formal municipal tone using 'u' form across all pages, professional and informative."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "Three routes defined via React Router: / (OverviewPage), /projecten (ProjectsPage), /leefbaarheid (LivingPage)."
+              },
+              {
+                "criterionId": "structure.struct-form",
+                "score": 2,
+                "notes": "Newsletter email form clearly visible in screenshot with label, input, and submit button; included on all 3 pages."
+              },
+              {
+                "criterionId": "structure.struct-nav",
+                "score": 2,
+                "notes": "Sidebar navigation with 3 NavLink items visible in screenshot with active-state bold styling."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T09:54:17.760Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "57891a15c6ac62d5"
+          }
+        }
+      ],
+      "legacyScreenshots": [
+        {
+          "variantLabel": "Amsterdam skills",
+          "path": "legacy-screenshots/amsterdam-skills.png"
+        },
+        {
+          "variantLabel": "Default skills (pass 1)",
+          "path": "legacy-screenshots/default-skills-pass1.png"
+        },
+        {
+          "variantLabel": "Default skills (pass 2)",
+          "path": "legacy-screenshots/default-skills-pass2.png"
+        },
+        {
+          "variantLabel": "No skills",
+          "path": "legacy-screenshots/no-skills.png"
+        }
+      ]
+    },
+    {
+      "definition": {
+        "id": "002",
+        "slug": "vergunningen-tracker",
+        "name": "Vergunningen Tracker",
+        "difficulty": "advanced",
+        "persona": "Senior frontend engineer, 3 years at Gemeente Amsterdam, knows ADS exists but hasn't memorized the API",
+        "skillsTested": [
+          "amsterdam-design-system",
+          "amsterdam-stijl"
+        ],
+        "prompt": "Build an internal permit-tracking application (vergunningen tracker) for\nGemeente Amsterdam employees. Use Vite + React + TypeScript with React\nRouter for navigation. Use the Amsterdam Design System\n(@amsterdam/design-system-react) in Compact mode.\n\nThe app has two main views:\n\n1. **Dashboard** (route: /)\n   A table of all submitted permits with columns: Zaaknummer, Type,\n   Aanvrager, Datum ingediend, Status. The table should be sortable by\n   any column and filterable by Status (dropdown above the table).\n   Clicking a row navigates to the detail view.\n\n   Seed the table with 8-10 realistic example rows. Use these permit\n   types: Bouwvergunning, Evenementenvergunning, Terrasvergunning,\n   Kapvergunning. Statuses: Ingediend, In behandeling, Goedgekeurd,\n   Afgewezen.\n\n2. **New permit form** (route: /nieuw)\n   A multi-step wizard with 4 steps:\n   - Stap 1 — Aanvrager: naam, e-mail, telefoon, organisatie (all text fields)\n   - Stap 2 — Locatie: adres, postcode, stadsdeel (dropdown with Amsterdam\n     stadsdelen: Centrum, West, Nieuw-West, Zuid, Oost, Noord, Zuidoost)\n   - Stap 3 — Vergunning: type (radio group with the 4 permit types),\n     gewenste startdatum (date input), beschrijving (textarea), akkoord\n     voorwaarden (checkbox)\n   - Stap 4 — Controleren: read-only summary of all entered data, submit\n     button\n\n   Each step must validate its fields before allowing navigation to the\n   next step. Show inline error messages per field and a summary alert\n   at the top when submitting a step with errors.\n\n3. **Detail view** (route: /zaak/:id)\n   Shows the full permit data in a structured read-only layout. Include\n   the current status as a colored badge.\n\nRequirements:\n- All UI labels, error messages, and status text in Dutch following\n  Amsterdam's Heldere Taal guidelines (clear, B1-level, active voice)\n- Header with the Amsterdam logo and navigation (Dashboard, Nieuwe aanvraag)\n- Footer with standard municipality links\n- Use TypeScript strict mode\n- No external UI libraries besides the Amsterdam Design System\n",
+        "variants": [
+          {
+            "id": "copilot_claude-opus-4.6_no-skills",
+            "label": "Copilot · Opus 4.6 · No skills",
+            "agent": "copilot",
+            "model": "claude-opus-4.6",
+            "skills": "none"
+          },
+          {
+            "id": "copilot_claude-opus-4.6_amsterdam",
+            "label": "Copilot · Opus 4.6 · Amsterdam skills",
+            "agent": "copilot",
+            "model": "claude-opus-4.6",
+            "skills": "amsterdam"
+          },
+          {
+            "id": "copilot_gpt-5.1-high_no-skills",
+            "label": "Copilot · GPT-5.1 (high) · No skills",
+            "agent": "copilot",
+            "model": "gpt-5.1",
+            "effort": "high",
+            "skills": "none"
+          },
+          {
+            "id": "copilot_gpt-5.1-high_amsterdam",
+            "label": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+            "agent": "copilot",
+            "model": "gpt-5.1",
+            "effort": "high",
+            "skills": "amsterdam"
+          }
+        ],
+        "rubric": {
+          "designSystem": {
+            "label": "Design System",
+            "max": 14,
+            "criteria": [
+              {
+                "id": "ds-react",
+                "label": "Uses @amsterdam/design-system-react components",
+                "max": 2
+              },
+              {
+                "id": "ds-tokens",
+                "label": "Uses --ams-* tokens or Tailwind bridge",
+                "max": 2
+              },
+              {
+                "id": "ds-compact",
+                "label": "Compact mode enabled (compact.css imported)",
+                "max": 2
+              },
+              {
+                "id": "ds-headerfooter",
+                "label": "PageHeader + PageFooter components",
+                "max": 2
+              },
+              {
+                "id": "ds-form",
+                "label": "Form uses ADS Field/Label/ErrorMessage composition",
+                "max": 2
+              },
+              {
+                "id": "ds-table",
+                "label": "Table uses ADS Table component",
+                "max": 2
+              },
+              {
+                "id": "ds-noBanned",
+                "label": "No banned libraries (MUI, shadcn, Chakra, etc.)",
+                "max": 2
+              }
+            ]
+          },
+          "formHandling": {
+            "label": "Form Handling",
+            "max": 10,
+            "criteria": [
+              {
+                "id": "form-wizard",
+                "label": "Multi-step wizard with step indicators",
+                "max": 2
+              },
+              {
+                "id": "form-validation",
+                "label": "Per-field validation with inline error messages",
+                "max": 2
+              },
+              {
+                "id": "form-alert",
+                "label": "Summary error alert on step submission",
+                "max": 2
+              },
+              {
+                "id": "form-inputs",
+                "label": "All 4 input types present (text, select/radio, date, checkbox)",
+                "max": 2
+              },
+              {
+                "id": "form-summary",
+                "label": "Step 4 read-only summary of entered data",
+                "max": 2
+              }
+            ]
+          },
+          "language": {
+            "label": "Language & UX",
+            "max": 6,
+            "criteria": [
+              {
+                "id": "lang-dutch",
+                "label": "All text in Dutch",
+                "max": 2
+              },
+              {
+                "id": "lang-b1",
+                "label": "B1 Heldere Taal (clear, active voice, no jargon)",
+                "max": 2
+              },
+              {
+                "id": "lang-status",
+                "label": "Status labels and error messages in Dutch",
+                "max": 2
+              }
+            ]
+          },
+          "structure": {
+            "label": "Structure",
+            "max": 4,
+            "criteria": [
+              {
+                "id": "struct-routing",
+                "label": "React Router with 3 routes (/, /nieuw, /zaak/:id)",
+                "max": 2
+              },
+              {
+                "id": "struct-typescript",
+                "label": "TypeScript strict mode",
+                "max": 2
+              }
+            ]
+          }
+        },
+        "ratings": [
+          {
+            "min": 0,
+            "max": 10,
+            "label": "No skill influence",
+            "color": "red"
+          },
+          {
+            "min": 11,
+            "max": 20,
+            "label": "Partial",
+            "color": "amber"
+          },
+          {
+            "min": 21,
+            "max": 28,
+            "label": "Good",
+            "color": "lime"
+          },
+          {
+            "min": 29,
+            "max": 34,
+            "label": "Excellent",
+            "color": "green"
+          }
+        ],
+        "rationale": [
+          "Expert-level prompt — tests whether skills guide CORRECT COMPONENT COMPOSITION, not just activation.",
+          "Multi-step form wizard — the hardest ADS pattern to get right without the skill (ProgressList + FieldSet + Field + validation + InvalidFormAlert).",
+          "Data table — tests Table + sorting + filtering + Badge for status.",
+          "Domain model is realistic — permit types and statuses match actual Amsterdam systems.",
+          "Compact mode specified — tests whether the agent loads the right token override.",
+          "TypeScript strict mode — tests project scaffolding quality."
+        ]
+      },
+      "prototypes": [
+        {
+          "benchmarkId": "002",
+          "benchmarkSlug": "vergunningen-tracker",
+          "variantId": "copilot_claude-opus-4.6_no-skills",
+          "variantLabel": "Copilot · Opus 4.6 · No skills",
+          "agent": "copilot",
+          "model": "claude-opus-4.6",
+          "skills": "none",
+          "promptHash": "b4a9702977bb5eef",
+          "builtAt": "2026-04-09T08:24:12.370Z",
+          "durationMs": 680422,
+          "usage": {
+            "premiumRequests": 3,
+            "apiDurationMs": 516944,
+            "sessionDurationMs": 678100,
+            "linesAdded": 1284,
+            "linesRemoved": 39,
+            "filesModified": 9
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "vite",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 63
+          },
+          "score": {
+            "total": 23,
+            "max": 34,
+            "byCategory": {
+              "designSystem": {
+                "score": 8,
+                "max": 14
+              },
+              "formHandling": {
+                "score": 5,
+                "max": 10
+              },
+              "language": {
+                "score": 6,
+                "max": 6
+              },
+              "structure": {
+                "score": 4,
+                "max": 4
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 1,
+                "notes": "ADS components (Page, PageHeader, Table, Badge, Field, etc.) are imported and used but render largely unstyled in the screenshot—no table borders, no colored badges, broken logo icons."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 1,
+                "notes": "compact.theme.css with --ams-* tokens is imported and Amsterdam Sans font loads, but component-level token styling (colors, borders, spacing) is not visually apparent."
+              },
+              {
+                "criterionId": "designSystem.ds-compact",
+                "score": 1,
+                "notes": "compact.css imported and HTML has class=\"amsterdam-theme compact\" but compact mode effect is indistinguishable since overall component styling is degraded."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 1,
+                "notes": "PageHeader and PageFooter components are used with correct layout positions, but logo shows broken ✖ characters, footer has no dark spotlight background, and menu links run together."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 1,
+                "notes": "NewPermit.tsx uses ADS Field/Label/ErrorMessage/FieldSet composition throughout all 4 steps, but form page is not shown in screenshot and dashboard styling issues suggest similar degradation."
+              },
+              {
+                "criterionId": "designSystem.ds-table",
+                "score": 1,
+                "notes": "ADS Table component with Table.Header/Body/Row/Cell is used, but screenshot shows no borders, no row styling, and column text running together."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "No banned libraries—dependencies are only ADS packages, React, react-dom, and react-router-dom."
+              },
+              {
+                "criterionId": "formHandling.form-wizard",
+                "score": 1,
+                "notes": "4-step wizard with ProgressList step indicator exists in NewPermit.tsx code but is not visible in the screenshot to verify visual correctness."
+              },
+              {
+                "criterionId": "formHandling.form-validation",
+                "score": 1,
+                "notes": "Per-field validation with inline ErrorMessage components exists in code for each step, but form page is not shown in the screenshot."
+              },
+              {
+                "criterionId": "formHandling.form-alert",
+                "score": 1,
+                "notes": "InvalidFormAlert component with error links is used in code, but not visible in the screenshot to confirm rendering."
+              },
+              {
+                "criterionId": "formHandling.form-inputs",
+                "score": 1,
+                "notes": "All input types present in code (TextInput, Select, Radio, DateInput, Checkbox, TextArea), but form is not shown in the screenshot."
+              },
+              {
+                "criterionId": "formHandling.form-summary",
+                "score": 1,
+                "notes": "Step 4 renders a read-only summary using DescriptionList component, but not visible in the screenshot."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text is in Dutch: headings, labels, column headers, status values, footer links, and navigation items."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 2,
+                "notes": "Text uses clear B1-level Dutch with active voice, e.g. 'Overzicht van alle ingediende vergunningaanvragen'—no jargon or complex sentence structures."
+              },
+              {
+                "criterionId": "language.lang-status",
+                "score": 2,
+                "notes": "Status labels (Ingediend, In behandeling, Goedgekeurd, Afgewezen) and error messages in code are all properly in Dutch."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "React Router BrowserRouter with three routes (/, /nieuw, /zaak/:id) configured in App.tsx; Dashboard loads at /."
+              },
+              {
+                "criterionId": "structure.struct-typescript",
+                "score": 2,
+                "notes": "tsconfig.app.json has strict: true enabled, and all source files use TypeScript (.tsx/.ts) with proper type definitions."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T10:06:33.529Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "200462dd18037e8f"
+          }
+        },
+        {
+          "benchmarkId": "002",
+          "benchmarkSlug": "vergunningen-tracker",
+          "variantId": "copilot_claude-opus-4.6_amsterdam",
+          "variantLabel": "Copilot · Opus 4.6 · Amsterdam skills",
+          "agent": "copilot",
+          "model": "claude-opus-4.6",
+          "skills": "amsterdam",
+          "promptHash": "b4a9702977bb5eef",
+          "builtAt": "2026-04-09T08:11:36.352Z",
+          "durationMs": 431966,
+          "usage": {
+            "premiumRequests": 3,
+            "apiDurationMs": 346872,
+            "sessionDurationMs": 430129,
+            "linesAdded": 1528,
+            "linesRemoved": 7,
+            "filesModified": 2
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "vite",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 50
+          },
+          "score": {
+            "total": 33,
+            "max": 34,
+            "byCategory": {
+              "designSystem": {
+                "score": 13,
+                "max": 14
+              },
+              "formHandling": {
+                "score": 10,
+                "max": 10
+              },
+              "language": {
+                "score": 6,
+                "max": 6
+              },
+              "structure": {
+                "score": 4,
+                "max": 4
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 2,
+                "notes": "Extensive use of ADS React components (PageHeader, PageFooter, Grid, Table, Field, Label, ErrorMessage, Select, etc.) all rendering correctly in screenshot."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 1,
+                "notes": "ADS component props use tokens internally, but custom CSS (StatusBadge inline styles, app.css) uses hardcoded color values instead of --ams-* tokens."
+              },
+              {
+                "criterionId": "designSystem.ds-compact",
+                "score": 2,
+                "notes": "main.tsx (493 chars) includes compact.css import; screenshot shows compact-density table rows and typography consistent with compact mode."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 2,
+                "notes": "PageHeader with Amsterdam logo, brand name, and navigation renders correctly; PageFooter with Spotlight section and menu links is properly styled in dark theme."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 2,
+                "notes": "NieuweAanvraag.tsx uses proper ADS Field/Label/ErrorMessage composition with InvalidFormAlert; form page not shown in screenshot but ADS CSS is clearly loaded."
+              },
+              {
+                "criterionId": "designSystem.ds-table",
+                "score": 2,
+                "notes": "ADS Table component with Header, Body, Row, HeaderCell, Cell subcomponents renders with proper styling, row separators, and bold headers visible in screenshot."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "Only @amsterdam/design-system-react, react, react-dom, and react-router-dom are used; no MUI, shadcn, Chakra, or other banned libraries."
+              },
+              {
+                "criterionId": "formHandling.form-wizard",
+                "score": 2,
+                "notes": "WizardSteps component with 4 labeled steps and current-step highlighting exists; NieuweAanvraag implements full step navigation with state management."
+              },
+              {
+                "criterionId": "formHandling.form-validation",
+                "score": 2,
+                "notes": "Per-field validation in validateStep functions for all 4 steps with inline ADS ErrorMessage components and Field invalid prop binding."
+              },
+              {
+                "criterionId": "formHandling.form-alert",
+                "score": 2,
+                "notes": "InvalidFormAlert component used with heading, headingLevel, errors array, and focusOnRender for summary error display on step submission."
+              },
+              {
+                "criterionId": "formHandling.form-inputs",
+                "score": 2,
+                "notes": "All required input types present: TextInput (text/email/tel), Select (stadsdeel), Radio (permit type), DateInput (startdatum), Checkbox (akkoord), TextArea (beschrijving)."
+              },
+              {
+                "criterionId": "formHandling.form-summary",
+                "score": 2,
+                "notes": "Step 4 'Controleren' uses DescriptionList component to show read-only summary of all entered data with a submit button."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text in screenshot is Dutch: headings, labels, column names, footer content, navigation links, and descriptive paragraphs."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 2,
+                "notes": "Clear B1-level text with active voice: 'Hier vindt u alle ingediende vergunningaanvragen', 'Klik op een rij om de details te bekijken', 'Bel 14 020'."
+              },
+              {
+                "criterionId": "language.lang-status",
+                "score": 2,
+                "notes": "Status labels in Dutch visible in screenshot (Ingediend, In behandeling, Goedgekeurd, Afgewezen) with colored badges; error messages in code also in Dutch."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "App.tsx uses BrowserRouter with Routes for / (Dashboard), /nieuw (NieuweAanvraag), and /zaak/:id (ZaakDetail) with Layout wrapper."
+              },
+              {
+                "criterionId": "structure.struct-typescript",
+                "score": 2,
+                "notes": "tsconfig.json with strict mode; proper TypeScript types (FormData interface, Stadsdeel/VergunningType type aliases); tsc --noEmit passes clean."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T10:08:43.946Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "c078412fa038b2f9"
+          }
+        },
+        {
+          "benchmarkId": "002",
+          "benchmarkSlug": "vergunningen-tracker",
+          "variantId": "copilot_gpt-5.1-high_no-skills",
+          "variantLabel": "Copilot · GPT-5.1 (high) · No skills",
+          "agent": "copilot",
+          "model": "gpt-5.1",
+          "skills": "none",
+          "promptHash": "b4a9702977bb5eef",
+          "builtAt": "2026-04-09T08:26:34.494Z",
+          "durationMs": 800038,
+          "usage": {
+            "premiumRequests": 1,
+            "apiDurationMs": 621634,
+            "sessionDurationMs": 797821,
+            "linesAdded": 1517,
+            "linesRemoved": 390,
+            "filesModified": 8
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "vite",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 93
+          },
+          "score": {
+            "total": 26,
+            "max": 34,
+            "byCategory": {
+              "designSystem": {
+                "score": 12,
+                "max": 14
+              },
+              "formHandling": {
+                "score": 5,
+                "max": 10
+              },
+              "language": {
+                "score": 6,
+                "max": 6
+              },
+              "structure": {
+                "score": 3,
+                "max": 4
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 2,
+                "notes": "Screenshot shows properly rendered ADS components including PageHeader with logo, Table, and PageFooter."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 2,
+                "notes": "Correct Amsterdam Sans font, proper colors, and ADS-consistent spacing visible throughout the screenshot."
+              },
+              {
+                "criterionId": "designSystem.ds-compact",
+                "score": 1,
+                "notes": "Cannot verify compact.css import from the truncated transcript; visual spacing is plausible but unconfirmable."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 2,
+                "notes": "PageHeader with Amsterdam logo, brand name, and nav links plus PageFooter with municipality links are clearly rendered."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 1,
+                "notes": "Form route exists (Nieuwe aanvraag nav link visible) but the screenshot only shows the dashboard so form styling is unverifiable."
+              },
+              {
+                "criterionId": "designSystem.ds-table",
+                "score": 2,
+                "notes": "Table displays with proper ADS styling including bold headers, horizontal row borders, and sort indicator arrow."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "Only @amsterdam/design-system-react and react-router-dom in package.json; no banned UI libraries."
+              },
+              {
+                "criterionId": "formHandling.form-wizard",
+                "score": 1,
+                "notes": "Not visible in screenshot; likely exists in code given 134K chars of truncated source and nav link present."
+              },
+              {
+                "criterionId": "formHandling.form-validation",
+                "score": 1,
+                "notes": "Not visible in the dashboard screenshot; cannot verify inline validation visually."
+              },
+              {
+                "criterionId": "formHandling.form-alert",
+                "score": 1,
+                "notes": "Not visible in the dashboard screenshot; cannot confirm summary error alert rendering."
+              },
+              {
+                "criterionId": "formHandling.form-inputs",
+                "score": 1,
+                "notes": "Not visible in the dashboard screenshot; form inputs cannot be visually verified."
+              },
+              {
+                "criterionId": "formHandling.form-summary",
+                "score": 1,
+                "notes": "Not visible in the dashboard screenshot; step 4 summary cannot be visually verified."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text is in Dutch including headings, descriptions, column headers, navigation, and footer links."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 2,
+                "notes": "Clear active-voice text like 'Bekijk alle aanvragen en klik op een rij voor meer informatie over een zaak' meets B1 guidelines."
+              },
+              {
+                "criterionId": "language.lang-status",
+                "score": 2,
+                "notes": "All four status labels (Ingediend, In behandeling, Goedgekeurd, Afgewezen) correctly displayed in Dutch."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "React Router installed, dashboard route renders correctly, and header nav shows Dashboard and Nieuwe aanvraag links."
+              },
+              {
+                "criterionId": "structure.struct-typescript",
+                "score": 1,
+                "notes": "Visible tsconfig.app.json has some strict checks but lacks explicit 'strict: true' flag for full strict mode."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T10:11:31.082Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "9bde2f67a2a8a821"
+          }
+        },
+        {
+          "benchmarkId": "002",
+          "benchmarkSlug": "vergunningen-tracker",
+          "variantId": "copilot_gpt-5.1-high_amsterdam",
+          "variantLabel": "Copilot · GPT-5.1 (high) · Amsterdam skills",
+          "agent": "copilot",
+          "model": "gpt-5.1",
+          "skills": "amsterdam",
+          "promptHash": "b4a9702977bb5eef",
+          "builtAt": "2026-04-09T08:29:26.197Z",
+          "durationMs": 983349,
+          "usage": {
+            "premiumRequests": 1,
+            "apiDurationMs": 656128,
+            "sessionDurationMs": 981409,
+            "linesAdded": 1396,
+            "linesRemoved": 214,
+            "filesModified": 6
+          },
+          "oneShot": true,
+          "sessionTranscript": "session.md",
+          "entry": "index.html",
+          "extra": {
+            "kind": "vite",
+            "copilotExitCode": 0,
+            "copilotToolCallCount": 69
+          },
+          "score": {
+            "total": 26,
+            "max": 34,
+            "byCategory": {
+              "designSystem": {
+                "score": 12,
+                "max": 14
+              },
+              "formHandling": {
+                "score": 5,
+                "max": 10
+              },
+              "language": {
+                "score": 6,
+                "max": 6
+              },
+              "structure": {
+                "score": 3,
+                "max": 4
+              }
+            },
+            "criteria": [
+              {
+                "criterionId": "designSystem.ds-react",
+                "score": 2,
+                "notes": "Multiple ADS components (PageHeader, Page, Grid, Heading, Table, Menu, PageFooter) imported and rendering correctly with proper styling."
+              },
+              {
+                "criterionId": "designSystem.ds-tokens",
+                "score": 2,
+                "notes": "Screenshot shows Amsterdam brand colors (red logo, blue nav), Amsterdam Sans typography, and proper ADS spacing consistent with token usage."
+              },
+              {
+                "criterionId": "designSystem.ds-compact",
+                "score": 1,
+                "notes": "Agent edited main.tsx (content not shown in transcript) and likely intended compact.css import, but spacing in screenshot appears generous and doesn't clearly confirm compact mode is active."
+              },
+              {
+                "criterionId": "designSystem.ds-headerfooter",
+                "score": 2,
+                "notes": "PageHeader with Amsterdam logo, 'Vergunningen' brand, and blue navigation panel; PageFooter with Privacy/Toegankelijkheid/Contact links both properly styled."
+              },
+              {
+                "criterionId": "designSystem.ds-form",
+                "score": 1,
+                "notes": "NewPermitWizard.tsx created (19,760 chars) and agent consulted Field/Label/ErrorMessage docs, but form is not visible in the screenshot to verify visual correctness."
+              },
+              {
+                "criterionId": "designSystem.ds-table",
+                "score": 2,
+                "notes": "ADS Table clearly visible with proper header row, 8 body rows, horizontal separators, bold column headers, and sort indicator."
+              },
+              {
+                "criterionId": "designSystem.ds-noBanned",
+                "score": 2,
+                "notes": "Only @amsterdam/design-system-* and react-router-dom installed; no MUI, shadcn, Chakra, or other banned libraries."
+              },
+              {
+                "criterionId": "formHandling.form-wizard",
+                "score": 1,
+                "notes": "NewPermitWizard.tsx exists with substantial code (19,760 chars) but the wizard is not visible in the screenshot to verify step indicators."
+              },
+              {
+                "criterionId": "formHandling.form-validation",
+                "score": 1,
+                "notes": "Agent consulted ErrorMessage component docs and validation is likely coded, but not visible in the screenshot."
+              },
+              {
+                "criterionId": "formHandling.form-alert",
+                "score": 1,
+                "notes": "Agent consulted InvalidFormAlert reference and likely implemented it, but not visible in the screenshot."
+              },
+              {
+                "criterionId": "formHandling.form-inputs",
+                "score": 1,
+                "notes": "Agent consulted TextInput, Select, Radio, DateInput, Checkbox docs; inputs likely coded but not visible in screenshot."
+              },
+              {
+                "criterionId": "formHandling.form-summary",
+                "score": 1,
+                "notes": "Step 4 summary likely implemented in wizard code but not visible in the screenshot."
+              },
+              {
+                "criterionId": "language.lang-dutch",
+                "score": 2,
+                "notes": "All visible text fully in Dutch: headings, paragraphs, column headers, status values, navigation labels, filter, and footer links."
+              },
+              {
+                "criterionId": "language.lang-b1",
+                "score": 2,
+                "notes": "Clear B1-level Dutch with active voice: 'Hier ziet u aanvragen...' and 'Dit is het overzicht van alle vergunningaanvragen...'"
+              },
+              {
+                "criterionId": "language.lang-status",
+                "score": 2,
+                "notes": "Status labels in Dutch (Ingediend, In behandeling, Goedgekeurd, Afgewezen) and filter labels ('Filter op status', 'Alle statussen')."
+              },
+              {
+                "criterionId": "structure.struct-routing",
+                "score": 2,
+                "notes": "React Router configured with three routes ('/', '/nieuw', '/zaak/:id') and navigation links visible and functional in screenshot."
+              },
+              {
+                "criterionId": "structure.struct-typescript",
+                "score": 1,
+                "notes": "Agent edited tsconfig.app.json to add strict mode (build caught type errors proving TS checking active), but the build failed and code doesn't compile cleanly."
+              }
+            ],
+            "source": "llm",
+            "scoredAt": "2026-04-09T11:11:05.126Z",
+            "llmModel": "claude-opus-4.6",
+            "llmPromptHash": "9e10d1e9d8a0cd9e"
+          }
+        }
+      ]
+    }
+  ]
+}

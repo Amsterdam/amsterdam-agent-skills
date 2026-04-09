@@ -1,0 +1,226 @@
+---
+import Base from "../layouts/Base.astro"
+import { getAllBenchmarks, getDisplayItems, loadManifest } from "../data/manifest.ts"
+
+const benchmarks = getAllBenchmarks()
+const generatedAt = new Date(loadManifest().generatedAt).toLocaleString()
+---
+
+<Base title="Amsterdam agent skill benchmarks">
+  <main class="page">
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="kicker">Amsterdam Agent Skills</span>
+        <h1>Skill benchmark showcase</h1>
+        <p class="lede">
+          Reproducible side-by-side comparisons of how AI coding agents perform
+          on the same prompt — with and without Amsterdam-specific skills loaded.
+          Click any benchmark to walk through the variants.
+        </p>
+        <div class="meta">
+          <span class="chip">{benchmarks.length} benchmark{benchmarks.length === 1 ? "" : "s"}</span>
+          <span class="chip">
+            {benchmarks.reduce((n, b) => n + b.prototypes.length, 0)} prototypes
+          </span>
+          <a class="chip link" href="https://github.com/Amsterdam/amsterdam-agent-skills">
+            github →
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid">
+      {benchmarks.map((b) => {
+        const items = getDisplayItems(b)
+        const first = items[0]
+        const protoCount = b.prototypes.length
+        const screenshotCount = b.legacyScreenshots?.length ?? 0
+        return (
+          <a
+            class="card"
+            href={
+              first
+                ? `${import.meta.env.BASE_URL}benchmark/${b.definition.slug}/${first.id}/`
+                : `#${b.definition.slug}`
+            }
+          >
+            <div class="card-id">#{b.definition.id}</div>
+            <h2 class="card-name">{b.definition.name}</h2>
+            <p class="card-persona">{b.definition.persona}</p>
+
+            <div class="card-tags">
+              {b.definition.skillsTested.map((s) => (
+                <span class="tag">{s}</span>
+              ))}
+              <span class="tag difficulty">{b.definition.difficulty}</span>
+            </div>
+
+            <div class="card-stats">
+              <span>
+                <strong>{protoCount}</strong> prototype{protoCount === 1 ? "" : "s"}
+              </span>
+              {screenshotCount > 0 && (
+                <span>
+                  <strong>{screenshotCount}</strong> legacy
+                </span>
+              )}
+              <span class="open">open →</span>
+            </div>
+          </a>
+        )
+      })}
+    </section>
+
+    <footer class="page-footer">
+      <p>
+        Manifest generated <time>{generatedAt}</time> ·
+        <a href="https://github.com/Amsterdam/amsterdam-agent-skills/tree/main/tools/bench">
+          tools/bench
+        </a>
+      </p>
+    </footer>
+  </main>
+</Base>
+
+<style>
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .hero {
+    padding: 4rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+  .hero-inner {
+    max-width: 720px;
+  }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    margin-top: 0.6rem;
+  }
+  .lede {
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    margin-top: 1rem;
+  }
+  .meta {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.4rem;
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 0.3rem 0.7rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-family: var(--mono);
+    color: var(--text-dim);
+  }
+  .chip.link {
+    color: var(--text);
+  }
+  .chip.link:hover {
+    border-color: var(--accent);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .card {
+    display: block;
+    padding: 1.4rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: all 0.18s ease;
+    text-decoration: none;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  .card-id {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+  }
+  .card-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .card-persona {
+    margin-top: 0.5rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 1rem;
+  }
+  .tag {
+    padding: 0.15rem 0.55rem;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-family: var(--mono);
+    color: var(--text-dim);
+  }
+  .tag.difficulty {
+    color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .card-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+  .card-stats strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+  .open {
+    margin-left: auto;
+    color: var(--text);
+  }
+
+  .page-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .page-footer a {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--border);
+  }
+</style>

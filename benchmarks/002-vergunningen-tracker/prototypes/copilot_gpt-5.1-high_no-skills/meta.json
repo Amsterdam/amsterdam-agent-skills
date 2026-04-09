@@ -1,0 +1,141 @@
+{
+  "benchmarkId": "002",
+  "benchmarkSlug": "vergunningen-tracker",
+  "variantId": "copilot_gpt-5.1-high_no-skills",
+  "variantLabel": "Copilot · GPT-5.1 (high) · No skills",
+  "agent": "copilot",
+  "model": "gpt-5.1",
+  "skills": "none",
+  "promptHash": "b4a9702977bb5eef",
+  "builtAt": "2026-04-09T08:26:34.494Z",
+  "durationMs": 800038,
+  "usage": {
+    "premiumRequests": 1,
+    "apiDurationMs": 621634,
+    "sessionDurationMs": 797821,
+    "linesAdded": 1517,
+    "linesRemoved": 390,
+    "filesModified": 8
+  },
+  "oneShot": true,
+  "sessionTranscript": "session.md",
+  "entry": "index.html",
+  "extra": {
+    "kind": "vite",
+    "copilotExitCode": 0,
+    "copilotToolCallCount": 93
+  },
+  "score": {
+    "total": 26,
+    "max": 34,
+    "byCategory": {
+      "designSystem": {
+        "score": 12,
+        "max": 14
+      },
+      "formHandling": {
+        "score": 5,
+        "max": 10
+      },
+      "language": {
+        "score": 6,
+        "max": 6
+      },
+      "structure": {
+        "score": 3,
+        "max": 4
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "Screenshot shows properly rendered ADS components including PageHeader with logo, Table, and PageFooter."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 2,
+        "notes": "Correct Amsterdam Sans font, proper colors, and ADS-consistent spacing visible throughout the screenshot."
+      },
+      {
+        "criterionId": "designSystem.ds-compact",
+        "score": 1,
+        "notes": "Cannot verify compact.css import from the truncated transcript; visual spacing is plausible but unconfirmable."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 2,
+        "notes": "PageHeader with Amsterdam logo, brand name, and nav links plus PageFooter with municipality links are clearly rendered."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 1,
+        "notes": "Form route exists (Nieuwe aanvraag nav link visible) but the screenshot only shows the dashboard so form styling is unverifiable."
+      },
+      {
+        "criterionId": "designSystem.ds-table",
+        "score": 2,
+        "notes": "Table displays with proper ADS styling including bold headers, horizontal row borders, and sort indicator arrow."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "Only @amsterdam/design-system-react and react-router-dom in package.json; no banned UI libraries."
+      },
+      {
+        "criterionId": "formHandling.form-wizard",
+        "score": 1,
+        "notes": "Not visible in screenshot; likely exists in code given 134K chars of truncated source and nav link present."
+      },
+      {
+        "criterionId": "formHandling.form-validation",
+        "score": 1,
+        "notes": "Not visible in the dashboard screenshot; cannot verify inline validation visually."
+      },
+      {
+        "criterionId": "formHandling.form-alert",
+        "score": 1,
+        "notes": "Not visible in the dashboard screenshot; cannot confirm summary error alert rendering."
+      },
+      {
+        "criterionId": "formHandling.form-inputs",
+        "score": 1,
+        "notes": "Not visible in the dashboard screenshot; form inputs cannot be visually verified."
+      },
+      {
+        "criterionId": "formHandling.form-summary",
+        "score": 1,
+        "notes": "Not visible in the dashboard screenshot; step 4 summary cannot be visually verified."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All visible text is in Dutch including headings, descriptions, column headers, navigation, and footer links."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 2,
+        "notes": "Clear active-voice text like 'Bekijk alle aanvragen en klik op een rij voor meer informatie over een zaak' meets B1 guidelines."
+      },
+      {
+        "criterionId": "language.lang-status",
+        "score": 2,
+        "notes": "All four status labels (Ingediend, In behandeling, Goedgekeurd, Afgewezen) correctly displayed in Dutch."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "React Router installed, dashboard route renders correctly, and header nav shows Dashboard and Nieuwe aanvraag links."
+      },
+      {
+        "criterionId": "structure.struct-typescript",
+        "score": 1,
+        "notes": "Visible tsconfig.app.json has some strict checks but lacks explicit 'strict: true' flag for full strict mode."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T10:11:31.082Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "9bde2f67a2a8a821"
+  }
+}

@@ -3,3 +3,15 @@ __pycache__/
 *.skill
 .DS_Store
 .agents/skills/
+.claude/
+
+# Per-package node_modules and build output
+**/node_modules/
+**/dist/
+
+# Astro
+site/.astro/
+site/public/prototypes/
+
+# bench scratch / temp
+.bench-workdir/

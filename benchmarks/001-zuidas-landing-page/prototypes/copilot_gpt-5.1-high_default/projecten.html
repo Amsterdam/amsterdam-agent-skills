@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zuidas Amsterdam – Bouwprojecten en fasering</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <span class="logo-mark">ZA</span>
+        <span class="logo-text">Zuidas Amsterdam</span>
+      </div>
+      <nav class="main-nav" aria-label="Hoofdmenu">
+        <a href="index.html" class="nav-link">Overzicht</a>
+        <a href="projecten.html" class="nav-link nav-link--active">Projecten</a>
+        <a href="leefomgeving.html" class="nav-link">Leefomgeving</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="page-intro">
+      <div class="container">
+        <h1>Bouwprojecten en fasering tot en met 2031</h1>
+        <p>De bouwagenda voor de Zuidas in de komende vijf jaar omvat een reeks grootschalige projecten die elkaar in tempo en complexiteit opvolgen. Nieuwe woningen, onderwijsgebouwen en voorzieningen worden gecombineerd met ingrijpende werkzaamheden aan wegen, sporen en kabels, waardoor de wijk gedurende langere tijd een echte bouwplaats blijft.</p>
+        <p>Gemeente, ontwikkelaars en vervoerders stemmen de planning nauwgezet op elkaar af om overlast te beperken en belangrijke functies bereikbaar te houden. Cruciale routes voor hulpdiensten en langzaam verkeer worden zo veel mogelijk in stand gehouden, terwijl tijdelijke loopbruggen, omleidingen en bouwschuttingen de veiligheid van bewoners, werknemers en bezoekers waarborgen.</p>
+      </div>
+    </section>
+
+    <section class="page-content">
+      <div class="container two-column">
+        <div class="page-text">
+          <h2>Grote projecten in samenhang</h2>
+          <p>Rond station Amsterdam Zuid wordt in fasen gebouwd aan nieuwe stationsentrees, bredere perrons en betere overstapmogelijkheden tussen trein, metro, tram en bus. Tegelijkertijd wordt aan de zuidzijde ruimte gemaakt voor een stedelijk plein met winkels en horeca, zodat het station zich ontwikkelt tot een volwaardige toegangspoort tot de Zuidas.</p>
+          <p>Ten oosten en westen van het station verrijzen in de komende jaren meerdere hoge woon- en kantoortorens met een sterke nadruk op duurzaamheid. Gebouwen worden uitgerust met energiezuinige gevels, gedeelde daktuinen en collectieve voorzieningen zoals mobiliteitshubs, waardoor de druk op de openbare ruimte wordt verlicht en parkeren efficiënter wordt ingericht.</p>
+          <p>Om de bouwlogistiek beheersbaar te houden, wordt gebruikgemaakt van bouwhubs aan de rand van de stad, slimme transportplanningen en digitale simulaties van hijsbewegingen en transportroutes. Zo kan materiaal just-in-time worden aangeleverd, worden risico’s op vertraging en verkeersopstoppingen verkleind en blijft er meer ruimte over voor een veilige en toegankelijke leefomgeving.</p>
+        </div>
+
+        <aside class="newsletter-card" aria-labelledby="newsletter-heading-projecten">
+          <h2 id="newsletter-heading-projecten">Nieuwsbrief bouwprojecten</h2>
+          <div class="newsletter-intro">Ontvang periodiek een overzicht van belangrijke mijlpalen, wegafsluitingen en nieuwe projecten in de Zuidas.</div>
+          <form class="newsletter-form" novalidate>
+            <div class="form-row">
+              <label for="projecten-name">Naam</label>
+              <input id="projecten-name" name="name" type="text" autocomplete="name" />
+            </div>
+            <div class="form-row">
+              <label for="projecten-email">E-mailadres*</label>
+              <input id="projecten-email" name="email" type="email" required autocomplete="email" />
+            </div>
+            <div class="form-row form-row--inline">
+              <input id="projecten-consent" name="consent" type="checkbox" required />
+              <label for="projecten-consent" class="checkbox-label">Ik geef toestemming om mij per e-mail te informeren over bouwprojecten en fasering in de Zuidas.</label>
+            </div>
+            <button type="submit" class="button">Aanmelden</button>
+            <div class="form-message" aria-live="polite"></div>
+          </form>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <small>© 2026 Informatieve site over de Zuidas – Dit is een fictieve voorbeeldpagina.</small>
+    </div>
+  </footer>
+</body>
+</html>
