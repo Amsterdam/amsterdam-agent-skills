@@ -103,9 +103,10 @@ export async function postProcess(opts: PostProcessOptions): Promise<PostProcess
 
     if (pkg.scripts?.["build"]) {
       log(verbose, `→ Detected ${kind} project, running build...`)
-      // Run `bun install` + `bun run build` inside the project root, which
-      // may be a subdirectory of workdir.
-      await runShell("bun", ["install"], detected.root, verbose)
+      // Run `bun install --ignore-scripts` to avoid executing arbitrary
+      // preinstall/postinstall hooks from LLM-generated package.json, then
+      // `bun run build` which only runs the explicit build script.
+      await runShell("bun", ["install", "--ignore-scripts"], detected.root, verbose)
       await runShell("bun", ["run", "build"], detected.root, verbose)
     } else {
       throw new Error(

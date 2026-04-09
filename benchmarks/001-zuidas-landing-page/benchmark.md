@@ -26,16 +26,16 @@ From the repo root:
 
 ```bash
 # Build one variant
-bun bench run 001 --variant copilot_claude-opus-4-6_amsterdam
+cd tools/bench && bun run src/cli.ts run 001 --variant copilot_claude-opus-4.6_amsterdam
 
 # Build the entire matrix defined in benchmark.yaml
-bun bench matrix 001
+bun run src/cli.ts matrix 001
 
 # Score every variant with the LLM judge
-bun bench judge 001
+bun run src/cli.ts judge 001
 
 # Refresh the showcase manifest
-bun bench manifest
+bun run src/cli.ts manifest
 ```
 
 See `tools/bench/README.md` for the full CLI reference.

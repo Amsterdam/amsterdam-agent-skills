@@ -48,15 +48,14 @@ With the skill, the agent has the exact component API reference, the form compos
 ## How to run
 
 ```bash
+# All 4 variants (run from tools/bench/)
 cd tools/bench
-
-# All 4 variants
 bun run src/cli.ts matrix 002
 
 # One at a time
 bun run src/cli.ts run 002 --variant copilot_claude-opus-4.6_amsterdam
 bun run src/cli.ts run 002 --variant copilot_gpt-5.1-high_amsterdam
 
-# Score with the LLM judge
+# Score with the LLM judge (takes Playwright screenshots + sends to model)
 bun run src/cli.ts judge 002
 ```

@@ -6,7 +6,7 @@
  * walking upward until we hit a `skills/` directory next to a `benchmarks/` one.
  */
 
-import { existsSync } from "node:fs"
+import { existsSync, readdirSync } from "node:fs"
 import { resolve, dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -51,7 +51,6 @@ export function resolveBenchmarkPath(idOrSlug: string): string {
   const direct = join(benchmarksDir, idOrSlug)
   if (existsSync(join(direct, "benchmark.yaml"))) return direct
 
-  const { readdirSync } = require("node:fs") as typeof import("node:fs")
   const dirs = readdirSync(benchmarksDir, { withFileTypes: true }).filter(
     (d) => d.isDirectory() && existsSync(join(benchmarksDir, d.name, "benchmark.yaml")),
   )

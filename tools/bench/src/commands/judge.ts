@@ -4,13 +4,15 @@
  * Score one or more prototypes against the benchmark's rubric using an LLM
  * via the same `copilot` CLI we use for runs. Cheap and zero new dependencies.
  *
- * The judge prompt:
- *   1. Reads the rubric from benchmark.yaml.
- *   2. Reads the prototype's index.html (and any visible text from sub-pages
- *      if it can find them — links are followed one level deep).
- *   3. Asks Copilot to score each criterion 0|1|2 with a one-line note,
- *      returning STRICT JSON in a fenced code block.
- *   4. Parses the JSON, totals it, writes back into meta.json under `score`.
+ * The judge process:
+ *   1. Takes a Playwright screenshot of the rendered prototype (visual ground truth).
+ *   2. Reads the session.md transcript (full source code) or index.html as fallback.
+ *   3. Builds a prompt with the rubric, the artifact text, and a reference to
+ *      the screenshot file in the copilot workdir.
+ *   4. Asks Copilot to score each criterion 0|1|2 with a one-line note,
+ *      returning STRICT JSON in a fenced code block. Screenshot is ground truth:
+ *      unstyled-but-present components score 1 (partial), not 2 (correct).
+ *   5. Parses the JSON, totals it, writes back into meta.json under `score`.
  *
  * Scores are advisory. A human reviewer can override them via PR.
  */
@@ -204,7 +206,7 @@ async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
     await cp(screenshotPath, join(tempDir, "screenshot.png"))
   }
   try {
-    const { stdout, exitCode } = await spawnCopilot([
+    const { stdout, stderr, exitCode } = await spawnCopilot([
       "-p",
       promptText,
       "--model",
@@ -216,7 +218,11 @@ async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
     ], tempDir)
 
     if (exitCode !== 0) {
-      throw new Error(`copilot judge exited with code ${exitCode}`)
+      const stderrSnippet = stderr.trim().slice(-300)
+      throw new Error(
+        `copilot judge exited with code ${exitCode}` +
+          (stderrSnippet ? `\nstderr (last 300 chars):\n${stderrSnippet}` : ""),
+      )
     }
     const json = extractJsonBlock(stdout)
     if (!json) {
