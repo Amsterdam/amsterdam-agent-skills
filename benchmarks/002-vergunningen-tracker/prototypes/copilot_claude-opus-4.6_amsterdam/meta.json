@@ -24,5 +24,118 @@
     "kind": "vite",
     "copilotExitCode": 0,
     "copilotToolCallCount": 50
+  },
+  "score": {
+    "total": 33,
+    "max": 34,
+    "byCategory": {
+      "designSystem": {
+        "score": 13,
+        "max": 14
+      },
+      "formHandling": {
+        "score": 10,
+        "max": 10
+      },
+      "language": {
+        "score": 6,
+        "max": 6
+      },
+      "structure": {
+        "score": 4,
+        "max": 4
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "Extensive ADS imports visible: Grid, Page, PageHeader, PageFooter, Field, Label, ErrorMessage, TextInput, Select, Radio, Checkbox, DateInput, TextArea, InvalidFormAlert, DescriptionList, etc."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 1,
+        "notes": "Token and CSS packages installed and imported in main.tsx, but cannot verify direct --ams-* custom property usage in the 2914-char app.css since its content was not shown."
+      },
+      {
+        "criterionId": "designSystem.ds-compact",
+        "score": 2,
+        "notes": "Agent installed @amsterdam/design-system-css, read compact mode docs, explicitly claims Compact mode, and main.tsx size (493 chars) is consistent with compact.css import line being present."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 2,
+        "notes": "Layout.tsx clearly uses PageHeader (with brandName, menuItems, MenuLink) and PageFooter (with Spotlight, Menu, MenuLink sub-components)."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 2,
+        "notes": "NieuweAanvraag.tsx imports show Field/Label/ErrorMessage/FieldSet composition pattern matching ADS form structure docs."
+      },
+      {
+        "criterionId": "designSystem.ds-table",
+        "score": 2,
+        "notes": "Agent studied ADS Table API from component docs; Dashboard.tsx (6383 chars) created and TypeScript strict build passes, strongly indicating ADS Table usage."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "package.json shows only react, react-dom, react-router-dom, and @amsterdam/design-system-* packages — no banned UI libraries."
+      },
+      {
+        "criterionId": "formHandling.form-wizard",
+        "score": 2,
+        "notes": "4-step wizard with STEP_LABELS array and dedicated WizardSteps component (861 chars) for step indicators."
+      },
+      {
+        "criterionId": "formHandling.form-validation",
+        "score": 2,
+        "notes": "ErrorMessage and Field with invalid prop imported; InvalidFormAlert for summary; agent explicitly describes per-field inline validation."
+      },
+      {
+        "criterionId": "formHandling.form-alert",
+        "score": 2,
+        "notes": "InvalidFormAlert component explicitly imported in NieuweAanvraag.tsx — this is the ADS summary error alert component."
+      },
+      {
+        "criterionId": "formHandling.form-inputs",
+        "score": 2,
+        "notes": "All 4+ types imported: TextInput (text), Select (dropdown), Radio (radio group), DateInput (date), Checkbox, TextArea."
+      },
+      {
+        "criterionId": "formHandling.form-summary",
+        "score": 2,
+        "notes": "Step 4 'Controleren' exists in STEP_LABELS and DescriptionList imported for read-only summary display."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All visible UI text in Dutch: 'Ga naar inhoud', 'Overzicht', 'Nieuwe aanvraag', step labels, footer text, field names."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 2,
+        "notes": "Visible text uses clear active voice at B1 level: 'Heeft u een vraag? Bel 14 020 op werkdagen tussen 8.00 en 18.00 uur.'"
+      },
+      {
+        "criterionId": "language.lang-status",
+        "score": 2,
+        "notes": "Dutch status labels (Ingediend, In behandeling, Goedgekeurd, Afgewezen) defined in types; StatusBadge component for display."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "React Router installed and imported; App.tsx (605 chars) configures 3 routes (/, /nieuw, /zaak/:id) per agent description; build passes."
+      },
+      {
+        "criterionId": "structure.struct-typescript",
+        "score": 2,
+        "notes": "tsconfig.json (593 chars) created; tsc --noEmit catches unused import (proving strict/noUnusedLocals), then passes after fix."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:07:00.844Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "55570982baec89d9"
   }
 }

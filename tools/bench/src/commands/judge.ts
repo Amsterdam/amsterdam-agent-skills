@@ -33,7 +33,7 @@ import type {
   BenchmarkDefinition,
 } from "../types/manifest.ts"
 
-const DEFAULT_JUDGE_MODEL = "claude-opus-4-6"
+const DEFAULT_JUDGE_MODEL = "claude-opus-4.6"
 
 export async function judgeCommand(argv: string[]): Promise<number> {
   const args = parseArgs(argv)
@@ -96,12 +96,26 @@ interface ScoreOptions {
 async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
   const { benchmark, prototypePath, judgeModel } = opts
 
-  // Read the published index.html as the canonical artifact for scoring.
+  // For SPA builds (React/Vue/Next), index.html is just `<div id="root">`
+  // with no visible content — useless for scoring. The session transcript
+  // (session.md) contains the FULL unminified source code the agent wrote,
+  // which is what a human reviewer would actually look at. Use session.md
+  // as the primary scoring artifact, with index.html as a fallback for
+  // static HTML prototypes.
+  const sessionPath = join(prototypePath, "session.md")
   const indexPath = join(prototypePath, "index.html")
-  if (!existsSync(indexPath)) {
-    throw new Error(`No index.html at ${indexPath}`)
+
+  let artifactContent: string
+  let artifactLabel: string
+  if (existsSync(sessionPath)) {
+    artifactContent = await readFile(sessionPath, "utf8")
+    artifactLabel = "Agent session transcript (contains all source code written)"
+  } else if (existsSync(indexPath)) {
+    artifactContent = await readFile(indexPath, "utf8")
+    artifactLabel = "Rendered HTML"
+  } else {
+    throw new Error(`No session.md or index.html at ${prototypePath}`)
   }
-  const indexHtml = await readFile(indexPath, "utf8")
 
   // Build the rubric prompt.
   const rubricLines: string[] = []
@@ -114,7 +128,7 @@ async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
   const rubricBlock = rubricLines.join("\n")
 
   const promptText = [
-    `You are an expert frontend reviewer. Score the following HTML against a rubric.`,
+    `You are an expert frontend reviewer. Score the agent's output against a rubric.`,
     `Each criterion is 0 (missing), 1 (partial), or 2 (correct).`,
     ``,
     `## Benchmark`,
@@ -129,9 +143,9 @@ async function scorePrototype(opts: ScoreOptions): Promise<PrototypeScore> {
     `## Rubric`,
     rubricBlock,
     ``,
-    `## Rendered HTML to score`,
-    "```html",
-    truncate(indexHtml, 30000),
+    `## ${artifactLabel}`,
+    "```",
+    truncate(artifactContent, 80000),
     "```",
     ``,
     `## Output format`,

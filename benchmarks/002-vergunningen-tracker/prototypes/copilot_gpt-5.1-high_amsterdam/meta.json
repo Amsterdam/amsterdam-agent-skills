@@ -24,5 +24,118 @@
     "kind": "vite",
     "copilotExitCode": 0,
     "copilotToolCallCount": 69
+  },
+  "score": {
+    "total": 22,
+    "max": 34,
+    "byCategory": {
+      "designSystem": {
+        "score": 10,
+        "max": 14
+      },
+      "formHandling": {
+        "score": 5,
+        "max": 10
+      },
+      "language": {
+        "score": 4,
+        "max": 6
+      },
+      "structure": {
+        "score": 3,
+        "max": 4
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "App.tsx clearly imports and uses Grid, Heading, Menu, Page, PageHeader, PageFooter, Paragraph, SkipLink from @amsterdam/design-system-react."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 1,
+        "notes": "ADS CSS/token packages installed; main.tsx and index.css were edited but new content not visible in transcript to verify --ams-* token usage."
+      },
+      {
+        "criterionId": "designSystem.ds-compact",
+        "score": 1,
+        "notes": "Package @amsterdam/design-system-css installed and main.tsx edited, but compact.css import cannot be verified from transcript."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 2,
+        "notes": "PageHeader and PageFooter clearly used in App.tsx with brandName, logoAccessibleName, navigation, and footer menu links."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 1,
+        "notes": "NewPermitWizard.tsx created (19760 chars) after reading Field/Label/ErrorMessage docs, but file content not visible and build fails."
+      },
+      {
+        "criterionId": "designSystem.ds-table",
+        "score": 1,
+        "notes": "Dashboard.tsx created (6098 chars) after reading ADS Table docs, but actual Table component usage cannot be verified from transcript."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "Only react-router-dom and ADS packages installed; no MUI, shadcn, Chakra or other banned libraries in package.json."
+      },
+      {
+        "criterionId": "formHandling.form-wizard",
+        "score": 1,
+        "notes": "NewPermitWizard.tsx created at 19760 chars suggesting multi-step implementation, but step indicators cannot be verified; build fails."
+      },
+      {
+        "criterionId": "formHandling.form-validation",
+        "score": 1,
+        "notes": "Agent read Field/ErrorMessage/InvalidFormAlert docs before creating wizard file, but inline validation implementation not verifiable."
+      },
+      {
+        "criterionId": "formHandling.form-alert",
+        "score": 1,
+        "notes": "Agent studied InvalidFormAlert component docs; likely implemented but content of NewPermitWizard.tsx not visible in transcript."
+      },
+      {
+        "criterionId": "formHandling.form-inputs",
+        "score": 1,
+        "notes": "Agent read TextInput, Select, Radio, DateInput, Checkbox, TextArea docs; likely all 4 types present but cannot verify from transcript."
+      },
+      {
+        "criterionId": "formHandling.form-summary",
+        "score": 1,
+        "notes": "Step 4 summary was explicitly planned; file size suggests implementation but content not visible in transcript."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All visible text in App.tsx is Dutch: 'Ga naar de inhoud', 'Hoofdnavigatie', 'Nieuwe aanvraag', 'Hier ziet u aanvragen voor vergunningen'."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 1,
+        "notes": "Visible App.tsx text uses clear active-voice Dutch at B1 level, but cannot verify language quality across all created component files."
+      },
+      {
+        "criterionId": "language.lang-status",
+        "score": 1,
+        "notes": "PermitsContext.tsx (7785 chars) likely contains Dutch status labels but file content not visible in transcript."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "React Router clearly configured with three routes: '/', '/nieuw', '/zaak/:id' visible in App.tsx."
+      },
+      {
+        "criterionId": "structure.struct-typescript",
+        "score": 1,
+        "notes": "tsconfig.app.json was edited (likely adding strict:true) but build fails with TS errors, so strict mode not fully verified."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:15:02.417Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "3ae124fdef63dd5a"
   }
 }

@@ -24,5 +24,99 @@
     "kind": "vite",
     "copilotExitCode": 0,
     "copilotToolCallCount": 31
+  },
+  "score": {
+    "total": 20,
+    "max": 28,
+    "byCategory": {
+      "designSystem": {
+        "score": 9,
+        "max": 12
+      },
+      "language": {
+        "score": 6,
+        "max": 10
+      },
+      "structure": {
+        "score": 5,
+        "max": 6
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "@amsterdam/design-system-react installed and TypeScript type-check passes, confirming valid ADS component imports."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 1,
+        "notes": "@amsterdam/design-system-tokens and design-system-css installed, but cannot verify actual --ams-* token usage in code since file contents not visible."
+      },
+      {
+        "criterionId": "designSystem.ds-grid",
+        "score": 1,
+        "notes": "Agent claims Grid/Column 4/8/12 layout and tsc passes, but cannot directly verify grid structure without file contents."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 2,
+        "notes": "Agent claims PageHeader and PageFooter usage; tsc --noEmit passing confirms these ADS components are correctly imported and typed."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 1,
+        "notes": "NewsletterSignup.tsx exists (2312 chars) but cannot verify whether it uses ADS form components or plain HTML form elements."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "package.json shown explicitly — only ADS, React, react-router-dom; no MUI, shadcn, Chakra, or other banned libraries."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "Dutch file names (InfrastructuurPage, WonenWerkenPage), agent claims all-Dutch content; build succeeds with 6000+ char pages consistent with Dutch text."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 1,
+        "notes": "Agent claims B1 level and 'u' form, but actual text content not visible in transcript to verify reading level."
+      },
+      {
+        "criterionId": "language.lang-paragraphs",
+        "score": 1,
+        "notes": "Agent claims exactly 5 paragraphs per page; file sizes (~6200-6500 chars) are consistent but cannot count paragraphs without seeing content."
+      },
+      {
+        "criterionId": "language.lang-factual",
+        "score": 1,
+        "notes": "Agent summary references specific Zuidas facts (Zuidasdok, 9000 homes, station expansion) but actual page text is not visible to verify."
+      },
+      {
+        "criterionId": "language.lang-tone",
+        "score": 1,
+        "notes": "Cannot verify tone consistency without seeing the actual Dutch text content."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "react-router-dom installed, 3 separate page files created (HomePage, InfrastructuurPage, WonenWerkenPage), App.tsx likely contains routes, tsc passes."
+      },
+      {
+        "criterionId": "structure.struct-form",
+        "score": 2,
+        "notes": "NewsletterSignup.tsx component created (2312 chars), agent claims email validation and placement on every page."
+      },
+      {
+        "criterionId": "structure.struct-nav",
+        "score": 1,
+        "notes": "Agent claims Breadcrumb and StandaloneLink sidebar navigation but cannot verify actual navigation links between pages."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:09:41.731Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "ac831000f599d811"
   }
 }

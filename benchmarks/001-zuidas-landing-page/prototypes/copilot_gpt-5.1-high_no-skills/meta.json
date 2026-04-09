@@ -24,5 +24,99 @@
     "kind": "static",
     "copilotExitCode": 0,
     "copilotToolCallCount": 13
+  },
+  "score": {
+    "total": 15,
+    "max": 28,
+    "byCategory": {
+      "designSystem": {
+        "score": 2,
+        "max": 12
+      },
+      "language": {
+        "score": 7,
+        "max": 10
+      },
+      "structure": {
+        "score": 6,
+        "max": 6
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 0,
+        "notes": "Plain static HTML pages were created; no React or @amsterdam/design-system-react used at all."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 0,
+        "notes": "Custom CSS via style.css with no mention of --ams-* tokens or Tailwind bridge."
+      },
+      {
+        "criterionId": "designSystem.ds-grid",
+        "score": 0,
+        "notes": "No ADS Grid/Column 4/8/12 layout system used; custom responsive CSS only."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 0,
+        "notes": "No ADS Header/Footer components; likely plain HTML header/footer elements."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 0,
+        "notes": "Form uses plain HTML inputs with custom JS validation, not ADS form components."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "No third-party UI libraries used; plain HTML/CSS/JS only."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All agent output, page names (projecten, leefomgeving), and summary confirm Dutch text throughout."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 1,
+        "notes": "Text is in Dutch but no evidence of specific B1/Heldere Taal targeting; cannot verify reading level."
+      },
+      {
+        "criterionId": "language.lang-paragraphs",
+        "score": 2,
+        "notes": "Grep verification confirmed exactly 5 <p> tags per page across all three HTML files."
+      },
+      {
+        "criterionId": "language.lang-factual",
+        "score": 1,
+        "notes": "Topics described match real Zuidas themes but actual content unverifiable from transcript alone."
+      },
+      {
+        "criterionId": "language.lang-tone",
+        "score": 1,
+        "notes": "Professional style was targeted per agent summary but actual tone unverifiable without file content."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "Three separate HTML pages created: index.html, projecten.html, leefomgeving.html."
+      },
+      {
+        "criterionId": "structure.struct-form",
+        "score": 2,
+        "notes": "Newsletter signup form with name, email, interest, and consent checkbox on all three pages."
+      },
+      {
+        "criterionId": "structure.struct-nav",
+        "score": 2,
+        "notes": "Agent confirms navigation between all three pages via shared layout."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:11:03.812Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "c1b1c1aa019ef4f4"
   }
 }

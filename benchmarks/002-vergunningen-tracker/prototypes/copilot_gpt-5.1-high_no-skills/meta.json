@@ -24,5 +24,118 @@
     "kind": "vite",
     "copilotExitCode": 0,
     "copilotToolCallCount": 93
+  },
+  "score": {
+    "total": 33,
+    "max": 34,
+    "byCategory": {
+      "designSystem": {
+        "score": 13,
+        "max": 14
+      },
+      "formHandling": {
+        "score": 10,
+        "max": 10
+      },
+      "language": {
+        "score": 6,
+        "max": 6
+      },
+      "structure": {
+        "score": 4,
+        "max": 4
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "Extensively uses ADS components: Table, Field, Label, Select, TextInput, Radio, DateInput, Checkbox, TextArea, Badge, DescriptionList, Button, Column, FieldSet, etc."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 2,
+        "notes": "Imports @amsterdam/design-system-tokens/dist/index.css and uses --ams-* custom properties like --ams-color-page-background and --ams-color-interactive in CSS."
+      },
+      {
+        "criterionId": "designSystem.ds-compact",
+        "score": 2,
+        "notes": "Imports @amsterdam/design-system-tokens/dist/compact.css in main.tsx to enable compact mode."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 1,
+        "notes": "PageFooter component is used with PageFooter.Menu and PageFooter.MenuLink, but PageHeader is NOT used — header is a custom HTML element with Logo."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 2,
+        "notes": "Uses proper ADS composition: Field (with invalid prop), Label, ErrorMessage, FieldSet, Hint, and InvalidFormAlert throughout the wizard."
+      },
+      {
+        "criterionId": "designSystem.ds-table",
+        "score": 2,
+        "notes": "Dashboard uses ADS Table with Table.Header, Table.Row, Table.HeaderCell, Table.Body, and Table.Cell with proper aria-label."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "No banned libraries present; only ADS, React, and React Router in dependencies."
+      },
+      {
+        "criterionId": "formHandling.form-wizard",
+        "score": 2,
+        "notes": "4-step wizard with Badge-based step indicator showing current step, Vorige/Volgende navigation, and per-step validation gating."
+      },
+      {
+        "criterionId": "formHandling.form-validation",
+        "score": 2,
+        "notes": "Per-field validation with inline ErrorMessage components and Field invalid prop; validates name, email format, phone, all required fields across 3 steps."
+      },
+      {
+        "criterionId": "formHandling.form-alert",
+        "score": 2,
+        "notes": "Uses ADS InvalidFormAlert component with error links pointing to field IDs, shown at top of form on failed step submission."
+      },
+      {
+        "criterionId": "formHandling.form-inputs",
+        "score": 2,
+        "notes": "All input types present: TextInput (text), Select (dropdown), Radio (radio group), DateInput (date), Checkbox, and TextArea."
+      },
+      {
+        "criterionId": "formHandling.form-summary",
+        "score": 2,
+        "notes": "Step 4 renders read-only DescriptionList with Aanvrager, Locatie, and Vergunning sections showing all entered data plus submit button."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All UI text in Dutch: headings, labels, buttons, navigation, placeholder texts, and footer links."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 2,
+        "notes": "Clear B1-level active voice: 'Vul uw naam in', 'Kies een type vergunning', 'Controleer of de gegevens kloppen voordat u de aanvraag verstuurt'."
+      },
+      {
+        "criterionId": "language.lang-status",
+        "score": 2,
+        "notes": "Dutch status labels (Ingediend, In behandeling, Goedgekeurd, Afgewezen) and Dutch error messages throughout the form."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "BrowserRouter in main.tsx with three Routes: / (Dashboard), /nieuw (NewPermitWizard), /zaak/:id (PermitDetail)."
+      },
+      {
+        "criterionId": "structure.struct-typescript",
+        "score": 2,
+        "notes": "strict: true added to both tsconfig.app.json and tsconfig.node.json; build succeeds with tsc -b && vite build."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:12:53.899Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "177a3a6adec8cb7a"
   }
 }

@@ -24,5 +24,99 @@
     "kind": "vite",
     "copilotExitCode": 0,
     "copilotToolCallCount": 32
+  },
+  "score": {
+    "total": 28,
+    "max": 28,
+    "byCategory": {
+      "designSystem": {
+        "score": 12,
+        "max": 12
+      },
+      "language": {
+        "score": 10,
+        "max": 10
+      },
+      "structure": {
+        "score": 6,
+        "max": 6
+      }
+    },
+    "criteria": [
+      {
+        "criterionId": "designSystem.ds-react",
+        "score": 2,
+        "notes": "Extensively uses @amsterdam/design-system-react: Page, PageHeader, PageFooter, Grid, Grid.Cell, Column, Heading, Paragraph, Button, Field, Label, TextInput, ErrorMessage, Hint."
+      },
+      {
+        "criterionId": "designSystem.ds-tokens",
+        "score": 2,
+        "notes": "Uses --ams-* tokens in index.css (--ams-space-l, --ams-space-s, --ams-typography-body-text-bold-font-weight) and imports tokens CSS."
+      },
+      {
+        "criterionId": "designSystem.ds-grid",
+        "score": 2,
+        "notes": "Uses Grid and Grid.Cell with span={{ narrow: 4, medium: 8, wide: 9 }} and span={{ narrow: 4, medium: 8, wide: 3 }} totaling 12 columns on wide."
+      },
+      {
+        "criterionId": "designSystem.ds-headerfooter",
+        "score": 2,
+        "notes": "Uses PageHeader with brandName/logoLink and PageFooter with PageFooter.Menu and PageFooter.MenuLink components."
+      },
+      {
+        "criterionId": "designSystem.ds-form",
+        "score": 2,
+        "notes": "Newsletter form uses ADS components: Field, Label, TextInput, ErrorMessage, Hint, and Button."
+      },
+      {
+        "criterionId": "designSystem.ds-noBanned",
+        "score": 2,
+        "notes": "No banned libraries present; only @amsterdam/design-system-* and react-router-dom used."
+      },
+      {
+        "criterionId": "language.lang-dutch",
+        "score": 2,
+        "notes": "All user-facing text is written in Dutch including headings, paragraphs, form labels, and navigation."
+      },
+      {
+        "criterionId": "language.lang-b1",
+        "score": 2,
+        "notes": "Text uses short, clear sentences with common words; formal 'u' form consistently applied, suitable for B1 reading level."
+      },
+      {
+        "criterionId": "language.lang-paragraphs",
+        "score": 2,
+        "notes": "Each of the 3 pages has exactly 5 Paragraph components with substantive content."
+      },
+      {
+        "criterionId": "language.lang-factual",
+        "score": 2,
+        "notes": "References real Zuidas projects: Zuidasdok, station Amsterdam Zuid, A10 tunnel, Gustav Mahlerlaan, Ravel woonproject."
+      },
+      {
+        "criterionId": "language.lang-tone",
+        "score": 2,
+        "notes": "Consistent professional, informative tone across all pages with formal 'u' address throughout."
+      },
+      {
+        "criterionId": "structure.struct-routing",
+        "score": 2,
+        "notes": "Three routed pages via React Router: / (overview), /projecten (projects), /leefbaarheid (living)."
+      },
+      {
+        "criterionId": "structure.struct-form",
+        "score": 2,
+        "notes": "NewsletterForm component with email validation and success feedback is included on every page."
+      },
+      {
+        "criterionId": "structure.struct-nav",
+        "score": 2,
+        "notes": "NavLink-based navigation sidebar with active state styling connects all three pages."
+      }
+    ],
+    "source": "llm",
+    "scoredAt": "2026-04-09T09:12:35.641Z",
+    "llmModel": "claude-opus-4.6",
+    "llmPromptHash": "cd006b8a702673b0"
   }
 }
