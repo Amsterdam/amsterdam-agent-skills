@@ -7,6 +7,22 @@ const generatedAt = new Date(loadManifest().generatedAt).toLocaleString()
 ---
 
 <Base title="Amsterdam agent skill benchmarks">
+  <div class="ams-top-bar"></div>
+  <header class="ams-header">
+    <div class="ams-header-inner">
+      <a href={import.meta.env.BASE_URL} class="ams-logo" aria-label="Gemeente Amsterdam">
+        <svg viewBox="0 0 40 40" fill="currentColor" width="32" height="32" aria-hidden="true">
+          <path d="m20 0-5.263 8.545L9.474 0H6.49l5.264 8.545L6.49 17.09h2.984l5.263-8.545 5.263 8.545 5.263-8.545L30.526 17.09h2.984l-5.263-8.545L33.51 0h-2.984L25.263 8.545 20 0Zm-5.263 22.91L9.474 14.364H6.49l5.264 8.545-5.264 8.545h2.984l5.263-8.544 5.263 8.544 5.263-8.544 5.263 8.544h2.984l-5.263-8.545 5.263-8.545h-2.984l-5.263 8.545-5.263-8.545Z"/>
+        </svg>
+        <span class="ams-logo-text">Amsterdam</span>
+      </a>
+      <nav class="ams-header-nav">
+        <a href={import.meta.env.BASE_URL}>Benchmarks</a>
+        <a href="https://github.com/Amsterdam/amsterdam-agent-skills">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
   <main class="page">
     <header class="hero">
       <div class="hero-inner">
@@ -23,7 +39,7 @@ const generatedAt = new Date(loadManifest().generatedAt).toLocaleString()
             {benchmarks.reduce((n, b) => n + b.prototypes.length, 0)} prototypes
           </span>
           <a class="chip link" href="https://github.com/Amsterdam/amsterdam-agent-skills">
-            github →
+            source →
           </a>
         </div>
       </div>
@@ -83,6 +99,53 @@ const generatedAt = new Date(loadManifest().generatedAt).toLocaleString()
 </Base>
 
 <style>
+  .ams-top-bar {
+    height: 3px;
+    background: var(--ams-blue);
+  }
+  .ams-header {
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem 1.5rem;
+  }
+  .ams-header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ams-logo {
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .ams-logo:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .ams-logo-text {
+    margin-left: 0.6rem;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+  }
+  .ams-header-nav {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+  }
+  .ams-header-nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .ams-header-nav a:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+
   .page {
     max-width: 1200px;
     margin: 0 auto;

@@ -48,52 +48,55 @@ done
 | [amsterdam-stijl](skills/amsterdam-stijl/) | Amsterdam municipality writing style — Heldere Taal (B1), Eenvoudige Taal (A2), inclusive language, tone of voice, word choice, text templates | 2026-04-01 |
 | [developers-amsterdam](skills/developers-amsterdam/) | Gemeente Amsterdam engineering standards — approved tech stacks, Git workflow, testing requirements, security-by-design, documentation standards, EU-PL v1.2, WCAG 2.1 AA | 2026-04-01 |
 
-## Benchmark: Do Skills Actually Work?
+## Benchmarks
 
-> **Live showcase:** [amsterdam.github.io/amsterdam-agent-skills](https://amsterdam.github.io/amsterdam-agent-skills/) — interactive gallery, prev/next through every prototype.
+> **[Live showcase →](https://amsterdam.github.io/amsterdam-agent-skills/)** — interactive gallery with side-by-side prototype comparisons, visual scoring, and agent session transcripts.
 
-We gave the same model (Claude Opus 4.6) the same vague prompt — *"build me a landing page for the Amsterdam Zuidas area"* — under three configurations. The prompt mentioned no design system, no component library, no language guidelines. Results:
+Two benchmarks test the skills across models (Claude Opus 4.6 + GPT-5.1) and skill modes (none vs amsterdam):
 
-| | No Skills | Default Skills | Amsterdam Skills |
-|--|-----------|---------------|-----------------|
-| **Score** | 12/28 | 10/28 | **26/28** |
-| **Time** | 4m 21s | 7m 10s+ | 5m 28s |
-| **Passes needed** | 1 | 2 | 1 |
-| **Input tokens** | 391K | 1.8M (2 passes) | 1.8M |
-| **Design system** | None | None | ADS components + tokens |
-| **Language quality** | Marketing-speak | Formal, complex | Heldere Taal (B1) |
+### 001 — Zuidas Landing Page (vague prompt, beginner)
 
-<table>
-<tr>
-<td><strong>No Skills (12/28)</strong><br>Static HTML, generic corporate palette, emoji, marketing Dutch<br><img src="benchmarks/001-zuidas-landing-page/legacy-screenshots/no-skills.png" width="280"></td>
-<td><strong>Default Skills (10/28)</strong><br>Next.js+Tailwind, bare on first pass, generic blue on second<br><img src="benchmarks/001-zuidas-landing-page/legacy-screenshots/default-skills-pass2.png" width="280"></td>
-<td><strong>Amsterdam Skills (26/28)</strong><br>ADS React, XXX logo, Amsterdam Sans, Heldere Taal, one-shot<br><img src="benchmarks/001-zuidas-landing-page/legacy-screenshots/amsterdam-skills.png" width="280"></td>
-</tr>
-</table>
+A deliberately vague brief from an inexperienced developer. Tests whether skills **activate at all** on an ambiguous prompt.
 
-Generic best-practice skills scored *worse* than no skills — more tokens, more time, an extra pass, and still no domain knowledge. Domain-specific skills hit 26/28 in a single shot.
+| | No Skills | Amsterdam Skills |
+|--|-----------|-----------------|
+| **Opus 4.6** | 17/28 | **28/28** |
+| **GPT-5.1 (high)** | 17/28 | **27/28** |
 
-Full methodology and scoring: [`benchmarks/001-zuidas-landing-page/`](benchmarks/001-zuidas-landing-page/)
+Skills add **+10-11 points** on vague prompts.
 
-### Reproducing benchmarks
+### 002 — Vergunningen Tracker (expert prompt, advanced)
 
-The runner is a Bun CLI that wraps the GitHub Copilot CLI. Run any benchmark variant against your own Copilot install with one command:
+A senior engineer's structured brief: multi-step form wizard, sortable data table, 3 React Router routes, Compact mode. Tests whether skills guide **correct component composition** when the engineer already names the stack.
+
+| | No Skills | Amsterdam Skills |
+|--|-----------|-----------------|
+| **Opus 4.6** | 23/34 | **33/34** |
+| **GPT-5.1 (high)** | 26/34 | **26/34** |
+
+Opus gains **+10 points** with skills on the expert prompt. GPT-5.1 holds steady — the skill context doesn't help it further on a well-specified brief.
+
+### Running benchmarks
+
+The runner wraps the GitHub Copilot CLI. Benchmarks are fully reproducible:
 
 ```bash
-cd tools/bench
-bun install
+cd tools/bench && bun install
 
-# Build one prototype
-bun run src/cli.ts run 001 --variant copilot_claude-opus-4-6_amsterdam
+# List all benchmarks and variants
+bun run src/cli.ts list
+
+# Build one variant
+bun run src/cli.ts run 001 --variant copilot_claude-opus-4.6_amsterdam
 
 # Build the entire matrix
-bun run src/cli.ts matrix 001
+bun run src/cli.ts matrix 002
 
-# Score with the LLM judge
-bun run src/cli.ts judge 001
+# Score with the visual LLM judge (Playwright screenshots)
+bun run src/cli.ts judge 002
 ```
 
-Outputs land under `benchmarks/{slug}/prototypes/{variant}/` as iframable static bundles. The Astro showcase at `site/` reads them via `benchmarks/benchmarks.json`. Full reference: [`tools/bench/README.md`](tools/bench/README.md).
+Full CLI reference: [`tools/bench/README.md`](tools/bench/README.md).
 
 ## Structure
 
@@ -104,20 +107,12 @@ skills/                         # The skills themselves
 └── developers-amsterdam/       # Engineering standards (developers.amsterdam)
 
 benchmarks/                     # Reproducible benchmark definitions + outputs
-├── 001-zuidas-landing-page/
-│   ├── benchmark.yaml          # Prompt, variants matrix, scoring rubric
-│   ├── benchmark.md            # Human prose narrative
-│   ├── prototypes/             # Built static bundles (one per variant)
-│   └── legacy-screenshots/     # Pre-runner manual captures
+├── 001-zuidas-landing-page/    # Vague prompt, beginner
+├── 002-vergunningen-tracker/   # Expert prompt, advanced
 └── benchmarks.json             # Manifest the showcase reads (generated)
 
 tools/bench/                    # Bun CLI runner (wraps the Copilot CLI)
-└── src/cli.ts                  # bench run | matrix | judge | manifest | list
-
-site/                           # Astro showcase site (deployed to GH Pages)
-└── src/pages/
-    ├── index.astro             # Grid of benchmark cards
-    └── benchmark/[slug]/[variant].astro  # iframe + overlay toolbar
+site/                           # Astro showcase (deployed to GH Pages)
 ```
 
 ## Adding a New Skill

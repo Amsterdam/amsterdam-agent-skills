@@ -3,6 +3,8 @@
  * prototypes do their own styling, the showcase chrome is system-font + flat.
  */
 
+@import url("https://unpkg.com/@amsterdam/design-system-assets@2.2.0/font/index.css");
+
 :root {
   --bg: #0e0f12;
   --bg-elev: #16181d;
@@ -10,14 +12,15 @@
   --border: #2a2f38;
   --text: #e8eaed;
   --text-dim: #9aa0a6;
-  --accent: #ff5d8f; /* nod to ams highlight magenta — used very sparingly */
+  --accent: #e50082; /* --ams-color-highlight-magenta */
+  --ams-blue: #004699; /* --ams-color-interactive */
   --green: #00c389;
   --lime: #bed200;
   --amber: #ffb300;
   --red: #ec5757;
   --radius: 6px;
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+  --font: "Amsterdam Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
 }
 
