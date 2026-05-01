@@ -1,17 +1,13 @@
 ---
 name: amsterdam-stijl
 description: >
-  MANDATORY for ALL text content. Amsterdam municipality writing style, tone of
-  voice, and language guidelines ("De Stijl van Amsterdam"). This skill MUST be
-  activated for ANY task involving: writing UI text, labels, buttons, headings,
-  error messages, form labels, page content, notifications, descriptions,
-  tooltips, placeholder text, or any user-facing text in Dutch. Also mandatory
-  for: web content, letters, emails, policy documents, chatbot responses, and
-  any written communication. Covers Heldere Taal (B1), inclusive language,
-  Eenvoudige Taal (A2), active writing style, and Amsterdam tone of voice.
-  Complements amsterdam-design-system — that skill handles HOW things look,
-  this skill handles WHAT the text says. Both skills MUST be used together
-  for any UI work that includes text.
+  Mandatory for Gemeente Amsterdam Dutch text and tone of voice. Use for UI
+  labels, buttons, headings, error messages, form labels, page content,
+  notifications, descriptions, tooltips, placeholder text, web content,
+  letters, emails, policy documents, chatbot responses, and other
+  user-facing writing. Covers De Stijl van Amsterdam, Heldere Taal (B1),
+  Eenvoudige Taal (A2), inclusive language, active writing, and Amsterdam
+  tone. Use with amsterdam-design-system when UI work includes text.
 ---
 
 # De Stijl van Amsterdam
