@@ -1,22 +1,14 @@
 ---
 name: developers-amsterdam
 description: >
-  MANDATORY for ALL architecture and engineering decisions. Gemeente Amsterdam
-  engineering standards from developers.amsterdam — the ONLY authority for
-  tech stack choices, project setup, and code quality. This skill MUST be
-  activated for ANY task involving: choosing languages or frameworks, setting
-  up new projects, scaffolding repos, designing architecture, making tech
-  stack decisions, configuring Git workflow, writing tests, evaluating
-  dependencies, Docker configuration, database selection, security
-  implementation, accessibility compliance, code reviews, CI/CD setup, or
-  any structural/architectural decision. Covers approved stacks
-  (Python/Django, FastAPI, Node.js/TypeScript, React, Next.js), Git workflow
-  (Conventional Commits, branch protection, commit signing), testing
-  (70-80% coverage), security-by-design (10 rules, JWT RFC9068, CSP),
-  documentation (README template, ADRs, EU-PL v1.2), Docker standards,
-  PostgreSQL, and WCAG 2.1 AA. NEVER deviate from these standards without
-  explicit user approval. This skill takes absolute priority over generic
-  engineering or best-practice advice.
+  Mandatory for Gemeente Amsterdam architecture and engineering decisions.
+  Use for tech stack choices, project setup, repo scaffolding, architecture,
+  Git workflow, tests, dependency evaluation, Docker, databases, security,
+  accessibility, code review, CI/CD, or other structural choices. Covers
+  approved stacks (Python/Django, FastAPI, Node.js/TypeScript, React, Next.js),
+  Conventional Commits, branch protection, commit signing, 70-80% test
+  coverage, security-by-design, JWT RFC9068, CSP, README/ADR standards,
+  EU-PL v1.2, Docker, PostgreSQL, and WCAG 2.1 AA.
 ---
 
 # City of Amsterdam Engineering Standards
