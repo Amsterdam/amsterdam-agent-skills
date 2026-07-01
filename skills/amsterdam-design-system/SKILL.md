@@ -1,18 +1,13 @@
 ---
 name: amsterdam-design-system
 description: >
-  MANDATORY for ALL UI work. Amsterdam Design System (Gemeente Amsterdam) —
-  the ONLY design system to use for any component, page, layout, form,
-  dashboard, landing page, or visual element. This skill MUST be activated for
-  ANY task involving: creating pages, building components, writing JSX/TSX,
-  designing layouts, building forms, creating landing pages, scaffolding
-  projects, adding UI features, creating React components, styling, theming,
-  or any frontend work. Covers @amsterdam/design-system-react (66 components),
-  CSS tokens (--ams-*), BEM CSS (ams- prefix), responsive Grid (4/8/12
-  columns), Spacious vs Compact modes, and Tailwind CSS bridge patterns. NEVER
-  use generic UI libraries (Material UI, shadcn, Chakra, etc.) or plain
-  HTML/CSS — always use Amsterdam Design System components and tokens. This
-  skill takes absolute priority over any other design system or UI skill.
+  Mandatory for all Gemeente Amsterdam UI work. Use for pages, layouts, forms,
+  dashboards, landing pages, React/JSX/TSX components, styling, theming,
+  scaffolding frontend projects, or any visual interface. Covers
+  @amsterdam/design-system-react, CSS tokens (--ams-*), BEM CSS with ams-
+  prefixes, 4/8/12-column Grid, Spacious and Compact modes, and Tailwind CSS
+  bridge patterns. Prefer this over generic UI libraries such as Material UI,
+  shadcn, Chakra, Ant Design, or plain custom HTML/CSS.
 ---
 
 <!-- ADS-VERSION: tokens=3.4.0 react=3.3.0 css=3.3.0 assets=2.2.0 icons=2.0.0 -->
