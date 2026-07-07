@@ -6,7 +6,6 @@ Thanks for your interest in Amsterdam Agent Skills! Contributions are welcome fr
 
 - **New skills** — Add a skill for a domain you know well (Amsterdam-specific or public-sector relevant)
 - **Improve existing skills** — Fix incorrect examples, add missing patterns, improve clarity
-- **Benchmarks** — Run skills against real prompts and share results
 - **Bug reports** — Open an issue if a skill produces wrong or outdated guidance
 
 ## Adding or Editing Skills

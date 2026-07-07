@@ -4,15 +4,12 @@
 # Security updates: Dependabot opens security-update PRs automatically once
 # "Dependabot security updates" is enabled in the repository settings
 # (Settings > Code security). The version-update entries below keep the
-# manifests current and let Dependabot group and label those PRs. The
-# `npm` ecosystem also covers this repo's Bun (package.json) projects.
+# manifests current and let Dependabot group and label those PRs.
 version: 2
 updates:
-  # JavaScript / TypeScript packages (Bun-managed, handled by the npm ecosystem)
+  # The starter-vite-react skill asset (npm ecosystem reads its package.json)
   - package-ecosystem: "npm"
     directories:
-      - "/site"
-      - "/tools/bench"
       - "/skills/amsterdam-design-system/assets/starter-vite-react"
     schedule:
       interval: "weekly"
