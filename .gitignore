@@ -8,10 +8,3 @@ __pycache__/
 # Per-package node_modules and build output
 **/node_modules/
 **/dist/
-
-# Astro
-site/.astro/
-site/public/prototypes/
-
-# bench scratch / temp
-.bench-workdir/

@@ -367,7 +367,7 @@ If three or more of your answers are "default", the page will look like a wirefr
 
 ## Worked example — Zuidas landing page
 
-The brief from `benchmarks/001-zuidas-landing-page.md`:
+A worked-example brief:
 
 > Build a landing page for the Amsterdam Zuidas area, focused on construction and developments over the next 5 years. Three pages, five paragraphs of real Dutch text per page, a newsletter signup form. Professional style.
 
