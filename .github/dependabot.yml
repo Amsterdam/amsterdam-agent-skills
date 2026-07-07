@@ -7,8 +7,10 @@
 # manifests current and let Dependabot group and label those PRs.
 version: 2
 updates:
-  # The starter-vite-react skill asset (npm ecosystem reads its package.json)
-  - package-ecosystem: "npm"
+  # The starter-vite-react skill asset. It's a Bun project (packageManager:
+  # bun), so use the dedicated `bun` ecosystem rather than `npm` — it reads
+  # package.json and keeps a bun.lock in sync if one is ever committed.
+  - package-ecosystem: "bun"
     directories:
       - "/skills/amsterdam-design-system/assets/starter-vite-react"
     schedule:
@@ -21,14 +23,14 @@ updates:
       prefix-development: "chore(deps-dev)"
       include: "scope"
     groups:
-      # One grouped PR per directory for routine minor/patch bumps
-      npm-minor-patch:
+      # Batch routine minor/patch bumps into one PR
+      deps-minor-patch:
         applies-to: version-updates
         update-types:
           - "minor"
           - "patch"
       # Batch security fixes together so they land in a single review
-      npm-security:
+      deps-security:
         applies-to: security-updates
         patterns:
           - "*"
