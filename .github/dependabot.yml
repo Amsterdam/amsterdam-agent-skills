@@ -1,0 +1,52 @@
+# Dependabot configuration
+# Docs: https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# Security updates: Dependabot opens security-update PRs automatically once
+# "Dependabot security updates" is enabled in the repository settings
+# (Settings > Code security). The version-update entries below keep the
+# manifests current and let Dependabot group and label those PRs. The
+# `npm` ecosystem also covers this repo's Bun (package.json) projects.
+version: 2
+updates:
+  # JavaScript / TypeScript packages (Bun-managed, handled by the npm ecosystem)
+  - package-ecosystem: "npm"
+    directories:
+      - "/site"
+      - "/tools/bench"
+      - "/skills/amsterdam-design-system/assets/starter-vite-react"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: "scope"
+    groups:
+      # One grouped PR per directory for routine minor/patch bumps
+      npm-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+      # Batch security fixes together so they land in a single review
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+
+  # GitHub Actions used in .github/workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
