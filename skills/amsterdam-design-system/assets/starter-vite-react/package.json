@@ -19,7 +19,7 @@
   "dependencies": {
     "@amsterdam/design-system-assets": "2.2.0",
     "@amsterdam/design-system-css": "3.3.0",
-    "@amsterdam/design-system-react": "3.3.0",
+    "@amsterdam/design-system-react": "4.2.0",
     "@amsterdam/design-system-react-icons": "2.0.0",
     "@amsterdam/design-system-tokens": "3.4.0",
     "@tanstack/react-query": "^5.90.12",
