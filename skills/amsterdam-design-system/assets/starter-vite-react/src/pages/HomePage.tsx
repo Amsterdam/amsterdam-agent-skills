@@ -14,6 +14,7 @@ import { ChevronForwardIcon } from "@amsterdam/design-system-react-icons"
 import { useQuery } from "@tanstack/react-query"
 
 import { StatCard } from "@/components/StatCard"
+import { RouterLink } from "@/lib/RouterLink"
 
 /*
  * HomePage — the worked example from references/aesthetic-discipline.md.
@@ -106,6 +107,7 @@ export function HomePage() {
               <StandaloneLink
                 href="/rapport"
                 icon={ChevronForwardIcon}
+                linkComponent={RouterLink}
                 color="inverse"
               >
                 Lees het rapport
@@ -188,7 +190,7 @@ export function HomePage() {
                 geconsulteerd. Inloopavonden vinden maandelijks plaats in het
                 informatiecentrum aan de Strawinskylaan.
               </Paragraph>
-              <StandaloneLink href="/meedoen" icon={ChevronForwardIcon}>
+              <StandaloneLink href="/meedoen" icon={ChevronForwardIcon} linkComponent={RouterLink}>
                 Bekijk de agenda
               </StandaloneLink>
             </Column>

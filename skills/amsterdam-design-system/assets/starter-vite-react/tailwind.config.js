@@ -5,10 +5,11 @@ const { ams } = compactTokens
 /**
  * Tailwind v4 config used via the `@config` directive in src/styles/index.css.
  *
- * Two important details:
- *   1. `corePlugins.preflight: false` — Tailwind's CSS reset conflicts with
- *      AMS base styles (`ams-body`, component CSS). AMS provides its own reset.
- *   2. `theme.extend.spacing` spreads `ams.space` from compact.json so utilities
+ * Preflight (Tailwind's reset) is left out in src/styles/index.css by importing
+ * only `tailwindcss/theme` and `tailwindcss/utilities`. Tailwind v4 does not read
+ * `corePlugins` from a JS config, so there is no `preflight: false` here.
+ *
+ * `theme.extend.spacing` spreads `ams.space` from compact.json so utilities
  *      like `p-ams-m` resolve to the exact compact-mode value, not via CSS vars.
  *
  * For Spacious mode, swap the import to `@amsterdam/design-system-tokens/dist/index.json`.
@@ -53,8 +54,5 @@ export default {
         ams: "var(--ams-typography-font-family)",
       },
     },
-  },
-  corePlugins: {
-    preflight: false,
   },
 }

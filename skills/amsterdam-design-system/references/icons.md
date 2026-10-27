@@ -43,7 +43,7 @@ import { SearchIcon, CloseIcon } from "@amsterdam/design-system-react-icons"
 | `color` | `'inverse'` | — | White icon for dark backgrounds |
 | `square` | `boolean` | `false` | Square bounding box |
 
-Sizes `heading-0` and `heading-6` are deprecated.
+Sizes `heading-0` and `heading-6` were removed in v4.0.0 — use `heading-1` and `heading-5`.
 
 ## Design Guidelines
 
@@ -85,173 +85,59 @@ Sizes `heading-0` and `heading-6` are deprecated.
 - **Interaction:** Use `With` — `DocumentWithPencil`, `HandWithPlant`
 - **Fill variants:** Most icons have outline + fill — `CalendarIcon` / `CalendarFillIcon`
 
-## v2.0.0 Breaking Renames
-
-| Old name | New name |
-|----------|----------|
-| `BellIcon` / `BellFillIcon` | `NotificationIcon` / `NotificationFillIcon` |
-| `PersonCircleIcon` / `PersonCircleFillIcon` | `UserAccountIcon` / `UserAccountFillIcon` |
-| `TrashBinIcon` | `DeleteIcon` |
-| `CogwheelIcon` | `SettingsIcon` |
-| `CheckMarkCircleIcon` | `SuccessIcon` |
-| `LinkedinIcon` | `LinkedInIcon` (capitalization fix) |
-
 ## Available Icons
 
-Most icons have a regular variant and a `Fill` variant (e.g., `CalendarIcon` and `CalendarFillIcon`). Only the base name is listed; append `FillIcon` for the filled version where available.
+<!-- Generated from @amsterdam/design-system-react-icons 2.3.0 dist/index.d.ts and the @deprecated tags in dist/*.d.ts. Regenerate rather than edit by hand. -->
 
-### Navigation & Directional
+359 current exports (220 icons, most with a `Fill` variant) plus 14 deprecated aliases. Import each as `<Name>Icon`; a **+F** marks a `<Name>FillIcon` variant.
 
-| Icon | Import |
-|------|--------|
-| Arrow backward | `ArrowBackwardIcon` |
-| Arrow forward | `ArrowForwardIcon` |
-| Arrow down | `ArrowDownIcon` |
-| Arrow up | `ArrowUpIcon` |
-| Chevron backward | `ChevronBackwardIcon` |
-| Chevron forward | `ChevronForwardIcon` |
-| Chevron down | `ChevronDownIcon` |
-| Chevron up | `ChevronUpIcon` |
-| Next | `NextIcon` |
-| Previous | `PreviousIcon` |
-| External link | `ExternalLinkIcon` |
-| Expand | `ExpandIcon` |
+| | Icons |
+|---|---|
+| **A** | Airplane, Apple **+F**, ArchiveBox **+F**, Area **+F**, ArrowBackward, ArrowDown, ArrowForward, ArrowUp, AwardRibbon **+F** |
+| **B** | BabyBottle **+F**, Ball, BankCard **+F**, BarChart **+F**, Bed, Bike, BirdHouse **+F**, Box **+F**, Bread **+F**, Bridge **+F**, Broom, Brush **+F**, Building **+F**, Buildings **+F**, Bus **+F** |
+| **C** | Cake **+F**, Calendar **+F**, Camera **+F**, Car **+F**, Certificate **+F**, ChargingStation **+F**, CheckMark, ChevronBackward, ChevronDoubleBackward, ChevronDoubleForward, ChevronDown, ChevronForward, ChevronUp, CityPass **+F**, Clipboard **+F**, Clock **+F**, Close, ConnectedCircles **+F**, Construction, Contrast **+F**, Cookie **+F**, Copy **+F**, CrossHair **+F** |
+| **D** | Database **+F**, Databases **+F**, Delete **+F**, Document **+F**, DocumentCheckMark **+F**, DocumentEuro **+F**, DocumentMusicalNote **+F**, DocumentPercent **+F**, DocumentQuestionMark **+F**, DocumentWithPencil **+F**, Documents **+F**, Download, Duplicate **+F** |
+| **E** | Earth **+F**, Edit **+F**, Ellipsis, Embed, Error **+F**, Euro, EuroCoins **+F**, EyeClosed **+F**, EyeOpen **+F** |
+| **F** | FaceHappy **+F**, FaceNeutral **+F**, FaceSad **+F**, Facebook, FastForward, Filter **+F**, Flower **+F**, Folder **+F**, FontSize, ForkAndKnife **+F**, FormattingBold, FormattingItalic, FormattingStrikethrough, FormattingUnderline, FullScreenClose, FullScreenOpen |
+| **G** | GasolinePump **+F**, Gavel **+F**, GraduateHat **+F**, Grid **+F** |
+| **H** | HandWithPlant **+F**, Handshake, Heart **+F**, HeartBroken **+F**, History, House **+F**, HouseCanal **+F**, HouseWithFlag **+F** |
+| **I** | IdentityCard **+F**, Image **+F**, Incognito **+F**, Info **+F**, Instagram |
+| **K** | KeyboardKeyCommand, KeyboardKeyControl, KeyboardKeyEnter, KeyboardKeyShift |
+| **L** | LaptopBroken, Layers **+F**, Leaf **+F**, LightBulb **+F**, Lightning **+F**, LineChartDown, LineChartUp, Link, LinkExternal **+F**, LinkedIn, List, LitterBin **+F**, LockClosed **+F**, LockOpen **+F**, LogIn, LogOut |
+| **M** | MagnifyingGlassWithEye **+F**, Mail **+F**, Map **+F**, MapMarker **+F**, MapMarkerOnMap **+F**, MarketStall **+F**, Mastodon, Maximize, MedicalKit **+F**, Megaphone **+F**, Menu, Minimize, Minus, MinusCircle **+F**, Monitor, Monument **+F** |
+| **N** | Next, Notification **+F** |
+| **O** | OrganisationChart |
+| **P** | Park **+F**, Parking **+F**, ParkingBike, ParkingGarage, Passport **+F**, Pause, Pen **+F**, Person **+F**, PersonAtDesk **+F**, PersonInWheelchair, PersonInWheelchairMoving, PersonPraying, PersonSwimming **+F**, Persons **+F**, PersonsWithEuroCoin **+F**, Phone **+F**, PieChart **+F**, PiggyBank **+F**, Placeholder, Plant **+F**, Play, Plus, PlusCircle **+F**, PowerPlug **+F**, PowerPlugWithSocket **+F**, Pregnant **+F**, Previous, Print **+F** |
+| **Q** | QuestionMarkCircle **+F**, QuotationMarkClose, QuotationMarkOpen |
+| **R** | Redo, Refresh, Replay, Rewind, RotateClockwise **+F**, RotateCounterclockwise **+F**, Ruler **+F** |
+| **S** | SaintAndrewsCrosses, Save **+F**, Search, Settings **+F**, Share, SpeechBalloon **+F**, SpeechBalloonEllipsis **+F**, SpeechBalloonNotification **+F**, SpeechBalloonQuestionMark **+F**, SportsField **+F**, StandBy, Star **+F**, Stroller **+F**, Student **+F**, Success **+F**, Suitcase **+F**, SunbedParasol **+F**, Syringe **+F** |
+| **T** | Table **+F**, TaxLetter **+F**, TheatricalMasks **+F**, ThumbsDown **+F**, ThumbsUp **+F**, TrashBag **+F**, Tree **+F**, TreeWide **+F** |
+| **U** | Undo, Upload, UserAccount **+F** |
+| **V** | Video **+F**, VolumeOff **+F**, VolumeOn **+F**, VotingBallot |
+| **W** | Wallet **+F**, Warning **+F**, WaterLadder, Whatsapp, WiFi |
+| **X** | X |
+| **Z** | ZoomIn **+F**, ZoomOut **+F** |
 
-### UI Controls & Actions
+### Deprecated names (still exported, will be removed)
 
-| Icon | Import |
-|------|--------|
-| Close | `CloseIcon` |
-| Menu (hamburger) | `MenuIcon` |
-| Search | `SearchIcon` |
-| Plus | `PlusIcon` |
-| Minus | `MinusIcon` |
-| Check mark | `CheckMarkIcon` / `CheckMarkFillIcon` |
-| Copy | `CopyIcon` |
-| Delete | `DeleteIcon` |
-| Download | `DownloadIcon` |
-| Upload | `UploadIcon` |
-| Edit / Pencil | `EditIcon` |
-| Filter | `FilterIcon` |
-| Sort | `SortIcon` |
-| Share | `ShareIcon` |
-| Settings | `SettingsIcon` |
-| Login | `LoginIcon` |
-| Logout | `LogoutIcon` |
-| Save | `SaveIcon` |
-| Refresh | `RefreshIcon` |
-| Undo | `UndoIcon` |
-| Redo | `RedoIcon` |
+| Deprecated | Use instead |
+|---|---|
+| `BellFillIcon` | `NotificationFillIcon` |
+| `BellIcon` | `NotificationIcon` |
+| `CheckMarkCircleFillIcon` | `SuccessFillIcon` |
+| `CheckMarkCircleIcon` | `SuccessIcon` |
+| `CogwheelFillIcon` | `SettingsFillIcon` |
+| `CogwheelIcon` | `SettingsIcon` |
+| `HandWithEuroCoinIcon` | `PersonsWithEuroCoinIcon` |
+| `LinkedinIcon` | `LinkedInIcon` |
+| `PencilFillIcon` | `EditFillIcon` |
+| `PencilIcon` | `EditIcon` |
+| `PersonCircleFillIcon` | `UserAccountFillIcon` |
+| `PersonCircleIcon` | `UserAccountIcon` |
+| `TrashBinFillIcon` | `DeleteFillIcon` |
+| `TrashBinIcon` | `DeleteIcon` |
 
-### Communication
-
-| Icon | Import |
-|------|--------|
-| Email / Mail | `EmailIcon` / `EmailFillIcon` |
-| Phone | `PhoneIcon` / `PhoneFillIcon` |
-| Chat | `ChatIcon` / `ChatFillIcon` |
-| Notification | `NotificationIcon` / `NotificationFillIcon` |
-
-### Objects & Concepts
-
-| Icon | Import |
-|------|--------|
-| Calendar | `CalendarIcon` / `CalendarFillIcon` |
-| Clock | `ClockIcon` / `ClockFillIcon` |
-| Document | `DocumentIcon` / `DocumentFillIcon` |
-| Documents | `DocumentsIcon` |
-| Document check mark | `DocumentCheckMarkIcon` |
-| Document euro | `DocumentEuroIcon` |
-| Document percent | `DocumentPercentIcon` |
-| Document question mark | `DocumentQuestionMarkIcon` |
-| Document with pencil | `DocumentWithPencilIcon` |
-| Home | `HomeIcon` / `HomeFillIcon` |
-| Location | `LocationIcon` / `LocationFillIcon` |
-| Map | `MapIcon` |
-| Person | `PersonIcon` / `PersonFillIcon` |
-| User account | `UserAccountIcon` / `UserAccountFillIcon` |
-| Lock | `LockIcon` / `LockFillIcon` |
-| Unlock | `UnlockIcon` |
-| Clipboard | `ClipboardIcon` |
-| Certificate | `CertificateIcon` |
-| Bank card | `BankCardIcon` |
-| City pass | `CityPassIcon` |
-| Shopping cart | `ShoppingCartIcon` |
-| Cookie | `CookieIcon` |
-| Key | `KeyIcon` |
-
-### Status & Feedback
-
-| Icon | Import |
-|------|--------|
-| Success | `SuccessIcon` |
-| Error | `ErrorIcon` |
-| Info | `InfoIcon` / `InfoFillIcon` |
-| Warning / Alert | `AlertIcon` / `AlertFillIcon` |
-| Star | `StarIcon` / `StarFillIcon` |
-| Heart | `HeartIcon` / `HeartFillIcon` |
-| Eye (visibility) | `EyeIcon` / `EyeFillIcon` |
-| Eye off | `EyeOffIcon` |
-
-### Media
-
-| Icon | Import |
-|------|--------|
-| Camera | `CameraIcon` / `CameraFillIcon` |
-| Image | `ImageIcon` / `ImageFillIcon` |
-| Play | `PlayIcon` / `PlayFillIcon` |
-| Pause | `PauseIcon` |
-| Microphone | `MicrophoneIcon` |
-
-### Transportation
-
-| Icon | Import |
-|------|--------|
-| Airplane | `AirplaneIcon` |
-| Bike | `BikeIcon` |
-| Bus | `BusIcon` |
-| Car | `CarIcon` |
-| Charging station | `ChargingStationIcon` |
-| Train | `TrainIcon` |
-
-### Data & Analytics
-
-| Icon | Import |
-|------|--------|
-| Bar chart | `BarChartIcon` |
-| Database | `DatabaseIcon` |
-| Databases | `DatabasesIcon` |
-| Connected circles | `ConnectedCirclesIcon` |
-
-### Buildings & Places
-
-| Icon | Import |
-|------|--------|
-| Building | `BuildingIcon` |
-| Buildings | `BuildingsIcon` |
-| Bed | `BedIcon` |
-| Construction | `ConstructionIcon` |
-| Park | `ParkIcon` |
-| Area | `AreaIcon` |
-
-### Social Media
-
-| Icon | Import |
-|------|--------|
-| Facebook | `FacebookIcon` |
-| Instagram | `InstagramIcon` |
-| LinkedIn | `LinkedInIcon` |
-| Mastodon | `MastodonIcon` |
-| WhatsApp | `WhatsAppIcon` |
-| X (Twitter) | `XIcon` |
-
-### Amsterdam-Specific
-
-| Icon | Import |
-|------|--------|
-| Amsterdam logo mark | `LogoIcon` |
-| Earth / Globe | `EarthIcon` |
-| Contrast | `ContrastIcon` |
+Deprecated names log a removal date in their type definitions; replace them when you touch the code.
 
 ## Custom SVG Icons
 

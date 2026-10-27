@@ -16,11 +16,9 @@ Responsive CSS grid: 4 columns (narrow) → 8 (medium) → 12 (wide).
 import { Grid } from "@amsterdam/design-system-react"
 
 <Grid
-  as="main"                     // 'article' | 'aside' | 'div' | 'footer' | 'header' | 'main' | 'nav' | 'section'
+  as="main"                     // 'article' | 'aside' | 'div' | 'footer' | 'header' | 'main' | 'nav' | 'ol' | 'section' | 'ul'
   gapVertical="large"           // 'none' | 'large' | '2x-large'
   paddingVertical="large"       // 'large' | 'x-large' | '2x-large'
-  paddingTop="x-large"          // overrides paddingVertical for top
-  paddingBottom="2x-large"      // overrides paddingVertical for bottom
 >
   <Grid.Cell
     span={8}                    // 1-12 | 'all' | { narrow?: n, medium?: n, wide?: n }
@@ -30,6 +28,12 @@ import { Grid } from "@amsterdam/design-system-react"
     Content
   </Grid.Cell>
 </Grid>
+```
+
+Use **either** `paddingVertical` **or** `paddingTop`/`paddingBottom` — the types make them mutually exclusive:
+
+```tsx
+<Grid paddingTop="x-large" paddingBottom="2x-large">…</Grid>
 ```
 
 **Responsive span patterns:**
@@ -75,13 +79,16 @@ Grid variant for content that "breaks out" of the standard grid.
 
 ```tsx
 <Breakout>
-  <Breakout.Cell span="all">
-    Full-bleed content
+  <Breakout.Cell colSpan="all" has="spotlight">
+    <Spotlight color="azure">Full-bleed band</Spotlight>
+  </Breakout.Cell>
+  <Breakout.Cell colSpan={{ narrow: 4, medium: 4, wide: 6 }} colStart={1} rowStart={1} has="figure">
+    <Image src="/hero.jpg" alt="" />
   </Breakout.Cell>
 </Breakout>
 ```
 
-Same props as Grid.
+`Breakout.Cell` uses `colSpan` / `colStart` / `rowSpan` / `rowStart` (not `span` / `start` like `Grid.Cell`), plus `has="spotlight" | "figure"` for cells that break out of the grid padding. `colSpan="all"` cannot be combined with `colStart`. `Breakout` itself takes the same `as`, `gapVertical` and padding props as `Grid`.
 
 ### Overlap
 
@@ -178,7 +185,7 @@ Amsterdam branded header with logo, navigation, and responsive menu.
 ```tsx
 <Heading
   level={1}              // 1 | 2 | 3 | 4 (required — sets HTML element h1-h4)
-  size="level-2"         // 'level-1' | ... | 'level-6' (visual size override)
+  size="level-2"         // 'level-1' | ... | 'level-5' (visual size override)
   color="inverse"        // 'inverse' (for dark backgrounds)
 >
 ```
@@ -331,7 +338,7 @@ Wraps buttons in a horizontal group with consistent spacing.
 <Radio
   name="choice"
   value="a"
-  icon={CircleIcon}      // custom icon
+  icon={MyRadioIcon}     // optional custom icon (IconProps['svg'])
   invalid                // boolean
 >
   Option A
@@ -343,8 +350,11 @@ Wraps buttons in a horizontal group with consistent spacing.
 Toggle switch (on/off).
 
 ```tsx
-<Switch id="notifications">Meldingen aan</Switch>
+<Label htmlFor="notifications">Meldingen</Label>
+<Switch id="notifications" />
 ```
+
+Switch renders an `<input>` with an empty visual `<label>` track — it takes **no children**. Its accessible name comes from a `Label` tied to it with `htmlFor`.
 
 ### DateInput
 
@@ -454,7 +464,7 @@ Validation error display.
 
 ```tsx
 <ErrorMessage
-  icon={AlertIcon}       // custom icon
+  icon={WarningIcon}     // default: WarningIcon
   prefix="Invoerfout"    // string (default: 'Invoerfout')
 >
   Vul een geldig e-mailadres in
@@ -515,10 +525,12 @@ Navigation menu with accessible label.
 
 ```tsx
 <Menu accessibleName="Hoofdmenu" inWideWindow>
-  <Menu.Link href="/">Home</Menu.Link>
-  <Menu.Link href="/about">Over ons</Menu.Link>
+  <Menu.Link href="/" icon={BarChartFillIcon}>Overzicht</Menu.Link>
+  <Menu.Link href="/documenten" icon={DocumentsFillIcon}>Documenten</Menu.Link>
 </Menu>
 ```
+
+`icon` is **required** on `Menu.Link` — use the filled variant.
 
 ### Pagination
 
@@ -577,7 +589,7 @@ Navigation menu with accessible label.
 
 ```tsx
 <Accordion
-  headingLevel={2}                 // 1-4 (required)
+  headingLevel={2}                 // 2 | 3 | 4 (required)
   sectionAs="section"              // 'div' | 'section'
 >
   <Accordion.Section
@@ -687,22 +699,24 @@ Terms use Heading 4 typography (larger, bolder) with `text-wrap: balance` for mu
 
 ### Dialog
 
-Modal dialog with static methods.
+A small modal window for a short confirmation, a yes/no question or a brief reminder. For anything bigger, use `ModalDialog`.
 
 ```tsx
+<Button onClick={() => Dialog.open("#my-dialog")}>Verwijderen</Button>
+
 <Dialog
   id="my-dialog"
-  heading="Dialog title"           // string (required)
+  heading="Weet u het zeker?"      // string (required)
   closeButtonLabel="Sluiten"
-  footer={<Button onClick={() => Dialog.close()}>OK</Button>}
+  footer={<Button onClick={Dialog.close}>OK</Button>}
 >
   <Paragraph>Dialog content.</Paragraph>
 </Dialog>
-
-{/* Open/close via static methods */}
-Dialog.open("my-dialog")
-Dialog.close()
 ```
+
+- `Dialog.open(selector)` takes a **CSS selector** — `"#my-dialog"`, not `"my-dialog"`.
+- `Dialog.close` is a click handler (it closes the `<dialog>` containing the clicked button). Pass it as `onClick={Dialog.close}`; calling `Dialog.close()` without an event is a type error and crashes.
+- Alternatively, put a `<form method="dialog">` inside and give each submit button a `value`.
 
 ### Badge
 
@@ -764,20 +778,20 @@ For custom logos, pass a `LogoBrandConfig` object: `{ label: string, svg: Compon
   <UnorderedList.Item>Item B</UnorderedList.Item>
 </UnorderedList>
 
-{/* File list */}
+{/* File list — each item takes a File object, not children */}
 <FileList>
-  <FileList.Item>document.pdf</FileList.Item>
+  <FileList.Item file={file} onDelete={() => removeFile(file)} />
 </FileList>
 ```
 
 ### ProgressList
 
-Steps are collapsible (v3.3.0+). Completed steps collapse by default to reduce visual noise. Each step heading becomes a toggle button with a chevron icon. The chevron rotation animates (respects `prefers-reduced-motion`). All panels force-expand when printing.
+Steps are static by default. Add `collapsible` (v4.0.0+) to turn each step heading into a toggle button; completed steps then start collapsed. All panels force-expand when printing.
 
 ```tsx
-<ProgressList headingLevel={2}>
+<ProgressList collapsible headingLevel={2}>
   <ProgressList.Step heading="Stap 1" status="completed">
-    {/* Collapsed by default because status="completed" */}
+    {/* Starts collapsed because status="completed" and the list is collapsible */}
     <Paragraph>Completed step.</Paragraph>
   </ProgressList.Step>
   <ProgressList.Step
@@ -791,7 +805,7 @@ Steps are collapsible (v3.3.0+). Completed steps collapse by default to reduce v
       <ProgressList.Substep>Sub B</ProgressList.Substep>
     </ProgressList.Substeps>
   </ProgressList.Step>
-  <ProgressList.Step heading="Stap 3" defaultCollapsed={true}>
+  <ProgressList.Step heading="Stap 3" defaultExpanded={false}>
     {/* Explicitly collapsed despite no completed status */}
     <Paragraph>Upcoming step.</Paragraph>
   </ProgressList.Step>
@@ -805,8 +819,11 @@ Steps are collapsible (v3.3.0+). Completed steps collapse by default to reduce v
 | `heading` | `string` | required | Heading text for the step |
 | `status` | `'current' \| 'completed'` | — | Progress state |
 | `hasSubsteps` | `boolean` | `false` | Whether step contains substeps (for connector lines) |
-| `defaultCollapsed` | `boolean` | `true` if completed, `false` otherwise | Initial collapsed state (uncontrolled) |
+| `defaultExpanded` | `boolean` | `false` if completed, `true` otherwise | Initial expanded state (uncontrolled) |
+| `expanded` | `boolean` | — | Controlled expanded state — pair with `onToggle` |
 | `onToggle` | `(expanded: boolean) => void` | — | Callback when step is expanded or collapsed |
+
+`collapsed` and `defaultCollapsed` are deprecated (v4.3.0, removal on or after 2027-01-10) — use `expanded` / `defaultExpanded`, which take the opposite value. These props only have an effect when the `ProgressList` is `collapsible`.
 
 ## Components ADS Does Not Ship — Use Radix Primitives
 

@@ -119,18 +119,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-### Bold Text Fix
+### Font Weights
 
-Amsterdam Sans uses weight 800 for bold, not the browser default 700. The `ams-body` class handles this, but if you scope differently:
+Body text is weight 400; bold text and headings are weight 700 (Amsterdam Sans Bold, since tokens v4.1.0). Use the tokens rather than numbers:
 
 ```css
 .your-root {
   font-weight: var(--ams-typography-body-text-font-weight); /* 400 */
 }
 .your-root strong, .your-root b {
-  font-weight: var(--ams-typography-body-text-bold-font-weight); /* 800 */
+  font-weight: var(--ams-typography-body-text-bold-font-weight); /* 700 */
 }
 ```
+
+Other weights have their own tokens: `--ams-typography-body-text-light-font-weight` (300), `-extra-bold-font-weight` (800), `-black-font-weight` (900). Headings use `--ams-typography-heading-font-weight` (700).
 
 ## Scaffold a New App
 
@@ -139,7 +141,7 @@ For a new standalone React app, **do not re-invent the setup**. Use the runnable
 - **Bun + Vite 6** + `@vitejs/plugin-react-swc` (matches real Amsterdam apps)
 - **React Router v7** with an `<AppLayout>` outlet pattern
 - **Tanstack Query v5** pre-wired in `App.tsx`
-- **Tailwind v4** via `@tailwindcss/vite`, with the AMS bridge in `tailwind.config.js` and preflight disabled
+- **Tailwind v4** via `@tailwindcss/vite`, with the AMS bridge in `tailwind.config.js` and preflight left out (only `tailwindcss/theme` + `tailwindcss/utilities` are imported)
 - **ADS v3.3.0 / v3.4.0** in **Compact mode** (most Amsterdam projects are internal tools)
 - **CVA + clsx + tailwind-merge** for custom component variants
 - **`tw-animate-css`** + a hand-rolled `.ams-reveal` page-load stagger
@@ -312,23 +314,27 @@ import { Grid, Heading, Page, PageHeader, PageFooter, Paragraph } from "@amsterd
 ### Dialog
 
 ```tsx
-import { Button, Dialog, Paragraph } from "@amsterdam/design-system-react"
+import { ActionGroup, Button, Dialog, Paragraph } from "@amsterdam/design-system-react"
 
-<Button onClick={() => Dialog.open("confirm-dialog")}>Open Dialog</Button>
+{/* open() takes a CSS selector — include the # */}
+<Button onClick={() => Dialog.open("#confirm-dialog")}>Open Dialog</Button>
 
 <Dialog
   id="confirm-dialog"
   heading="Bevestiging"
   footer={
-    <>
-      <Button variant="primary" onClick={() => Dialog.close()}>Bevestigen</Button>
-      <Button variant="secondary" onClick={() => Dialog.close()}>Annuleren</Button>
-    </>
+    <ActionGroup>
+      {/* close is a click handler: pass it, don't call it */}
+      <Button variant="primary" onClick={Dialog.close}>Bevestigen</Button>
+      <Button variant="secondary" onClick={Dialog.close}>Annuleren</Button>
+    </ActionGroup>
   }
 >
   <Paragraph>Weet u het zeker?</Paragraph>
 </Dialog>
 ```
+
+`Dialog` is for short confirmations, yes/no questions and brief reminders. For a task with several fields or longer content, use `ModalDialog` in an application, or a page of its own on a public website (see `references/components.md` § ModalDialog).
 
 ## Available Components
 
@@ -370,9 +376,9 @@ The AMS grid is responsive with 3 breakpoints:
 
 | Breakpoint | Columns | Viewport | Padding |
 |-----------|---------|----------|---------|
-| **Narrow** | 4 | < 576px | `--ams-space-l` (24-36px) |
-| **Medium** | 8 | 576px – 1023px | `--ams-space-xl` (36-60px) |
-| **Wide** | 12 | ≥ 1024px | `--ams-space-2xl` (48-90px) |
+| **Narrow** | 4 | < 600px (37.5rem) | `--ams-space-l` (24-36px) |
+| **Medium** | 8 | 600px – 1159px | `--ams-space-xl` (36-60px) |
+| **Wide** | 12 | ≥ 1160px (72.5rem) | `--ams-space-2xl` (48-90px) |
 
 ### Grid.Cell `span` prop
 
@@ -457,8 +463,8 @@ Brand tokens  →  Common tokens  →  Component tokens
 
 **Reference chain example:**
 ```
-Brand:     --ams-color-interactive-default: #004699
-Common:    --ams-links-color: var(--ams-color-interactive-default)
+Brand:     --ams-color-interactive: #004699
+Common:    --ams-links-color: var(--ams-color-interactive)
 Component: --ams-link-color: var(--ams-links-color)
 ```
 
@@ -527,13 +533,8 @@ AMS Link components render `<a>` by default. For SPA routing, use polymorphic re
 import NextLink from "next/link"
 import { Link, Breadcrumb, Pagination } from "@amsterdam/design-system-react"
 
-{/* Regular link */}
-<Link href="/about" legacyBehavior passHref>
-  <NextLink>Over ons</NextLink>
-</Link>
-
-{/* Or simpler: just use Next.js Link with AMS classes */}
-<NextLink href="/about" className="ams-link">Over ons</NextLink>
+{/* Every ADS link component accepts a linkComponent (React v4.2.0+) */}
+<Link href="/about" linkComponent={NextLink}>Over ons</Link>
 
 {/* Pagination with router links */}
 <Pagination
@@ -567,16 +568,14 @@ import { Link } from "@amsterdam/design-system-react"
 When using Tailwind CSS v4 alongside AMS, map AMS tokens to Tailwind's `@theme` so utilities use the design system values:
 
 ```css
-/* app.css */
-@import "tailwindcss";
-@import "@amsterdam/design-system-assets/font/index.css";
-@import "@amsterdam/design-system-css/dist/index.css";
-@import "@amsterdam/design-system-tokens/dist/index.css";
-
-/* Disable Tailwind's preflight — AMS CSS handles base styles */
-@layer base {
-  /* AMS body styles take precedence */
-}
+/* app.css — import Tailwind's theme and utilities, NOT `@import "tailwindcss"`:
+   that also pulls in preflight (Tailwind's reset), which fights ADS base styles. */
+@layer theme, base, ams, components, utilities;
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+@import "@amsterdam/design-system-assets/font/index.css" layer(ams);
+@import "@amsterdam/design-system-css/dist/index.css" layer(ams);
+@import "@amsterdam/design-system-tokens/dist/index.css" layer(ams);
 
 @theme {
   /* Map AMS spacing */
@@ -725,7 +724,7 @@ export const List = Object.assign(ListRoot, { Item: ListItem })
 | Missing `ams-body` class | Add to `<body>` or root element |
 | Hardcoded colors (`#004699`) | Use `var(--ams-color-interactive)` |
 | Hardcoded spacing (`16px`) | Use `var(--ams-space-m)` |
-| Using `font-weight: 700` for bold | Use `800` or `var(--ams-typography-body-text-bold-font-weight)` |
+| Hardcoding a font weight (`800`, `bold`) | Use `var(--ams-typography-body-text-bold-font-weight)` (700) or `--ams-typography-heading-font-weight` |
 | Setting `font-size: 62.5%` on html | Don't — AMS uses rem values calibrated to 16px base |
 | Missing `invalid` prop on both Field and input | Both `<Field invalid>` and `<TextInput invalid>` need it |
 | Using `<h1>` instead of `<Heading level={1}>` | Always use AMS Heading component |
@@ -790,17 +789,20 @@ import { SearchIcon, StarIcon } from "@amsterdam/design-system-react-icons"
 <Badge label="Nieuw" icon={StarIcon} color="azure" />
 ```
 
-### v2.0.0 Renames (Breaking)
+### Deprecated Icon Names
 
-These icons were renamed in v2.0.0 — use the new names:
+These names still export but are deprecated (each carries a removal date) — use the replacements:
 
-| Old name | New name |
+| Deprecated | Use instead |
 |----------|----------|
 | `BellIcon` / `BellFillIcon` | `NotificationIcon` / `NotificationFillIcon` |
 | `PersonCircleIcon` / `PersonCircleFillIcon` | `UserAccountIcon` / `UserAccountFillIcon` |
-| `TrashBinIcon` | `DeleteIcon` |
-| `CogwheelIcon` | `SettingsIcon` |
-| `CheckMarkCircleIcon` | `SuccessIcon` |
+| `TrashBinIcon` / `TrashBinFillIcon` | `DeleteIcon` / `DeleteFillIcon` |
+| `CogwheelIcon` / `CogwheelFillIcon` | `SettingsIcon` / `SettingsFillIcon` |
+| `CheckMarkCircleIcon` / `CheckMarkCircleFillIcon` | `SuccessIcon` / `SuccessFillIcon` |
+| `PencilIcon` / `PencilFillIcon` | `EditIcon` / `EditFillIcon` (v2.3.0) |
+| `HandWithEuroCoinIcon` | `PersonsWithEuroCoinIcon` |
+| `LinkedinIcon` | `LinkedInIcon` |
 
 ### Custom SVGs
 

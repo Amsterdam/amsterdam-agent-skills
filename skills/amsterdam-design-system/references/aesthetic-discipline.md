@@ -22,7 +22,7 @@ It does **not** override any rule in `SKILL.md`. The mechanical rules — Amster
 
 **ADS reality:** Amsterdam Sans is the only font, period. `--ams-typography-font-family` is `'Amsterdam Sans', Arial, sans-serif`. There is no escape valve.
 
-**The legal move:** hierarchy comes from **size jumps**, **weight contrast** (400 body vs 800 headings — no 500/600/700 stops in between), and **uppercase tracking** on small eyebrows. The `level` prop sets semantics; the `size` prop sets visual rank — use them independently to break the default cascade.
+**The legal move:** hierarchy comes from **size jumps**, **weight contrast** (400 body vs 700 headings — use the weight tokens, no in-between stops), and **uppercase tracking** on small eyebrows. The `level` prop sets semantics; the `size` prop sets visual rank — use them independently to break the default cascade.
 
 ```tsx
 // ✅ Editorial hero — three distinct typographic ranks in three lines
@@ -331,7 +331,7 @@ When `frontend-design`'s literal advice conflicts with ADS, use this table.
 
 | frontend-design says | ADS does not allow | Instead do |
 |---|---|---|
-| "Pick a distinctive display font" | Amsterdam Sans only | Weight contrast (400 vs 800), size jumps via `Heading size="level-1"`, uppercase tracking on small eyebrows |
+| "Pick a distinctive display font" | Amsterdam Sans only | Weight contrast (400 vs 700), size jumps via `Heading size="level-1"`, uppercase tracking on small eyebrows |
 | "Avoid Inter, Roboto, Arial" | Arial is the system fallback for Amsterdam Sans | Already covered — Amsterdam Sans is none of those. If the font fails to load, Arial appears, but that is a network failure, not a design choice |
 | "Break the grid, diagonal flow" | 4/8/12 is mandatory; no rotation | Asymmetric spans with `start={}`, varied `paddingVertical` per section, one `<Breakout>` per page |
 | "Dominant purple gradient on white" | No gradients in tokens; no purple-to-white | Dominant `--ams-color-interactive` (Amsterdam blue) or one `<Spotlight color="…">`, with one `--ams-color-highlight-*` accent |

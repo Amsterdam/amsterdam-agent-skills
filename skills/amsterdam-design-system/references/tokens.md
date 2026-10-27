@@ -15,8 +15,8 @@ Brand tokens  →  Common tokens  →  Component tokens
 
 **Reference chain example:**
 ```
-Brand:     --ams-color-interactive-default: #004699
-Common:    --ams-links-color: var(--ams-color-interactive-default)
+Brand:     --ams-color-interactive: #004699
+Common:    --ams-links-color: var(--ams-color-interactive)
 Component: --ams-link-color: var(--ams-links-color)
 ```
 
@@ -123,7 +123,11 @@ All spacing tokens use fluid `clamp()` values that scale with viewport width.
 | `--ams-typography-body-text-font-size` | `clamp(1.125rem, 1.0893rem + 0.1786vw, 1.25rem)` (~18-20px) |
 | `--ams-typography-body-text-font-weight` | `400` |
 | `--ams-typography-body-text-line-height` | `1.6` |
-| `--ams-typography-body-text-bold-font-weight` | `800` |
+| `--ams-typography-body-text-bold-font-weight` | `700` (was 800 before v4.1.0) |
+| `--ams-typography-body-text-light-font-weight` | `300` |
+| `--ams-typography-body-text-extra-bold-font-weight` | `800` |
+| `--ams-typography-body-text-black-font-weight` | `900` |
+| `--ams-typography-italic-font-style` | `italic` |
 | `--ams-typography-body-text-small-font-size` | `1rem` (16px) |
 | `--ams-typography-body-text-small-line-height` | `1.5` |
 | `--ams-typography-body-text-large-font-size` | ~21-25px fluid |
@@ -144,7 +148,7 @@ All spacing tokens use fluid `clamp()` values that scale with viewport width.
 
 ### Headings — Spacious
 
-All headings: `font-weight: 800`, `text-wrap: balance`
+All headings: `font-weight: var(--ams-typography-heading-font-weight)` (`700`), `text-wrap: balance`
 
 | Level | Font Size | Line Height |
 |-------|-----------|-------------|

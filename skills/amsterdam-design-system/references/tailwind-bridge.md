@@ -59,21 +59,13 @@ export default {
 }
 ```
 
-### Disable preflight — required
+### Leave out preflight — required
 
-Tailwind's preflight (CSS reset) **conflicts** with AMS base styles: it strips margins from `<p>`, removes the `<body>` font-family, and overrides `ams-body`. AMS provides its own reset via `@amsterdam/design-system-css`. Disable Tailwind's:
+Tailwind's preflight (CSS reset) **conflicts** with AMS base styles: it strips margins from `<p>`, removes the `<body>` font-family, and overrides `ams-body`. ADS needs no global reset — every component resets the elements it renders.
 
-```js
-// tailwind.config.js
-export default {
-  // ...
-  corePlugins: {
-    preflight: false,
-  },
-}
-```
+In Tailwind v4 you leave preflight out by **not importing it**: import `tailwindcss/theme` and `tailwindcss/utilities` separately (as above) instead of `@import "tailwindcss"`, which bundles `tailwindcss/preflight`.
 
-This is non-negotiable. If you skip it you will see broken paragraph spacing, missing Amsterdam Sans, and `ams-page-header` styling that does not apply.
+> The v3 `corePlugins: { preflight: false }` option does nothing in Tailwind v4 — the v4 JS config loaded through `@config` does not read `corePlugins`. Don't rely on it.
 
 ## Using compact tokens with Tailwind
 
@@ -113,9 +105,6 @@ export default {
         ams: "var(--ams-typography-font-family)",
       },
     },
-  },
-  corePlugins: {
-    preflight: false,
   },
 }
 ```

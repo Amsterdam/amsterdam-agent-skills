@@ -37,7 +37,7 @@ Open <http://localhost:5173>.
 ├── package.json
 ├── tsconfig.json                 # Strict mode, paths alias @/* → src/*
 ├── vite.config.ts                # SWC + Tailwind plugin + @ alias
-├── tailwind.config.js            # Imports compact.json, preflight:false
+├── tailwind.config.js            # Imports compact.json (bridge config)
 ├── eslint.config.js              # Flat config, React + hooks + refresh
 ├── bunfig.toml
 ├── .env.example                  # VITE_PUBLIC_API_URL placeholder
@@ -125,15 +125,15 @@ See the `appinsights-instrumentation` skill for setup.
 
 ## Customizing the navigation
 
-ADS v3.3.0 only ships a router slot on **two** components: `PageHeader.logoLinkComponent` and `Pagination.linkComponent`. Both expect a `ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>>`, not React Router's `Link` directly — so `AppLayout.tsx` defines a tiny `LogoLink` adapter that maps ADS's `href` to React Router's `to`.
+Every ADS link component takes a router link (ADS React v4.2.0+): `linkComponent` on `Link`, `StandaloneLink`, `Breadcrumb.Link`, `Card.Link`, `LinkList.Link`, `Menu.Link`, `PageHeader.MenuLink`, `PageFooter.MenuLink`, `TabNavigation.Link`, `TableOfContents.Link`, `CallToActionLink`, `SkipLink` and `Pagination`, and `logoLinkComponent` on `PageHeader`.
 
-Every other link-like component in this starter — `<StandaloneLink>`, `<PageHeader.MenuLink>`, `<PageFooter.MenuLink>`, `<Breadcrumb.Link>`, `<Card.Link>`, `<LinkList.Link>` — renders a plain `<a>` and **triggers a full page reload**. There is no `linkComponent` prop, no `asChild`, no render prop.
+ADS passes `href` and other anchor attributes straight through, so the starter ships one shared adapter, `src/lib/RouterLink.tsx`, built on React Router's `useHref` + `useLinkClickHandler` (the pattern from the [ADS routing guide](https://designsystem.amsterdam/?path=/docs/docs-guidelines-routing-libraries--docs)). Use it on every internal link:
 
-You have three options when that reload is unacceptable:
+```tsx
+<StandaloneLink href="/meedoen" linkComponent={RouterLink}>Bekijk de agenda</StandaloneLink>
+```
 
-1. **Accept the reload.** Fine for navigation links (header menu, footer, breadcrumbs) on internal tools — the bundle is cached.
-2. **Use the adapter** on the two slots that exist (`PageHeader.logoLinkComponent`, `Pagination.linkComponent`).
-3. **Build a click interceptor wrapper** around the ADS link, calling `useNavigate()` on left-clicks without modifier keys. Full pattern (with proper modifier/button/target/download guards) is in `references/layout-patterns.md` → "Routing Link integration with React Router v7".
+Keep the `linkComponent` stable: import the module-level `RouterLink`, never write `linkComponent={(p) => <a {...p} />}` inline — that remounts the link on every render. Refs are only forwarded to a plain anchor, not to a custom `linkComponent`.
 
 ## Verification
 
