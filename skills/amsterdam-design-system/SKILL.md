@@ -10,26 +10,27 @@ description: >
   shadcn, Chakra, Ant Design, or plain custom HTML/CSS.
 ---
 
-<!-- ADS-VERSION: tokens=3.4.0 react=3.3.0 css=3.3.0 assets=2.2.0 icons=2.0.0 -->
+<!-- ADS-VERSION: tokens=4.4.0 react=4.5.0 css=4.5.0 assets=2.7.0 icons=2.3.0 -->
 
 # Amsterdam Design System
 
-> **Supported versions** (last updated 2026-04-03):
+> **Supported versions** (last updated 2026-10-27):
 > | Package | Version |
 > |---------|---------|
-> | `@amsterdam/design-system-tokens` | **v3.4.0** |
-> | `@amsterdam/design-system-react` | **v3.3.0** |
-> | `@amsterdam/design-system-css` | **v3.3.0** |
-> | `@amsterdam/design-system-assets` | **v2.2.0** |
-> | `@amsterdam/design-system-react-icons` | **v2.0.0** |
+> | `@amsterdam/design-system-tokens` | **v4.4.0** |
+> | `@amsterdam/design-system-react` | **v4.5.0** |
+> | `@amsterdam/design-system-css` | **v4.5.0** |
+> | `@amsterdam/design-system-assets` | **v2.7.0** |
+> | `@amsterdam/design-system-react-icons` | **v2.3.0** |
 
 > **MANDATORY**: This is the ONLY design system permitted. ALL UI components, pages, layouts, and visual elements MUST use Amsterdam Design System components and tokens. Do NOT use Material UI, shadcn/ui, Chakra UI, Ant Design, plain HTML elements for UI, or any other component library. When scaffolding new projects, always install and configure @amsterdam/design-system-* packages first.
 
 Production guidance for building City of Amsterdam digital products using the official design system. Components, tokens, layout patterns, and integration with Tailwind CSS v4.
 
-> **Docs:** https://designsystem.amsterdam/
+> **Docs (Storybook):** https://designsystem.amsterdam/
+> **Release notes:** https://designsystem.amsterdam/?path=/docs/docs-release-notes--docs
 > **Repo:** https://github.com/Amsterdam/design-system
-> **Storybook:** https://storybook.designsystem.amsterdam/
+> **MCP server:** `https://main--68db9df886b46f139748c074.chromatic.com/mcp` (Streamable HTTP, public). Exposes the real components, props, stories and docs of the current release. If your tool has it connected, query it (`list-all-documentation`, `get-documentation`) before guessing a prop. See the [AI assistance guide](https://designsystem.amsterdam/?path=/docs/docs-guidelines-ai-assistance--docs).
 
 ## Clarify Before Building
 
@@ -77,7 +78,7 @@ The design system ships as 5 npm packages:
 | `@amsterdam/design-system-assets` | Amsterdam Sans font files |
 | `@amsterdam/design-system-css` | BEM component styles (`ams-*` classes) |
 | `@amsterdam/design-system-tokens` | CSS custom properties (`--ams-*`) in Spacious + Compact modes |
-| `@amsterdam/design-system-react` | React components (66 components, all with `forwardRef`) |
+| `@amsterdam/design-system-react` | React components (70 exported, all with `forwardRef`) |
 | `@amsterdam/design-system-react-icons` | Icon components for the AMS icon set |
 
 No provider or context wrapper required — import CSS, use components.
@@ -106,7 +107,11 @@ import "@amsterdam/design-system-tokens/dist/compact.css"  // 4. Compact overrid
 
 ### Root Element
 
-Add the `ams-body` class to your body or root element:
+Add the `ams-body` class to your body or root element, and declare the viewport with `viewport-fit=cover` so Grid, PageHeader, PageFooter and Menu keep clear of a display cutout (never add `maximum-scale` or `user-scalable=no`):
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+```
 
 ```tsx
 // Next.js (app/layout.tsx)
@@ -138,11 +143,11 @@ Other weights have their own tokens: `--ams-typography-body-text-light-font-weig
 
 For a new standalone React app, **do not re-invent the setup**. Use the runnable starter at `assets/starter-vite-react/`. It ships:
 
-- **Bun + Vite 6** + `@vitejs/plugin-react-swc` (matches real Amsterdam apps)
+- **Bun + Vite 8** + `@vitejs/plugin-react-swc` (matches real Amsterdam apps)
 - **React Router v7** with an `<AppLayout>` outlet pattern
 - **Tanstack Query v5** pre-wired in `App.tsx`
 - **Tailwind v4** via `@tailwindcss/vite`, with the AMS bridge in `tailwind.config.js` and preflight left out (only `tailwindcss/theme` + `tailwindcss/utilities` are imported)
-- **ADS v3.3.0 / v3.4.0** in **Compact mode** (most Amsterdam projects are internal tools)
+- **ADS React/CSS v4.5.0, tokens v4.4.0** in **Compact mode** (most Amsterdam projects are internal tools)
 - **CVA + clsx + tailwind-merge** for custom component variants
 - **`tw-animate-css`** + a hand-rolled `.ams-reveal` page-load stagger
 - A sample `HomePage.tsx` that exercises every principle from `references/aesthetic-discipline.md`
@@ -341,31 +346,31 @@ import { ActionGroup, Button, Dialog, Paragraph } from "@amsterdam/design-system
 > Full props reference: read `references/components.md`
 
 ### Layout
-`Grid` (`.Cell`) · `Column` · `Row` · `Breakout` (`.Cell`) · `Overlap` · `Page` · `Spotlight`
+`Grid` (`.Cell`, `.Subgrid`) · `Column` · `Row` · `Breakout` (`.Cell`) · `Overlap` · `Page` · `Spotlight`
 
 ### Page Structure
 `PageHeader` (`.GridCellNarrowWindowOnly`, `.MenuLink`) · `PageFooter` (`.Menu`, `.MenuLink`, `.Spotlight`)
 
 ### Typography
-`Heading` · `Paragraph` · `Blockquote` · `Link` · `StandaloneLink` · `CallToActionLink` · `Mark`
+`Heading` · `Paragraph` · `Blockquote` · `Link` · `StandaloneLink` · `CallToActionLink` · `Mark` · `Metadata`
 
 ### Buttons & Actions
 `Button` · `IconButton` · `ActionGroup`
 
 ### Form Controls
-`TextInput` · `TextArea` · `Select` (`.Group`, `.Option`) · `Checkbox` · `Radio` · `Switch` · `DateInput` · `TimeInput` · `PasswordInput` · `FileInput` · `SearchField` (`.Button`, `.Input`) · `CharacterCount`
+`TextInput` · `TextArea` · `Select` (`.Group`, `.Option`) · `Checkbox` · `Radio` · `Switch` · `DateInput` · `KnownDateInput` (`.Day`, `.Month`, `.Year`) · `DatePicker` · `TimeInput` · `PasswordInput` · `FileInput` · `SearchField` (`.Button`, `.Input`) · `FormFieldStatus` (`.CharacterCount`) · ~~`CharacterCount`~~ (deprecated)
 
 ### Form Structure
 `Field` · `FieldSet` · `Label` · `Hint` · `ErrorMessage` · `InvalidFormAlert`
 
 ### Navigation
-`Breadcrumb` (`.Link`) · `LinkList` (`.Link`) · `Menu` (`.Link`) · `Pagination` · `SkipLink` · `Tabs` (`.Button`, `.List`, `.Panel`) · `TableOfContents` (`.Link`, `.List`)
+`Breadcrumb` (`.Link`) · `LinkList` (`.Link`) · `Menu` (`.Link`) · `Pagination` · `SkipLink` · `Tabs` (`.Button`, `.List`, `.Panel`) · `TabNavigation` (`.List`, `.Link`) · `TableOfContents` (`.Link`, `.List`) · `Calendar`
 
 ### Data Display
-`Accordion` (`.Section`) · `Card` (`.Heading`, `.HeadingGroup`, `.Image`, `.Link`) · `DescriptionList` (`.Description`, `.Section`, `.Term`) · `Figure` (`.Caption`) · `Table` (`.Body`, `.Caption`, `.Cell`, `.Footer`, `.Header`, `.HeaderCell`, `.Row`) · `ImageSlider`
+`Accordion` (`.Section`) · `Card` (`.Content`, `.Heading`, `.HeadingGroup`, `.Image`, `.Link`) · `DataList` (`.Item`, `.Key`, `.Value`, `.Actions`) · `DescriptionList` (`.Item`, `.Term`, `.Description`) · `Figure` (`.Caption`) · `Image` · `Table` (`.Body`, `.Caption`, `.Cell`, `.Footer`, `.Header`, `.HeaderCell`, `.Row`) · `ImageSlider`
 
 ### Feedback
-`Alert` · `Dialog` (`.open()`, `.close()`) · `Badge` · `Avatar`
+`Alert` · `Dialog` (`.open()`, `.close()`) · `ModalDialog` (`.Header`, `.Body`, `.Footer`, `.open()`, `.close()`) · `Badge` · `Avatar` · `Skeleton` (`.Heading`, `.Paragraph`, `.List`, `.Image`, `.Table`)
 
 ### Utility
 `Icon` · `Logo` · `FileList` (`.Item`) · `OrderedList` (`.Item`) · `UnorderedList` (`.Item`) · `ProgressList` (`.Step`, `.Substep`, `.Substeps`)
@@ -506,8 +511,10 @@ const primaryColor = tokens.ams.color.interactive.default // "#004699"
 | **H1** | 32-48px fluid | 24-28px fluid |
 | **Line height** | 1.6 | 1.5 |
 | **Space m** | 16-24px fluid | 12-16px fluid |
-| **Space 2xl** | 48-90px fluid | 32-48px fluid |
+| **Space xl** | 36-60px fluid | 20-32px fluid |
+| **Space 2xl** | 48-90px fluid | 24-40px fluid |
 | **Borders** | Thicker (m=2px, xl=4px) | Thinner (m=1px, xl=3px) |
+| **Page background** | White | Grey (`--ams-color-background-body`, #e8e8e8); `Grid.Cell`s are white with `--ams-space-m` padding (`appearance="flush"` drops the padding, `"transparent"` also the background) |
 
 **Decision rule:** Public-facing site → Spacious. Back-office/admin/dashboard → Compact.
 
@@ -522,6 +529,18 @@ import "@amsterdam/design-system-tokens/dist/compact.css"
 ```
 
 Compact overrides the same CSS custom properties with smaller values. No code changes needed — components adapt automatically.
+
+### Lo-fi Mode
+
+Lo-fi Mode (CSS v4.4.0+) strips a page to a wireframe — for discussing structure before styling. Import it after the tokens, plus its font:
+
+```tsx
+import "@amsterdam/design-system-tokens/dist/index.css"
+import "@amsterdam/design-system-tokens/dist/lo-fi.css"
+import "@amsterdam/design-system-assets/font/lo-fi/index.css"
+```
+
+Using the `.ams-theme` class instead of `:root`? Pair `index.theme.css` with `compact.theme.css` or `lo-fi.theme.css`, and add `ams-theme--compact` or `ams-theme--lo-fi` to the element that carries `ams-theme`.
 
 ## Router Integration
 
@@ -554,12 +573,17 @@ import { Link, Breadcrumb, Pagination } from "@amsterdam/design-system-react"
 
 ### React Router
 
-```tsx
-import { Link as RouterLink } from "react-router-dom"
-import { Link } from "@amsterdam/design-system-react"
+React Router's `Link` takes `to`, not `href`, so pass a small adapter built on `useHref` + `useLinkClickHandler` from `react-router` (v7). Copy `assets/starter-vite-react/src/lib/RouterLink.tsx`:
 
-<RouterLink to="/about" className="ams-link">Over ons</RouterLink>
+```tsx
+import { Link, StandaloneLink } from "@amsterdam/design-system-react"
+import { RouterLink } from "@/lib/RouterLink"
+
+<Link href="/about" linkComponent={RouterLink}>Over ons</Link>
+<StandaloneLink href="/meedoen" linkComponent={RouterLink}>Meedoen</StandaloneLink>
 ```
+
+Define the `linkComponent` at module level (or with `useCallback`) — an inline arrow remounts the link on every render. Full pattern: `references/layout-patterns.md` § "Routing links".
 
 ## Tailwind v4 Integration
 
@@ -774,7 +798,7 @@ import { SearchIcon, CloseIcon, NotificationIcon } from "@amsterdam/design-syste
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `svg` | `Function \| ReactNode` | required | Icon component from the icon package or custom SVG |
+| `svg` | `ReactElement<SVGProps> \| (props: SVGProps) => ReactElement` | required | Icon component (`SearchIcon`), a rendered `<svg>` element, or a function returning one |
 | `size` | `'small' \| 'large' \| 'heading-1' \| 'heading-2' \| 'heading-3' \| 'heading-4' \| 'heading-5'` | — | Size aligned to text line heights |
 | `color` | `'inverse'` | — | White icon for dark backgrounds |
 | `square` | `boolean` | `false` | Square bounding box |

@@ -21,10 +21,10 @@ Open <http://localhost:5173>.
 
 | Concern | Choice | Why |
 |---|---|---|
-| Bundler | **Vite 6** + `@vitejs/plugin-react-swc` | What real Amsterdam apps use. Faster than Webpack/Next, simpler than Turbopack. |
-| Routing | **React Router v7** (`createBrowserRouter`) | What real Amsterdam apps use. Outlet-based layouts compose cleanly with ADS Page. |
+| Bundler | **Vite 8** + `@vitejs/plugin-react-swc` | What real Amsterdam apps use. Faster than Webpack/Next, simpler than Turbopack. |
+| Routing | **React Router v7** (`react-router`, `createBrowserRouter`) | What real Amsterdam apps use. Outlet-based layouts compose cleanly with ADS Page. |
 | Data | **Tanstack Query v5** | Pre-wired in `src/App.tsx`. Sample query in `src/pages/HomePage.tsx`. |
-| Styling | **Tailwind v4** via `@tailwindcss/vite` | Mapped to AMS tokens in `tailwind.config.js`. Preflight disabled — AMS provides its own reset. |
+| Styling | **Tailwind v4** via `@tailwindcss/vite` | Mapped to AMS tokens in `tailwind.config.js`. Preflight left out (only `tailwindcss/theme` + `utilities` imported) — ADS needs no reset. |
 | Mode | **Compact** (`compact.css` imported) | Most Amsterdam apps are internal tools. To switch to Spacious, delete one line — see "Switching to Spacious mode" below. |
 | Component variants | **CVA** + `clsx` + `tailwind-merge` | See `src/components/StatCard.tsx` and `src/lib/cn.ts`. |
 | Animation | **`tw-animate-css`** + the page-load reveal in `src/styles/reveal.css` | Wired up — apply `.ams-reveal` to top-level Grid cells. |
@@ -151,7 +151,7 @@ The build should succeed and `dist/index.html` should reference Amsterdam Sans.
 
 - `../../SKILL.md` — mechanical rules, component overview, common mistakes
 - `../../references/aesthetic-discipline.md` — translate frontend-design principles into ADS materials
-- `../../references/components.md` — full props for all 66 ADS components
+- `../../references/components.md` — full props for the ADS components (React v4.5.0)
 - `../../references/tokens.md` — complete `--ams-*` token catalog
 - `../../references/tailwind-bridge.md` — full Tailwind + AMS integration guide
 - `../../references/layout-patterns.md` — page templates for common Amsterdam project types

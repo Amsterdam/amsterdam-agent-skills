@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes } from "react"
-import { useHref, useLinkClickHandler } from "react-router-dom"
+import { useHref, useLinkClickHandler } from "react-router"
 
 type AnchorProps = AnchorHTMLAttributes<HTMLAnchorElement>
 

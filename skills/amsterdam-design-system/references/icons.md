@@ -1,6 +1,6 @@
 # Amsterdam Design System — Icon Reference
 
-Icons from `@amsterdam/design-system-react-icons` (v2.0.0+, 345+ icons).
+Icons from `@amsterdam/design-system-react-icons` **v2.3.0** (October 2026).
 
 ## Installation
 
@@ -38,7 +38,7 @@ import { SearchIcon, CloseIcon } from "@amsterdam/design-system-react-icons"
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `svg` | `Function \| ReactNode` | required | Icon component or SVG element |
+| `svg` | `ReactElement<SVGProps> \| (props: SVGProps) => ReactElement` | required | Icon component, a rendered `<svg>` element, or a function returning one |
 | `size` | `'small' \| 'large' \| 'heading-1' \| 'heading-2' \| 'heading-3' \| 'heading-4' \| 'heading-5'` | — | Size aligned to text line heights |
 | `color` | `'inverse'` | — | White icon for dark backgrounds |
 | `square` | `boolean` | `false` | Square bounding box |

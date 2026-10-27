@@ -357,7 +357,7 @@ The most common shape for an Amsterdam internal tool: a single `<AppLayout>` rou
 
 ```tsx
 // src/router.tsx
-import { createBrowserRouter, Outlet, Navigate, useLocation } from "react-router-dom"
+import { createBrowserRouter, Outlet, Navigate, useLocation } from "react-router"
 import { AppLayout } from "@/layouts/AppLayout"
 import { HomePage } from "@/pages/HomePage"
 import { LoginPage } from "@/pages/LoginPage"
@@ -396,7 +396,7 @@ export const router = createBrowserRouter([
 
 ```tsx
 // src/layouts/AppLayout.tsx
-import { Outlet } from "react-router-dom"
+import { Outlet } from "react-router"
 import { Page, PageHeader, PageFooter, SkipLink } from "@amsterdam/design-system-react"
 import { RouterLink } from "@/lib/RouterLink"   // see "Routing links" below
 
@@ -440,7 +440,7 @@ React Router's `<Link>` wants `to`, not `href`, so wrap `useHref` + `useLinkClic
 ```tsx
 // src/lib/RouterLink.tsx
 import type { AnchorHTMLAttributes } from "react"
-import { useHref, useLinkClickHandler } from "react-router-dom"
+import { useHref, useLinkClickHandler } from "react-router"
 
 type AnchorProps = AnchorHTMLAttributes<HTMLAnchorElement>
 const isExternal = (href: string) => /^([a-z][a-z0-9+.-]*:|\/\/)/i.test(href)

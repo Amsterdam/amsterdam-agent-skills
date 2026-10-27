@@ -1,6 +1,6 @@
 # Amsterdam Design System — Component API Reference
 
-> Covers `@amsterdam/design-system-react` **v3.3.0** and `@amsterdam/design-system-css` **v3.3.0** (April 2026).
+> Covers `@amsterdam/design-system-react` **v4.5.0** and `@amsterdam/design-system-css` **v4.5.0** (October 2026). For anything not listed here, the [ADS MCP server or docs](https://designsystem.amsterdam/) are the source of truth.
 
 All components from `@amsterdam/design-system-react`. Every component uses `forwardRef` and spreads `...restProps` on its root element.
 
@@ -44,7 +44,24 @@ Use **either** `paddingVertical` **or** `paddingTop`/`paddingBottom` — the typ
 <Grid.Cell span={8} start={3} />                            // Offset
 <Grid.Cell span={{ narrow: 4, medium: 6, wide: 8 }}
            start={{ narrow: 1, medium: 2, wide: 3 }} />    // Responsive offset
+<Grid.Cell span={4} rowSpan={2} rowStart={1} />             // Span or place rows (v4.0.0+ / v4.4.0+)
+<Grid.Cell appearance="flush" />                            // Compact Mode: no cell padding ("transparent": no background either)
 ```
+
+**Subgrid (v4.4.0+)** keeps nested cells on the page columns — use it for a block of cards or results inside a wider layout. A `Grid` or `Grid.Subgrid` with `as="ul"` / `"ol"` renders its cells as list items, so screen readers announce the set as a list:
+
+```tsx
+<Grid>
+  <Grid.Cell span={{ narrow: 4, medium: 2, wide: 3 }}>Filters</Grid.Cell>
+  <Grid.Subgrid as="ul" span={{ narrow: 4, medium: 6, wide: 9 }} gapVertical="large">
+    {results.map((r) => (
+      <Grid.Cell key={r.id} span={{ narrow: 4, medium: 3, wide: 3 }}>…</Grid.Cell>
+    ))}
+  </Grid.Subgrid>
+</Grid>
+```
+
+`Grid.Subgrid` takes `span`, `start`, `rowSpan`, `rowStart`, `as` and `gapVertical` (`'none' | 'large' | 'x-large' | '2x-large'`).
 
 ### Column
 
@@ -143,6 +160,9 @@ Amsterdam branded header with logo, navigation, and responsive menu.
   menuItems={<>...</>}             // ReactNode — menu content
   navigationLabel="Hoofdnavigatie"
   noMenuButtonOnWideWindow         // boolean — hide menu button on wide screens
+  brandNameShort="Mijn A'dam"      // shown on narrow windows
+  open={menuOpen}                  // controlled mega menu (v4.3.0+) — or defaultOpen
+  onOpenChange={setMenuOpen}
 >
   <PageHeader.GridCellNarrowWindowOnly>
     {/* Content shown only on narrow viewports */}
@@ -395,13 +415,55 @@ Compound form element for search.
 </SearchField>
 ```
 
-### CharacterCount
+### FormFieldStatus
 
-Shows remaining characters for a text field.
+Status line below a field (v4.5.0+). Replaces `CharacterCount`, which is deprecated (removal on or after 2027-04-25). When the count passes its limit it says so in words and with a warning icon, not colour alone.
 
 ```tsx
-<CharacterCount length={inputValue.length} maxLength={200} />
+<Field>
+  <Label htmlFor="bericht">Bericht</Label>
+  <TextArea id="bericht" maxLength={1000} value={value} onChange={…} />
+  <FormFieldStatus>
+    <FormFieldStatus.CharacterCount length={value.length} maxLength={1000} />
+  </FormFieldStatus>
+</Field>
+
+{/* or plain status text */}
+<FormFieldStatus>Uw wachtwoord is sterk genoeg.</FormFieldStatus>
 ```
+
+`FormFieldStatus.CharacterCount` also takes `formatText` and `formatOverLimitText` for translations.
+
+### KnownDateInput
+
+A date the user already knows (birth date, card expiry) as separate day, month and year fields (v4.5.0+). Put it in a `FieldSet` that provides the question.
+
+```tsx
+<FieldSet legend="Wanneer bent u geboren?" aria-describedby="geboren-hint">
+  <Paragraph id="geboren-hint">Bijvoorbeeld 1 1 2000.</Paragraph>
+  <KnownDateInput autoComplete="birth-date">   {/* 'birth-date' | 'credit-card-expiry-date' */}
+    <KnownDateInput.Day name="dag" />
+    <KnownDateInput.Month name="maand" />
+    <KnownDateInput.Year name="jaar" />
+  </KnownDateInput>
+</FieldSet>
+```
+
+Mark a wrong part with `invalid` on that part, and `invalid` on the `FieldSet`.
+
+### DatePicker
+
+Inline month grid for choosing a date or a range (v4.2.0+) — on the page, not in a form field. For a date the user already knows, use `KnownDateInput`.
+
+```tsx
+const [date, setDate] = useState<Date | null>(null)
+<DatePicker value={date} onChange={setDate} minDate={new Date()} />
+
+const [range, setRange] = useState<DateRange>({ start: null, end: null })
+<DatePicker mode="range" value={range} onChange={setRange} isDateDisabled={(d) => d.getDay() === 0} />
+```
+
+Also: `defaultMonth`, `maxDate`, `locale`, and labels/icons for the month and year buttons. Websites for the City must keep the default icons.
 
 ## Form Structure
 
@@ -544,6 +606,8 @@ Navigation menu with accessible label.
   accessibleName="Paginering"
   previousLabel="Vorige"
   nextLabel="Volgende"
+  pageAccessibleName="Pagina"                 // v4.4.0+: also currentPageAccessibleName,
+  nextAccessibleName="Volgende pagina"        //   previousAccessibleName, accessibleNameId
 />
 ```
 
@@ -571,17 +635,48 @@ Navigation menu with accessible label.
 
 **Important:** `aria-controls` on `Tabs.Button` must match `id` on `Tabs.Panel`.
 
+### TabNavigation
+
+Navigation between pages that share a context, styled like tabs (v4.0.0+). Each link loads a page — unlike `Tabs`, which switches panels on one page.
+
+```tsx
+<TabNavigation accessibleName="Mijn gegevens">   {/* orientation="vertical" for a side navigation */}
+  <TabNavigation.List>
+    <TabNavigation.Link aria-current="page" href="/gegevens">Gegevens</TabNavigation.Link>
+    <TabNavigation.Link href="/aanslagen" linkComponent={RouterLink}>Aanslagen</TabNavigation.Link>
+  </TabNavigation.List>
+</TabNavigation>
+```
+
+### Calendar
+
+Shows a month at a time, for navigating to dates that have something behind them (v4.2.0+). Days with content become links.
+
+```tsx
+<Calendar
+  accessibleName="Agenda"
+  linkTemplate={(date) => (hasEvents(date) ? `/agenda/${toIsoDate(date)}` : undefined)}
+  linkComponent={RouterLink}
+  locale="nl-NL"
+/>
+```
+
 ### TableOfContents
 
 ```tsx
-<TableOfContents heading="Inhoud" headingLevel={2}>
-  <TableOfContents.Link href="#section1">Section 1</TableOfContents.Link>
+<TableOfContents heading="Inhoud" headingLevel={2} collapsible>   {/* collapsible nested lists: v4.2.0+ */}
   <TableOfContents.List>
-    <TableOfContents.Link href="#section1a">Subsection 1a</TableOfContents.Link>
+    <TableOfContents.Link href="#section1" label="Section 1">
+      <TableOfContents.List>
+        <TableOfContents.Link href="#section1a" label="Subsection 1a" />
+      </TableOfContents.List>
+    </TableOfContents.Link>
+    <TableOfContents.Link href="#section2" label="Section 2" />
   </TableOfContents.List>
-  <TableOfContents.Link href="#section2">Section 2</TableOfContents.Link>
 </TableOfContents>
 ```
+
+The link text is the `label` prop (required); a nested `TableOfContents.List` goes **inside** its parent `Link`. Links with a nested list take `defaultExpanded` / `expanded` / `onToggle` when the table is `collapsible`.
 
 ## Data Display
 
@@ -594,7 +689,8 @@ Navigation menu with accessible label.
 >
   <Accordion.Section
     label="Section title"          // string (required)
-    expanded                       // boolean — initially expanded
+    defaultExpanded                // boolean — initially expanded (`expanded` is deprecated)
+    onToggle={(expanded) => {}}    // v4.3.0+
   >
     <Paragraph>Content</Paragraph>
   </Accordion.Section>
@@ -605,14 +701,20 @@ Navigation menu with accessible label.
 
 ```tsx
 <Card>
-  <Card.Image src="/photo.jpg" alt="Description" />
-  <Card.HeadingGroup>
-    <Card.Heading level={3}>Title</Card.Heading>
-  </Card.HeadingGroup>
-  <Paragraph>Card description text.</Paragraph>
-  <Card.Link href="/detail">Lees meer</Card.Link>
+  <Card.Image src="/photo.jpg" alt="" />          {/* 16:9 by default (v4.5.0); --ams-card-image-aspect-ratio */}
+  <Card.Content>                                  {/* optional: goes horizontal when its container is wide (v4.4.0) */}
+    <Card.HeadingGroup>
+      <Card.Heading level={3}>
+        <Card.Link href="/detail">Title</Card.Link>
+      </Card.Heading>
+      <Metadata size="small">Nieuws</Metadata>    {/* written after the heading, shown above it */}
+    </Card.HeadingGroup>
+    <Paragraph>Card description text.</Paragraph>
+  </Card.Content>
 </Card>
 ```
+
+The `tagline` prop of `Card.HeadingGroup` is deprecated (v4.4.0, removal on or after 2027-02-08) — add a `<Metadata>` child instead.
 
 ### DescriptionList
 
@@ -623,12 +725,14 @@ Terms use Heading 4 typography (larger, bolder) with `text-wrap: balance` for mu
   color="inverse"                  // 'inverse'
   termsWidth="medium"              // 'narrow' | 'medium' | 'wide'
 >
-  <DescriptionList.Section>
+  <DescriptionList.Item>
     <DescriptionList.Term>Naam</DescriptionList.Term>
     <DescriptionList.Description>Jan Jansen</DescriptionList.Description>
-  </DescriptionList.Section>
+  </DescriptionList.Item>
 </DescriptionList>
 ```
+
+`DescriptionList.Section` is deprecated (v4.5.0) — use `DescriptionList.Item`. The list switches to side-by-side when its container is wider than 32rem. To show details **with actions** (edit, delete) for one subject, use `DataList`.
 
 ### Figure
 
@@ -653,7 +757,7 @@ Terms use Heading 4 typography (larger, bolder) with `text-wrap: balance` for mu
   <Table.Body>
     <Table.Row>
       <Table.Cell>Value 1</Table.Cell>
-      <Table.Cell>Value 2</Table.Cell>
+      <Table.Cell align="end">1.250</Table.Cell>   {/* align: v4.1.0+ — right-align numbers */}
     </Table.Row>
   </Table.Body>
   <Table.Footer>
@@ -663,6 +767,41 @@ Terms use Heading 4 typography (larger, bolder) with `text-wrap: balance` for mu
     </Table.Row>
   </Table.Footer>
 </Table>
+```
+
+### DataList
+
+Details of one subject, with an action per value where needed (v4.5.0+). Horizontal by default; `orientation` switches it.
+
+```tsx
+<DataList>
+  <DataList.Item>
+    <DataList.Key>Telefoonnummer</DataList.Key>
+    <DataList.Value>06 12345678</DataList.Value>
+    <DataList.Actions>
+      <StandaloneLink href="/telefoon" icon={EditIcon}>
+        Wijzigen<span className="ams-visually-hidden"> telefoonnummer</span>
+      </StandaloneLink>
+    </DataList.Actions>
+  </DataList.Item>
+</DataList>
+```
+
+### Image
+
+```tsx
+<Image src="/foto.jpg" alt="Beschrijving" aspectRatio="16:9" />
+<Image src="/logo.png" alt="" fit="contain" />   {/* v4.5.0+: show the whole image instead of cropping */}
+```
+
+Shows a grey placeholder while loading (v4.4.0+).
+
+### Metadata
+
+Grey text for a date, category or status (v4.4.0+).
+
+```tsx
+<Metadata size="small"><time dateTime="2026-10-22">22 oktober 2026</time></Metadata>   {/* color="inverse" on dark */}
 ```
 
 ### ImageSlider
@@ -718,6 +857,36 @@ A small modal window for a short confirmation, a yes/no question or a brief remi
 - `Dialog.close` is a click handler (it closes the `<dialog>` containing the clicked button). Pass it as `onClick={Dialog.close}`; calling `Dialog.close()` without an event is a type error and crashes.
 - Alternatively, put a `<form method="dialog">` inside and give each submit button a `value`.
 
+### ModalDialog
+
+A window for a self-contained task or message that needs full attention — e.g. a form to create or edit something in an application (v4.4.0+). On public websites, give such a task its own page instead.
+
+```tsx
+<Button onClick={() => ModalDialog.open("#edit-dialog")}>Bewerken</Button>
+
+<ModalDialog id="edit-dialog" aria-labelledby="edit-dialog-heading">
+  <ModalDialog.Header closeButtonAccessibleName="Sluiten">
+    <Heading id="edit-dialog-heading" level={1} size="level-3">Adres wijzigen</Heading>
+  </ModalDialog.Header>
+  <ModalDialog.Body>
+    <form id="edit-form" method="dialog">…</form>
+  </ModalDialog.Body>
+  <ModalDialog.Footer>
+    <ActionGroup>
+      <Button form="edit-form" type="submit" value="save">Opslaan</Button>
+      <Button variant="secondary" onClick={ModalDialog.close}>Annuleren</Button>
+    </ActionGroup>
+  </ModalDialog.Footer>
+</ModalDialog>
+
+{/* Or controlled */}
+<ModalDialog open={isOpen} onClose={() => setIsOpen(false)} aria-labelledby="…">…</ModalDialog>
+```
+
+- Always give it an accessible name: `aria-labelledby` pointing at the heading in the Header (heading level 1 — the dialog starts a new layer).
+- `ModalDialog.open(selector)` takes a CSS selector (`"#edit-dialog"`); `ModalDialog.close` is a click handler.
+- `ModalDialog.Header` also takes `closeButtonSize` and (applications only) `closeButtonComponent` / `closeButtonIcon`.
+
 ### Badge
 
 ```tsx
@@ -744,7 +913,7 @@ A small modal window for a short confirmation, a yes/no question or a brief remi
 
 ```tsx
 <Icon
-  svg={SearchIcon}                 // Function | ReactNode (required)
+  svg={SearchIcon}                 // icon component, <svg> element, or (props) => <svg> (required)
   size="large"                     // 'small' | 'large' | 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5'
   color="inverse"                  // 'inverse'
   square                           // boolean — square bounding box
@@ -762,6 +931,25 @@ Amsterdam logo.
 **Available brands:** `'amsterdam'` | `'amsterdam-english'` | `'ggd-amsterdam'` | `'ggd-amsterdam-inspectie'` | `'museum-weesp'` | `'stadsarchief'` | `'stadsbank-van-lening'` | `'vga-verzekeringen'`
 
 For custom logos, pass a `LogoBrandConfig` object: `{ label: string, svg: ComponentType<SVGProps<SVGSVGElement>> }`.
+
+### Skeleton
+
+Placeholder shapes while content loads (v4.3.0+). Hidden from assistive technology — announce loading once on the region instead.
+
+```tsx
+<section aria-busy={isLoading}>
+  <p className="ams-visually-hidden" role="status">{isLoading ? "Resultaten worden geladen" : `${count} resultaten`}</p>
+  {isLoading ? (
+    <Skeleton>
+      <Skeleton.Image />
+      <Skeleton.Heading />
+      <Skeleton.Paragraph lines={3} />   {/* also Skeleton.List lines, Skeleton.Table rows/columns */}
+    </Skeleton>
+  ) : (
+    <Results />
+  )}
+</section>
+```
 
 ### Lists
 
@@ -827,7 +1015,7 @@ Steps are static by default. Add `collapsible` (v4.0.0+) to turn each step headi
 
 ## Components ADS Does Not Ship — Use Radix Primitives
 
-ADS covers 66 components but does not ship every interaction primitive. When you need a Popover, DropdownMenu, Tooltip, ContextMenu, or a Dialog with a custom trigger, **use Radix UI headless primitives** and style them with AMS tokens via a CVA wrapper. **Do not** reach for `shadcn/ui` directly — its design tokens conflict with ADS, and its variant system is opinionated about colors that ADS does not use.
+ADS exports 70 components but does not ship every interaction primitive. When you need a Popover, DropdownMenu, Tooltip, ContextMenu, or a Dialog with a custom trigger, **use Radix UI headless primitives** and style them with AMS tokens via a CVA wrapper. **Do not** reach for `shadcn/ui` directly — its design tokens conflict with ADS, and its variant system is opinionated about colors that ADS does not use.
 
 | Need | Radix package | ADS-shipped alternative? |
 |---|---|---|
