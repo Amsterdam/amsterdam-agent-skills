@@ -4,7 +4,7 @@
 
 All components from `@amsterdam/design-system-react`. Every component uses `forwardRef` and spreads `...restProps` on its root element.
 
-> **Before writing JSX:** for app scaffolding, copy `assets/starter-vite-react/`. For aesthetic choices (color commitment, rhythm, motion, composition), read `references/aesthetic-discipline.md` first — answer the 5-question checklist there before picking components.
+> **Before writing JSX:** for app scaffolding, copy `assets/starter-vite-react/`. For open-ended aesthetic choices, `references/aesthetic-discipline.md` has house-style notes (not ADS guidance).
 
 ## Layout
 
@@ -189,11 +189,11 @@ Amsterdam branded header with logo, navigation, and responsive menu.
 </PageFooter>
 ```
 
-### PageHeading (DEPRECATED)
+### PageHeading (REMOVED in v4.0.0)
 
-> **Deprecated:** Use `<Heading level={1}>` instead. The `PageHeading` component is no longer maintained.
+> **Removed:** `PageHeading` no longer exists. Use `<Heading level={1}>`.
 
-| Old (deprecated) | Replacement |
+| Old (removed) | Replacement |
 |---|---|
 | `<PageHeading>Title</PageHeading>` | `<Heading level={1}>Title</Heading>` |
 | `<PageHeading color="inverse">Title</PageHeading>` | `<Heading level={1} color="inverse">Title</Heading>` |
@@ -1013,9 +1013,11 @@ Steps are static by default. Add `collapsible` (v4.0.0+) to turn each step headi
 
 `collapsed` and `defaultCollapsed` are deprecated (v4.3.0, removal on or after 2027-01-10) — use `expanded` / `defaultExpanded`, which take the opposite value. These props only have an effect when the `ProgressList` is `collapsible`.
 
-## Components ADS Does Not Ship — Use Radix Primitives
+## Components ADS Does Not Ship
 
-ADS exports 70 components but does not ship every interaction primitive. When you need a Popover, DropdownMenu, Tooltip, ContextMenu, or a Dialog with a custom trigger, **use Radix UI headless primitives** and style them with AMS tokens via a CVA wrapper. **Do not** reach for `shadcn/ui` directly — its design tokens conflict with ADS, and its variant system is opinionated about colors that ADS does not use.
+ADS exports 70 components but no Popover, DropdownMenu, Tooltip or ContextMenu. First check whether an ADS pattern covers the need: help text belongs in a `Hint` or a visible `Paragraph` (ADS warns that tooltips cover text and hurt readability), navigation in `Menu` / `TabNavigation`, and a confirmation or task in `Dialog` / `ModalDialog`.
+
+If you still need one, the following is **this skill's suggestion, not ADS guidance**: use a headless library such as Radix UI and style it with `--ams-*` tokens, rather than `shadcn/ui`, whose own tokens and colour variants conflict with ADS.
 
 | Need | Radix package | ADS-shipped alternative? |
 |---|---|---|
@@ -1023,9 +1025,9 @@ ADS exports 70 components but does not ship every interaction primitive. When yo
 | Dropdown menu (button → menu of items) | `@radix-ui/react-dropdown-menu` | No (`<Menu>` is for navigation, not actions) |
 | Tooltip (hover/focus hint) | `@radix-ui/react-tooltip` | No |
 | Context menu (right-click) | `@radix-ui/react-context-menu` | No |
-| Dialog with custom trigger / non-modal flows | `@radix-ui/react-dialog` | Yes — use `<Dialog>` from ADS for modal forms; reach for Radix only when you need imperative control or non-modal behavior |
+| Modal dialog (confirmation or task) | — | **Yes** — ADS `Dialog` for short confirmations, `ModalDialog` for tasks and forms (both support controlled and imperative use). Don't add a Radix dialog |
 
-### Pattern: token-styled Radix Popover
+### Example: token-styled Radix Popover
 
 ```tsx
 import * as Popover from "@radix-ui/react-popover"
@@ -1067,7 +1069,7 @@ export function HelpPopover() {
 4. **One CVA wrapper per primitive.** If you use a Popover in three places, extract a `<TokenPopover>` component that pre-applies the AMS-styled className. Three loose `Popover.Content` elements with copy-pasted classNames will drift.
 5. **Animations are optional.** Radix exposes `data-state="open"` / `data-state="closed"` attributes. If you want a fade-in, add a `data-[state=open]:animate-in fade-in-0` utility from `tw-animate-css`. Match the timing to `aesthetic-discipline.md` § Motion (≤200ms for tooltips, ≤400ms for popovers).
 
-### Pattern: token-styled Radix DropdownMenu
+### Example: token-styled Radix DropdownMenu
 
 ```tsx
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"

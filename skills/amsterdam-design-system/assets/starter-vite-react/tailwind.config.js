@@ -9,8 +9,9 @@ const { ams } = compactTokens
  * only `tailwindcss/theme` and `tailwindcss/utilities`. Tailwind v4 does not read
  * `corePlugins` from a JS config, so there is no `preflight: false` here.
  *
- * `theme.extend.spacing` spreads `ams.space` from compact.json so utilities
- *      like `p-ams-m` resolve to the exact compact-mode value, not via CSS vars.
+ * `theme.extend.spacing` spreads `ams.space` from compact.json, which adds
+ * `p-m`, `gap-xl`, … with literal compact values. The `ams-*` keys (`p-ams-m`)
+ * go through the CSS variables and follow the loaded mode — prefer those.
  *
  * For Spacious mode, swap the import to `@amsterdam/design-system-tokens/dist/index.json`.
  */

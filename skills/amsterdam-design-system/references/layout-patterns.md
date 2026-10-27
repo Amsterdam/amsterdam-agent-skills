@@ -353,7 +353,7 @@ function FormPage() {
 
 ## React Router + AppLayout Outlet
 
-The most common shape for an Amsterdam internal tool: a single `<AppLayout>` route at the root, an `<Outlet>` for nested routes, and an optional `<AuthGate>` outlet wrapper for authenticated sections. This is what real Amsterdam projects (e.g. `srdo-2945`) use.
+A common shape for an Amsterdam internal tool: a single `<AppLayout>` route at the root, an `<Outlet>` for nested routes, and an optional `<AuthGate>` outlet wrapper for authenticated sections. This is what real Amsterdam projects (e.g. `srdo-2945`) use.
 
 ```tsx
 // src/router.tsx

@@ -21,13 +21,13 @@ Open <http://localhost:5173>.
 
 | Concern | Choice | Why |
 |---|---|---|
-| Bundler | **Vite 8** + `@vitejs/plugin-react-swc` | What real Amsterdam apps use. Faster than Webpack/Next, simpler than Turbopack. |
-| Routing | **React Router v7** (`react-router`, `createBrowserRouter`) | What real Amsterdam apps use. Outlet-based layouts compose cleanly with ADS Page. |
+| Bundler | **Vite 8** + `@vitejs/plugin-react-swc` | Fast dev server and build for a client-side SPA. For a full application with SSR, Next.js is also a recommended stack (see `developers-amsterdam`). |
+| Routing | **React Router v7** (`react-router`, `createBrowserRouter`) | Listed in the Amsterdam tech stack for SPAs. Outlet-based layouts compose cleanly with ADS Page. |
 | Data | **Tanstack Query v5** | Pre-wired in `src/App.tsx`. Sample query in `src/pages/HomePage.tsx`. |
 | Styling | **Tailwind v4** via `@tailwindcss/vite` | Mapped to AMS tokens in `tailwind.config.js`. Preflight left out (only `tailwindcss/theme` + `utilities` imported) — ADS needs no reset. |
-| Mode | **Compact** (`compact.css` imported) | Most Amsterdam apps are internal tools. To switch to Spacious, delete one line — see "Switching to Spacious mode" below. |
+| Mode | **Compact** (`compact.css` imported) | ADS's mode for applications and internal tools. For a public website, switch to Spacious by deleting one line — see "Switching to Spacious mode" below. |
 | Component variants | **CVA** + `clsx` + `tailwind-merge` | See `src/components/StatCard.tsx` and `src/lib/cn.ts`. |
-| Animation | **`tw-animate-css`** + the page-load reveal in `src/styles/reveal.css` | Wired up — apply `.ams-reveal` to top-level Grid cells. |
+| Animation | **`tw-animate-css`** + an optional page-load reveal in `src/styles/reveal.css` | House style, not ADS guidance. Apply `.ams-reveal` to top-level Grid cells if you want it; delete it otherwise. |
 
 ## File map
 
@@ -62,15 +62,15 @@ Open <http://localhost:5173>.
 
 ## How HomePage.tsx is built
 
-`src/pages/HomePage.tsx` is the worked example from `references/aesthetic-discipline.md`. It deliberately exercises all five principles:
+`src/pages/HomePage.tsx` is the worked example from `references/aesthetic-discipline.md` (house style, not ADS guidance). It exercises the four checklist questions plus optional motion:
 
 1. **Dominant color** — `--ams-color-background` (white) plus one `<Spotlight color="azure">` hero band.
 2. **Sharp accent** — `--ams-color-highlight-magenta` used on exactly three elements: the hero Badge, the first StatCard's left border, and the newsletter CTA Button.
 3. **Rhythm** — `paddingVertical="2x-large"` on the hero, `"large"` on the KPI strip and newsletter, `"x-large"` on the body.
-4. **Page-load moment** — `.ams-reveal` cascade on the four hero Grid cells (60-80ms stagger, 520ms duration, respects `prefers-reduced-motion`).
-5. **Memorable element** — the off-center editorial column at `start={2} span={7}` on wide, plus one `<Breakout>` band.
+4. **Focal point** — the off-center editorial column at `start={2} span={7}` on wide, plus one `<Breakout>` band.
+5. *Optional motion* — `.ams-reveal` cascade on the four hero Grid cells (respects `prefers-reduced-motion`).
 
-When you replace HomePage with your own page, **answer those five questions first** (see `references/aesthetic-discipline.md` → "The Discipline Checklist"). If you do not, the result will look like a wireframe.
+When you replace HomePage with your own page, the checklist in `references/aesthetic-discipline.md` → "The Discipline Checklist" can help on open-ended briefs.
 
 ## Switching to Spacious mode
 
@@ -103,15 +103,15 @@ bun add @tanstack/react-table
 ```
 See `references/components.md` → "Components ADS does not ship — use Radix primitives" for the wrapping pattern. Wrap rows in ADS `<Table>` markup; let Tanstack handle state.
 
-### Radix primitives — for components ADS doesn't cover
-ADS does not ship a Popover, DropdownMenu, Tooltip, or ContextMenu. When you need them, use Radix headless primitives and style them with AMS tokens via a CVA wrapper:
+### Headless primitives — for components ADS doesn't cover (suggestion, not ADS guidance)
+ADS does not ship a Popover, DropdownMenu, Tooltip, or ContextMenu. Check first whether an ADS pattern covers the need (see `references/components.md` → "Components ADS Does Not Ship"). If not, a headless library such as Radix, styled with AMS tokens, conflicts least:
 ```bash
 bun add @radix-ui/react-popover @radix-ui/react-dropdown-menu @radix-ui/react-tooltip
 ```
 Never reach for `shadcn/ui` directly — its design tokens conflict with ADS.
 
 ### MSAL — for Azure AD authentication
-Most Amsterdam internal tools authenticate via Azure AD. The pattern is documented in `references/layout-patterns.md` → "React Router + AppLayout outlet". Add:
+If your internal tool signs users in with Azure AD (Entra ID): The pattern is documented in `references/layout-patterns.md` → "React Router + AppLayout outlet". Add:
 ```bash
 bun add @azure/msal-browser @azure/msal-react
 ```

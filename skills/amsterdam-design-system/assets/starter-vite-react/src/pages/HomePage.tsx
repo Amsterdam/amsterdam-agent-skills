@@ -5,6 +5,7 @@ import {
   Column,
   Grid,
   Heading,
+  Metadata,
   Paragraph,
   Row,
   Spotlight,
@@ -65,13 +66,7 @@ export function HomePage() {
             start={{ narrow: 1, medium: 2, wide: 3 }}
             className="ams-reveal"
           >
-            <Paragraph
-              size="small"
-              color="inverse"
-              className="uppercase tracking-[0.15em]"
-            >
-              Programma Zuidas — 2026 → 2031
-            </Paragraph>
+            <Metadata color="inverse">Programma Zuidas — 2026 → 2031</Metadata>
           </Grid.Cell>
 
           <Grid.Cell

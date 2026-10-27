@@ -1,13 +1,16 @@
 ---
 name: amsterdam-design-system
 description: >
-  Mandatory for all Gemeente Amsterdam UI work. Use for pages, layouts, forms,
-  dashboards, landing pages, React/JSX/TSX components, styling, theming,
-  scaffolding frontend projects, or any visual interface. Covers
-  @amsterdam/design-system-react, CSS tokens (--ams-*), BEM CSS with ams-
-  prefixes, 4/8/12-column Grid, Spacious and Compact modes, and Tailwind CSS
-  bridge patterns. Prefer this over generic UI libraries such as Material UI,
-  shadcn, Chakra, Ant Design, or plain custom HTML/CSS.
+  Amsterdam Design System (ADS, designsystem.amsterdam) for Gemeente Amsterdam
+  web UI built with React or plain HTML/CSS. Use when building or reviewing
+  pages, layouts, forms, dashboards or components for the City of Amsterdam,
+  or when code imports @amsterdam/design-system-react, -css, -tokens, -assets
+  or -react-icons. Covers components and props, --ams-* design tokens, ams-
+  BEM classes, the Amsterdam Sans font, the 4/8/12-column Grid, Spacious,
+  Compact and Lo-fi modes, routing links, icons, and a Tailwind v4 bridge.
+  For Amsterdam web UI, use this instead of generic libraries such as
+  Material UI, shadcn/ui, Chakra or Ant Design. Not for native mobile apps,
+  print or non-Amsterdam projects.
 ---
 
 <!-- ADS-VERSION: tokens=4.4.0 react=4.5.0 css=4.5.0 assets=2.7.0 icons=2.3.0 -->
@@ -23,7 +26,7 @@ description: >
 > | `@amsterdam/design-system-assets` | **v2.7.0** |
 > | `@amsterdam/design-system-react-icons` | **v2.3.0** |
 
-> **MANDATORY**: This is the ONLY design system permitted. ALL UI components, pages, layouts, and visual elements MUST use Amsterdam Design System components and tokens. Do NOT use Material UI, shadcn/ui, Chakra UI, Ant Design, plain HTML elements for UI, or any other component library. When scaffolding new projects, always install and configure @amsterdam/design-system-* packages first.
+> **Use ADS for all Amsterdam web UI.** Build pages, layouts and visual elements from Amsterdam Design System components and `--ams-*` tokens. Do not mix in Material UI, shadcn/ui, Chakra UI, Ant Design or another component library. Without React, use the ADS CSS classes (`ams-*`) on plain HTML. When scaffolding, install and configure the `@amsterdam/design-system-*` packages first.
 
 Production guidance for building City of Amsterdam digital products using the official design system. Components, tokens, layout patterns, and integration with Tailwind CSS v4.
 
@@ -47,27 +50,18 @@ When the user's request is vague (e.g., "build me a page", "create a form", "mak
 
 **Don't ask all at once.** Pick the 1-2 questions that the prompt leaves genuinely ambiguous. If the user says "internal dashboard" → Compact mode is implied, no need to ask.
 
-> **For any brief that mentions "polished", "modern", "nice-looking", or is open-ended about style — read `references/aesthetic-discipline.md` BEFORE writing JSX.** That file is the bridge between aesthetic intent and ADS-legal output.
+> For briefs that are open-ended about style ("polished", "modern"), see the house-style notes in `references/aesthetic-discipline.md` before writing JSX.
 
-## Aesthetic Discipline
+## Aesthetic Discipline (house style, not ADS guidance)
 
-ADS gives you materials. Aesthetic discipline is how you use them so the result is not a wireframe. **Before writing a single line of JSX on any non-trivial UI task**, read `references/aesthetic-discipline.md` and answer its 5-question checklist in one sentence each:
+ADS gives you the materials; `references/aesthetic-discipline.md` is this skill's own guidance on using them so a page does not look like a wireframe. It is **opinion, not ADS documentation** — follow ADS docs where they differ. For open-ended briefs ("polished", "modern"), answer in one sentence each before writing JSX:
 
-1. **Dominant color** — which one `--ams-color-*` token covers 80%+ of the canvas?
-2. **Sharp accent** — which one `--ams-color-highlight-*` token appears on at most 2-3 elements?
-3. **Rhythm** — which sections are dense (`paddingVertical="large"`)? Which are airy (`"2x-large"`)?
-4. **Page-load moment** — what is the one staggered reveal sequence on top-level Grid cells?
-5. **Memorable element** — what is the one `<Breakout>`, `<Overlap>`, or asymmetric `start={}` moment per page?
+1. **Dominant color** — which `--ams-color-*` token covers most of the canvas?
+2. **Accent** — which `--ams-color-highlight-*` token, used on a few elements only?
+3. **Rhythm** — which sections are dense (`paddingVertical="large"`), which airy (`"2x-large"`)?
+4. **Focal point** — is there one element (a `<Breakout>`, `<Overlap>` or asymmetric `start={}`) that anchors the page?
 
-If you cannot answer these in one sentence each, the design is not committed yet. Re-read the discipline doc.
-
-This step is **additive** to the mechanical rules below — it does not override them. Amsterdam Sans, `--ams-*` tokens, and the 4/8/12 Grid are still mandatory. The discipline doc teaches *how to make them sing within those constraints*, by translating frontend-design principles (typography hierarchy, color commitment, motion orchestration, composition) into ADS-legal moves.
-
-### On the vendored `frontend-design` skill
-
-You may have access to a separate `frontend-design` skill in `.agents/skills/frontend-design/`. Its **principles** about typography hierarchy, color commitment, motion orchestration, and composition are sound and apply to all UI work. Its **specific guidance** (pick a distinctive font, break the grid, use purple gradients on white) does NOT apply in Amsterdam contexts because ADS overrides font, grid, and palette choices.
-
-`references/aesthetic-discipline.md` is the translation layer. **When in doubt, trust this skill, not the vendored one.**
+Amsterdam Sans, `--ams-*` tokens and the 4/8/12 Grid stay mandatory. If a separate `frontend-design` skill is installed (this repo vendors it via `skills-lock.json`), its principles apply but its font, grid and palette advice does not.
 
 ## Overview
 
@@ -143,27 +137,27 @@ Other weights have their own tokens: `--ams-typography-body-text-light-font-weig
 
 For a new standalone React app, **do not re-invent the setup**. Use the runnable starter at `assets/starter-vite-react/`. It ships:
 
-- **Bun + Vite 8** + `@vitejs/plugin-react-swc` (matches real Amsterdam apps)
+- **Vite 8** + `@vitejs/plugin-react-swc` (Bun scripts, but `npm` works the same)
 - **React Router v7** with an `<AppLayout>` outlet pattern
 - **Tanstack Query v5** pre-wired in `App.tsx`
 - **Tailwind v4** via `@tailwindcss/vite`, with the AMS bridge in `tailwind.config.js` and preflight left out (only `tailwindcss/theme` + `tailwindcss/utilities` are imported)
-- **ADS React/CSS v4.5.0, tokens v4.4.0** in **Compact mode** (most Amsterdam projects are internal tools)
+- **ADS React/CSS v4.5.0, tokens v4.4.0** in **Compact mode** (switch to Spacious for public sites, see below)
 - **CVA + clsx + tailwind-merge** for custom component variants
-- **`tw-animate-css`** + a hand-rolled `.ams-reveal` page-load stagger
+- **`tw-animate-css`** + an optional `.ams-reveal` page-load animation (house style, not ADS)
 - A sample `HomePage.tsx` that exercises every principle from `references/aesthetic-discipline.md`
 
 ### How to use
 
 ```bash
-cp -r {skill_dir}/assets/starter-vite-react ./<project-name>
+# <skill-dir> = the directory containing this SKILL.md
+cp -r <skill-dir>/assets/starter-vite-react ./<project-name>
 cd ./<project-name>
-bun install
-bun run dev
+bun install && bun run dev    # or: npm install && npm run dev
 ```
 
 Then:
-1. Read `references/aesthetic-discipline.md` (the 5-question checklist).
-2. Replace `src/pages/HomePage.tsx` with the user's actual page, keeping the discipline checklist answered.
+1. Replace `src/pages/HomePage.tsx` with the user's actual page.
+2. Pass `RouterLink` (`src/lib/RouterLink.tsx`) as `linkComponent` on internal links.
 3. Add routes in `src/router.tsx` as the app grows.
 
 ### Switching to Spacious mode
@@ -179,7 +173,7 @@ And swap the `tailwind.config.js` import from `compact.json` to `index.json`. Th
 ### When NOT to use the starter
 
 - **Adding pages to an existing Amsterdam app** — open the existing app and follow its conventions.
-- **Next.js App Router projects** — the starter is Vite-based. For Next.js, follow the import order in the "Setup" section above and apply `references/tailwind-bridge.md` manually. (A Next.js starter may be added later if demand emerges.)
+- **Next.js projects** — the starter is a Vite SPA. Next.js is a recommended stack for full applications (see the `developers-amsterdam` skill); follow the import order in "Setup" above, pass `NextLink` as `linkComponent`, and apply `references/tailwind-bridge.md` if you use Tailwind.
 - **Plain HTML / non-React** — use the BEM CSS classes documented in `references/layout-patterns.md` § "CSS Grid Classes (Non-React)".
 
 ## Component Patterns
@@ -377,44 +371,20 @@ import { ActionGroup, Button, Dialog, Paragraph } from "@amsterdam/design-system
 
 ## Grid System
 
-The AMS grid is responsive with 3 breakpoints:
-
-| Breakpoint | Columns | Viewport | Padding |
+| Breakpoint | Columns | Viewport | Padding (Spacious) |
 |-----------|---------|----------|---------|
 | **Narrow** | 4 | < 600px (37.5rem) | `--ams-space-l` (24-36px) |
 | **Medium** | 8 | 600px – 1159px | `--ams-space-xl` (36-60px) |
 | **Wide** | 12 | ≥ 1160px (72.5rem) | `--ams-space-2xl` (48-90px) |
 
-### Grid.Cell `span` prop
-
 ```tsx
-{/* Fixed span across all breakpoints */}
-<Grid.Cell span={6}>Half width on wide</Grid.Cell>
-
-{/* Full width */}
-<Grid.Cell span="all">Full width row</Grid.Cell>
-
-{/* Responsive spans: { narrow, medium, wide } */}
-<Grid.Cell span={{ narrow: 4, medium: 4, wide: 8 }}>
-  Responsive content
-</Grid.Cell>
-
-{/* Start position */}
-<Grid.Cell span={6} start={4}>Offset cell</Grid.Cell>
-<Grid.Cell span={{ narrow: 4, medium: 6, wide: 8 }} start={{ narrow: 1, medium: 2, wide: 3 }}>
-  Responsive offset
-</Grid.Cell>
+<Grid as="main" paddingVertical="large" gapVertical="large">    {/* or paddingTop / paddingBottom, not both */}
+  <Grid.Cell span="all">Full width</Grid.Cell>
+  <Grid.Cell span={{ narrow: 4, medium: 6, wide: 8 }} start={{ narrow: 1, medium: 2, wide: 3 }}>Responsive offset</Grid.Cell>
+</Grid>
 ```
 
-### Grid props
-
-```tsx
-<Grid
-  as="main"                          // Semantic element
-  paddingVertical="large"            // Vertical padding: 'large' | 'x-large' | '2x-large'
-  gapVertical="large"               // Row gap: 'none' | 'large' | '2x-large'
->
-```
+`paddingVertical`: `'large' | 'x-large' | '2x-large'` · `gapVertical`: `'none' | 'large' | '2x-large'`. Row placement, `appearance`, `Grid.Subgrid` and list grids (`as="ul"`): `references/components.md` § Grid.
 
 ## Content Spacing Patterns
 
@@ -459,43 +429,16 @@ Outer `Column gap="large"` separates sections. Inner `Column gap="small"` keeps 
 
 > Full token catalog: read `references/tokens.md`
 
-The token system uses a 3-layer hierarchy. All tokens are CSS custom properties prefixed with `--ams-`.
-
-```
-Brand tokens  →  Common tokens  →  Component tokens
-(core values)    (shared patterns)  (per-component)
-```
-
-**Reference chain example:**
-```
-Brand:     --ams-color-interactive: #004699
-Common:    --ams-links-color: var(--ams-color-interactive)
-Component: --ams-link-color: var(--ams-links-color)
-```
-
-### Key Token Categories
-
-| Category | Prefix | Examples |
-|----------|--------|---------|
-| **Colors** | `--ams-color-` | `text`, `text-inverse`, `text-secondary`, `background`, `interactive`, `interactive-hover`, `feedback-error`, `feedback-success`, `separator` |
-| **Spacing** | `--ams-space-` | `xs` (4-6px), `s` (8-12px), `m` (16-24px), `l` (24-36px), `xl` (36-60px), `2xl` (48-90px) — all fluid `clamp()` |
-| **Typography** | `--ams-typography-` | `font-family` ('Amsterdam Sans', Arial, sans-serif), `body-text-font-size`, `body-text-line-height`, heading sizes per level |
-| **Borders** | `--ams-border-width-` | `s` (1px), `m` (2px), `l` (3px), `xl` (4px) |
-| **Focus** | `--ams-focus-` | `outline-offset` (4px) |
-
-### Using Tokens in CSS
+All tokens are CSS custom properties prefixed `--ams-`, in three layers: brand (`--ams-color-interactive: #004699`) → common (`--ams-links-color`) → component (`--ams-link-color`). Key brand families: `--ams-color-*` (`text`, `text-secondary`, `background`, `interactive`, `feedback-*`, `highlight-*`, `separator`), `--ams-space-xs…2xl` (fluid `clamp()`), `--ams-typography-*`, `--ams-border-width-s…xl`, `--ams-focus-outline-offset`.
 
 ```css
 .my-component {
   color: var(--ams-color-text);
-  background: var(--ams-color-background);
   padding: var(--ams-space-m);
   font-family: var(--ams-typography-font-family);
   border: var(--ams-border-width-s) solid var(--ams-color-separator);
 }
 ```
-
-### Using Tokens in JS
 
 ```ts
 import tokens from "@amsterdam/design-system-tokens/dist/index.json"
@@ -587,59 +530,11 @@ Define the `linkComponent` at module level (or with `useCallback`) — an inline
 
 ## Tailwind v4 Integration
 
-> Full bridge config: read `references/tailwind-bridge.md`
+> Full bridge config (imports, `@theme` / JS mapping, compact tokens, motion): read `references/tailwind-bridge.md`
 
-When using Tailwind CSS v4 alongside AMS, map AMS tokens to Tailwind's `@theme` so utilities use the design system values:
-
-```css
-/* app.css — import Tailwind's theme and utilities, NOT `@import "tailwindcss"`:
-   that also pulls in preflight (Tailwind's reset), which fights ADS base styles. */
-@layer theme, base, ams, components, utilities;
-@import "tailwindcss/theme" layer(theme);
-@import "tailwindcss/utilities" layer(utilities);
-@import "@amsterdam/design-system-assets/font/index.css" layer(ams);
-@import "@amsterdam/design-system-css/dist/index.css" layer(ams);
-@import "@amsterdam/design-system-tokens/dist/index.css" layer(ams);
-
-@theme {
-  /* Map AMS spacing */
-  --spacing-ams-xs: var(--ams-space-xs);
-  --spacing-ams-s: var(--ams-space-s);
-  --spacing-ams-m: var(--ams-space-m);
-  --spacing-ams-l: var(--ams-space-l);
-  --spacing-ams-xl: var(--ams-space-xl);
-  --spacing-ams-2xl: var(--ams-space-2xl);
-
-  /* Map AMS colors */
-  --color-ams-text: var(--ams-color-text);
-  --color-ams-text-secondary: var(--ams-color-text-secondary);
-  --color-ams-text-inverse: var(--ams-color-text-inverse);
-  --color-ams-bg: var(--ams-color-background);
-  --color-ams-interactive: var(--ams-color-interactive);
-  --color-ams-interactive-hover: var(--ams-color-interactive-hover);
-  --color-ams-error: var(--ams-color-feedback-error);
-  --color-ams-success: var(--ams-color-feedback-success);
-  --color-ams-warning: var(--ams-color-feedback-warning);
-  --color-ams-info: var(--ams-color-feedback-info);
-  --color-ams-separator: var(--ams-color-separator);
-
-  /* Map AMS font */
-  --font-ams: var(--ams-typography-font-family);
-}
-```
-
-**Usage rule:** Use AMS React components for all standard UI (buttons, forms, headings, grids, etc.). Use Tailwind utilities only for custom layout (flex, positioning) and one-off spacing that AMS components don't cover.
-
-```tsx
-{/* AMS component — always preferred */}
-<Button variant="primary">Submit</Button>
-
-{/* Tailwind for custom layout around AMS components */}
-<div className="flex items-center gap-ams-m">
-  <Icon svg={SearchIcon} />
-  <Paragraph>Search results</Paragraph>
-</div>
-```
+- Import `tailwindcss/theme` and `tailwindcss/utilities` separately — **not** `@import "tailwindcss"`, which pulls in preflight and fights ADS base styles. (`corePlugins.preflight` does nothing in v4.)
+- Map `--ams-*` tokens to Tailwind (`--spacing-ams-m: var(--ams-space-m)`, `--color-ams-interactive: var(--ams-color-interactive)`, …) so utilities like `gap-ams-m` and `bg-ams-interactive` stay on-token.
+- Use ADS components for standard UI; use Tailwind only for custom layout (flex, positioning) and one-off spacing around them.
 
 ## Custom Components
 
@@ -754,109 +649,39 @@ export const List = Object.assign(ListRoot, { Item: ListItem })
 | Using `<h1>` instead of `<Heading level={1}>` | Always use AMS Heading component |
 | Missing `aria-controls` on `Tabs.Button` | Required prop — must match `Tabs.Panel` id |
 | Using Tailwind `bg-blue-500` instead of AMS tokens | Use `bg-ams-interactive` or AMS component |
-| Using deprecated `PageHeading` | Use `<Heading level={1}>` — PageHeading is deprecated |
+| Using `PageHeading` | Removed in v4.0.0 — use `<Heading level={1}>` |
 | Heading and paragraph with same spacing | Wrap content sections in nested `Column` — `gap="large"` between sections, `gap="small"` within |
-| Output looks like a wireframe | Read `references/aesthetic-discipline.md`, commit to a dominant + one accent token before writing JSX |
-| Every section has the same `paddingVertical` and `span` | Vary rhythm — alternate dense (`large`) and airy (`x-large`/`2x-large`); use asymmetric spans with `start={}` |
-| Scaffolding from scratch with Next.js or vanilla Vite | Use `assets/starter-vite-react/` — Bun + Vite + React Router + Tanstack Query is the real-world target |
-| Reaching for `shadcn/ui` for a Popover/DropdownMenu/Tooltip | ADS does not ship those — use `@radix-ui/react-*` headless primitives styled with AMS tokens (see `references/components.md` § "Components ADS Does Not Ship") |
+| `Dialog` for a form or long content | Use `ModalDialog` (applications) or a separate page (public websites) |
+| `Dialog.open("my-id")` / `onClick={() => Dialog.close()}` | `Dialog.open("#my-id")` / `onClick={Dialog.close}` |
+| Inline `linkComponent={(p) => <a {...p} />}` | Use a module-level component (e.g. the starter's `RouterLink`) |
+| Guessing an icon or prop name | Check `references/icons.md` / `references/components.md`, or the ADS MCP server |
+| Reaching for `shadcn/ui` for a Popover/DropdownMenu/Tooltip | ADS does not ship those. If you must add one, a headless library styled with `--ams-*` tokens conflicts least (see `references/components.md` § "Components ADS Does Not Ship") |
 
 ## Icon Usage
 
-> Full icon catalog and naming conventions: read `references/icons.md`
-
-Icons are visual symbols for quick communication. They must always be wrapped in the `Icon` component for consistent sizing and alignment. The icon set ships in `@amsterdam/design-system-react-icons` (345+ icons, v2.0.0+).
-
-### Basic Usage
+> Full catalogue (generated from the package), props, deprecated names and guidelines: read `references/icons.md`
 
 ```tsx
-import { Icon, Button, IconButton } from "@amsterdam/design-system-react"
-import { SearchIcon, CloseIcon, NotificationIcon } from "@amsterdam/design-system-react-icons"
+import { Button, Icon, IconButton } from "@amsterdam/design-system-react"
+import { CloseIcon, SearchIcon } from "@amsterdam/design-system-react-icons"
 
-{/* Standalone decorative icon — hidden from assistive tech by default */}
-<Icon svg={SearchIcon} />
-
-{/* Sized to match text */}
-<Icon svg={SearchIcon} size="large" />          {/* matches large body text */}
-<Icon svg={SearchIcon} size="heading-3" />       {/* matches heading level 3 */}
-
-{/* Inverse color for dark backgrounds */}
-<Icon svg={SearchIcon} color="inverse" />
-
-{/* Square bounding box (useful for alignment in grids) */}
-<Icon svg={SearchIcon} square />
-
-{/* Button with icon (icon appears after text by default) */}
-<Button icon={SearchIcon}>Zoeken</Button>
+<Icon svg={SearchIcon} size="heading-3" />          {/* decorative: the Icon span is hidden from assistive tech */}
 <Button icon={SearchIcon} iconBefore>Zoeken</Button>
-
-{/* Icon-only button — label is REQUIRED for accessibility */}
-<IconButton svg={CloseIcon} label="Sluiten" />
+<IconButton svg={CloseIcon} label="Sluiten" />      {/* icon-only: label is required */}
 ```
 
-### Icon Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `svg` | `ReactElement<SVGProps> \| (props: SVGProps) => ReactElement` | required | Icon component (`SearchIcon`), a rendered `<svg>` element, or a function returning one |
-| `size` | `'small' \| 'large' \| 'heading-1' \| 'heading-2' \| 'heading-3' \| 'heading-4' \| 'heading-5'` | — | Size aligned to text line heights |
-| `color` | `'inverse'` | — | White icon for dark backgrounds |
-| `square` | `boolean` | `false` | Square bounding box |
-
-### Icons With Other Components
-
-```tsx
-import { StandaloneLink, Badge } from "@amsterdam/design-system-react"
-import { SearchIcon, StarIcon } from "@amsterdam/design-system-react-icons"
-
-<StandaloneLink href="/search" icon={SearchIcon}>Zoek op de website</StandaloneLink>
-<Badge label="Nieuw" icon={StarIcon} color="azure" />
-```
-
-### Deprecated Icon Names
-
-These names still export but are deprecated (each carries a removal date) — use the replacements:
-
-| Deprecated | Use instead |
-|----------|----------|
-| `BellIcon` / `BellFillIcon` | `NotificationIcon` / `NotificationFillIcon` |
-| `PersonCircleIcon` / `PersonCircleFillIcon` | `UserAccountIcon` / `UserAccountFillIcon` |
-| `TrashBinIcon` / `TrashBinFillIcon` | `DeleteIcon` / `DeleteFillIcon` |
-| `CogwheelIcon` / `CogwheelFillIcon` | `SettingsIcon` / `SettingsFillIcon` |
-| `CheckMarkCircleIcon` / `CheckMarkCircleFillIcon` | `SuccessIcon` / `SuccessFillIcon` |
-| `PencilIcon` / `PencilFillIcon` | `EditIcon` / `EditFillIcon` (v2.3.0) |
-| `HandWithEuroCoinIcon` | `PersonsWithEuroCoinIcon` |
-| `LinkedinIcon` | `LinkedInIcon` |
-
-### Custom SVGs
-
-```tsx
-{/* Must use viewBox="0 0 24 24" and fill="currentColor" */}
-<Icon svg={
-  <svg viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2L2 7l10 5 10-5-10-5z" />
-  </svg>
-} />
-```
-
-### Guidelines
-
-- Icons accompany text in buttons and links — standalone icons only for universal conventions (hamburger menu, search, playback controls)
-- Default color: black/white matching container. Interactive state: blue. Disabled: grey
-- Icons align left of text, vertically centered to the first line
-- The `Icon` component sets `hidden` on the `<span>` — icons are decorative by default. For meaningful icons, use `IconButton` with a `label` prop
-- WCAG contrast requirements apply to icons same as typography
+Only use icon names from `references/icons.md` — do not guess. Deprecated names (`BellIcon`, `CogwheelIcon`, `PencilIcon`, …) still export; use their replacements.
 
 ## Reference Files
 
 For detailed API docs, token catalogs, and templates, read the reference files in `references/`:
 
-- **`aesthetic-discipline.md`** — How to apply frontend-design principles (typography hierarchy, color commitment, motion, composition, depth) within ADS constraints. **Read this before writing JSX on any non-trivial UI task.**
+- **`aesthetic-discipline.md`** — House-style guidance (not ADS documentation) on typography hierarchy, colour commitment, motion and composition within ADS constraints
 - **`components.md`** — Full props and code examples for each component, plus the Radix primitives section for components ADS does not ship
 - **`tokens.md`** — Complete `--ams-*` token catalog with values for both modes
 - **`layout-patterns.md`** — Page layout templates (public site, dashboard, form page, React Router + AppLayout outlet)
 - **`tailwind-bridge.md`** — Complete Tailwind v4 + AMS integration guide (Vite plugin, compact tokens, motion)
-- **`icons.md`** — Icon catalog from `@amsterdam/design-system-react-icons`
+- **`icons.md`** — Icon usage, props and the generated catalogue from `@amsterdam/design-system-react-icons`
 
 **Assets:**
 
