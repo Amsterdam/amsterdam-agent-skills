@@ -353,11 +353,11 @@ function FormPage() {
 
 ## React Router + AppLayout Outlet
 
-The most common shape for an Amsterdam internal tool: a single `<AppLayout>` route at the root, an `<Outlet>` for nested routes, and an optional `<AuthGate>` outlet wrapper for authenticated sections. This is what real Amsterdam projects (e.g. `srdo-2945`) use.
+A common shape for an Amsterdam internal tool: a single `<AppLayout>` route at the root, an `<Outlet>` for nested routes, and an optional `<AuthGate>` outlet wrapper for authenticated sections. This is what real Amsterdam projects (e.g. `srdo-2945`) use.
 
 ```tsx
 // src/router.tsx
-import { createBrowserRouter, Outlet, Navigate, useLocation } from "react-router-dom"
+import { createBrowserRouter, Outlet, Navigate, useLocation } from "react-router"
 import { AppLayout } from "@/layouts/AppLayout"
 import { HomePage } from "@/pages/HomePage"
 import { LoginPage } from "@/pages/LoginPage"
@@ -396,16 +396,9 @@ export const router = createBrowserRouter([
 
 ```tsx
 // src/layouts/AppLayout.tsx
-import type { AnchorHTMLAttributes, ComponentType } from "react"
-import { Outlet, Link } from "react-router-dom"
+import { Outlet } from "react-router"
 import { Page, PageHeader, PageFooter, SkipLink } from "@amsterdam/design-system-react"
-
-// Adapter — React Router's <Link> needs `to`, ADS's logoLinkComponent expects `href`
-const LogoLink: ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>> = ({
-  href, children, ...rest
-}) => (
-  <Link to={href ?? "/"} {...rest}>{children}</Link>
-)
+import { RouterLink } from "@/lib/RouterLink"   // see "Routing links" below
 
 export function AppLayout() {
   return (
@@ -415,9 +408,9 @@ export function AppLayout() {
         <PageHeader
           brandName="Amsterdam"
           logoLink="/"
-          logoLinkComponent={LogoLink}   // ← ONLY component with built-in routing slot
+          logoLinkComponent={RouterLink}
           menuItems={
-            <PageHeader.MenuLink href="/dashboard">Dashboard</PageHeader.MenuLink>
+            <PageHeader.MenuLink href="/dashboard" linkComponent={RouterLink}>Dashboard</PageHeader.MenuLink>
           }
         />
 
@@ -425,7 +418,7 @@ export function AppLayout() {
 
         <PageFooter>
           <PageFooter.Menu>
-            <PageFooter.MenuLink href="/privacy">Privacy</PageFooter.MenuLink>
+            <PageFooter.MenuLink href="/privacy" linkComponent={RouterLink}>Privacy</PageFooter.MenuLink>
           </PageFooter.Menu>
         </PageFooter>
       </Page>
@@ -438,77 +431,54 @@ export function AppLayout() {
 
 For a runnable version of this exact pattern, see `assets/starter-vite-react/src/layouts/AppLayout.tsx` and `src/router.tsx`.
 
-### Routing Link integration with React Router v7 — be honest about the limitation
+### Routing links with React Router v7
 
-**ADS v3.3.0 only ships a `linkComponent` slot on TWO components:**
+Every ADS link component accepts a router link (ADS React v4.2.0+): `linkComponent` on `Link`, `StandaloneLink`, `CallToActionLink`, `SkipLink`, `Breadcrumb.Link`, `Card.Link`, `LinkList.Link`, `Menu.Link`, `PageHeader.MenuLink`, `PageFooter.MenuLink`, `TabNavigation.Link`, `TableOfContents.Link` and `Pagination`; `logoLinkComponent` on `PageHeader`. ADS passes `href` and other anchor attributes straight through to it.
 
-| Component | Prop | Slot type |
-|---|---|---|
-| `PageHeader` | `logoLinkComponent` | `ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>>` |
-| `Pagination` | `linkComponent` | `ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>>` |
-
-Everything else — `StandaloneLink`, `PageHeader.MenuLink`, `Breadcrumb.Link`, `Card.Link`, `LinkList.Link`, `Link` — is a plain `<a>` and **will trigger a full page reload** when clicked. There is no `linkComponent`, no `asChild`, no render prop.
-
-Both slot props use the `AnchorHTMLAttributes<HTMLAnchorElement>` shape, which means React Router's `Link` (which requires `to`, not `href`) is **not directly assignable**. You need a small adapter:
+React Router's `<Link>` wants `to`, not `href`, so wrap `useHref` + `useLinkClickHandler` in one module-level component (the pattern from the [ADS routing guide](https://designsystem.amsterdam/?path=/docs/docs-guidelines-routing-libraries--docs); runnable in `assets/starter-vite-react/src/lib/RouterLink.tsx`):
 
 ```tsx
-import type { AnchorHTMLAttributes, ComponentType } from "react"
-import { Link } from "react-router-dom"
+// src/lib/RouterLink.tsx
+import type { AnchorHTMLAttributes } from "react"
+import { useHref, useLinkClickHandler } from "react-router"
 
-const RouterAdapter: ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>> = ({
-  href, children, ...rest
-}) => (
-  <Link to={href ?? "#"} {...rest}>{children}</Link>
-)
+type AnchorProps = AnchorHTMLAttributes<HTMLAnchorElement>
+const isExternal = (href: string) => /^([a-z][a-z0-9+.-]*:|\/\/)/i.test(href)
 
-// Use it on the two slots that exist:
-<PageHeader logoLinkComponent={RouterAdapter} logoLink="/" /* … */ />
-<Pagination linkComponent={RouterAdapter} linkTemplate={(p) => `/page/${p}`} /* … */ />
+function InternalLink({ href, onClick, target, ...props }: AnchorProps & { href: string }) {
+  const resolvedHref = useHref(href)
+  const handleClick = useLinkClickHandler<HTMLAnchorElement>(href, { target })
+  return (
+    <a
+      {...props}
+      href={resolvedHref}
+      onClick={(event) => {
+        onClick?.(event)                                // caller can opt out with preventDefault()
+        if (!event.defaultPrevented) handleClick(event) // skips modifier keys, middle-click, target=_blank
+      }}
+      target={target}
+    />
+  )
+}
+
+export function RouterLink({ href, ...props }: AnchorProps) {
+  if (!href || isExternal(href) || props.download !== undefined) return <a href={href} {...props} />
+  return <InternalLink href={href} {...props} />
+}
 ```
 
-For Next.js App Router, swap `Link from "react-router-dom"` for `next/link` and adjust the adapter to map `href` straight through (Next's Link uses `href`, not `to`).
+```tsx
+<StandaloneLink href="/meedoen" linkComponent={RouterLink}>Bekijk de agenda</StandaloneLink>
+<Breadcrumb.Link href="/onderwerpen" linkComponent={RouterLink}>Onderwerpen</Breadcrumb.Link>
+<Pagination linkComponent={RouterLink} linkTemplate={(p) => `/page/${p}`} totalPages={10} />
+```
 
-**For everything else, you have three options:**
+**Rules:**
 
-1. **Accept the full reload.** Acceptable for low-traffic public sites and footer links. The browser scroll position resets but the bundle is cached.
+- Keep `linkComponent` **stable** — define it at module level (or with `useCallback`). `linkComponent={(p) => <a {...p} />}` inline creates a new component type every render, which remounts the link and loses focus.
+- Refs are forwarded only to a plain anchor (the default, or `linkComponent="a"`), not to a custom `linkComponent`.
+- For Next.js, pass `NextLink` directly: `<Link href="/about" linkComponent={NextLink}>`.
 
-2. **Wrap with React Router's `<Link>` as a parent.** This nests an `<a>` inside an `<a>`, which is invalid HTML — do NOT do this.
-
-3. **Build a custom click interceptor.** Wrap the ADS component in a custom component that uses `useNavigate()` and an `onClick` handler to call `navigate(href)` and `event.preventDefault()`. The guard must let the browser handle every click that *isn't* a plain in-app navigation — modifier keys (cmd/ctrl/shift/alt), non-primary mouse buttons, `target="_blank"`, `download`, and any non-relative URL all need to fall through to the default behavior. Example:
-
-   ```tsx
-   import { useNavigate } from "react-router-dom"
-   import { StandaloneLink, type StandaloneLinkProps } from "@amsterdam/design-system-react"
-
-   export function RouterStandaloneLink({ href, target, download, onClick, ...rest }: StandaloneLinkProps) {
-     const navigate = useNavigate()
-     return (
-       <StandaloneLink
-         href={href}
-         target={target}
-         download={download}
-         onClick={(e) => {
-           // Always let the user's onClick run first; bail out if it cancelled.
-           onClick?.(e)
-           if (e.defaultPrevented) return
-           // Only intercept plain left-clicks with no modifiers.
-           if (e.button !== 0) return
-           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
-           // Let the browser handle "open in new tab/window" and downloads.
-           if (target && target !== "_self") return
-           if (download !== undefined) return
-           // Let the browser handle absolute / external / protocol URLs.
-           if (!href || /^([a-z][a-z0-9+.-]*:|\/\/)/i.test(href)) return
-           e.preventDefault()
-           navigate(href)
-         }}
-         {...rest}
-       />
-     )
-   }
-   ```
-
-   Apply the same pattern for `Breadcrumb.Link`, `Card.Link`, `PageHeader.MenuLink`, etc. as needed. This is more code than the built-in slot, but it preserves SPA behavior cleanly without breaking the keyboard/middle-click escape hatches users rely on.
 
 **Pragmatic recommendation:** for an internal Amsterdam tool, accept the full reload on `PageHeader.MenuLink`, `PageFooter.MenuLink`, and `Breadcrumb.Link` (they're navigation, not in-page transitions). Use the click interceptor only on `StandaloneLink` and `Card.Link` inside the main content area, where in-app navigation is more frequent and the reload is jarring.
 

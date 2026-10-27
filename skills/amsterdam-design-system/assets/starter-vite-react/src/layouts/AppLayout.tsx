@@ -1,5 +1,4 @@
-import type { AnchorHTMLAttributes, ComponentType } from "react"
-import { Outlet, Link } from "react-router-dom"
+import { Outlet } from "react-router"
 import {
   Page,
   PageHeader,
@@ -7,32 +6,14 @@ import {
   SkipLink,
 } from "@amsterdam/design-system-react"
 
-/**
- * Adapter that converts ADS's `ComponentType<AnchorHTMLAttributes>` shape
- * into a React Router <Link>. Needed because RR's Link requires `to`, not `href`.
- *
- * Use ONLY for `PageHeader.logoLinkComponent` — other ADS link components
- * (StandaloneLink, PageHeader.MenuLink, Breadcrumb.Link) do NOT accept a
- * linkComponent prop. See README "Customizing the navigation" for the workaround.
- */
-const LogoLink: ComponentType<AnchorHTMLAttributes<HTMLAnchorElement>> = ({
-  href,
-  children,
-  ...rest
-}) => (
-  <Link to={href ?? "/"} {...rest}>
-    {children}
-  </Link>
-)
+import { RouterLink } from "@/lib/RouterLink"
 
 /**
  * Root layout — wraps every route in a Page + PageHeader + PageFooter shell.
  *
- * Note on navigation: PageHeader.MenuLink and StandaloneLink in ADS v3.3.0 do
- * NOT route through React Router. They are plain anchors and trigger full page
- * reloads. For internal apps where this matters, intercept clicks at a parent
- * level or wrap each link manually with a custom component. The logo link is
- * the only one with a built-in adapter (`logoLinkComponent` above).
+ * Every ADS link component accepts a router link (ADS React v4.2.0+):
+ * `linkComponent` on links, `logoLinkComponent` on PageHeader. Pass the shared
+ * `RouterLink` so navigation stays client-side.
  */
 export function AppLayout() {
   return (
@@ -42,10 +23,12 @@ export function AppLayout() {
         <PageHeader
           brandName="Amsterdam"
           logoLink="/"
-          logoLinkComponent={LogoLink}
+          logoLinkComponent={RouterLink}
           logoLinkTitle="Naar de homepage"
           menuItems={
-            <PageHeader.MenuLink href="/">Home</PageHeader.MenuLink>
+            <PageHeader.MenuLink href="/" linkComponent={RouterLink}>
+              Home
+            </PageHeader.MenuLink>
           }
         />
 
@@ -53,8 +36,8 @@ export function AppLayout() {
 
         <PageFooter>
           <PageFooter.Menu>
-            <PageFooter.MenuLink href="/privacy">Privacy</PageFooter.MenuLink>
-            <PageFooter.MenuLink href="/toegankelijkheid">
+            <PageFooter.MenuLink href="/privacy" linkComponent={RouterLink}>Privacy</PageFooter.MenuLink>
+            <PageFooter.MenuLink href="/toegankelijkheid" linkComponent={RouterLink}>
               Toegankelijkheid
             </PageFooter.MenuLink>
           </PageFooter.Menu>

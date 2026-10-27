@@ -32,8 +32,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SYNC_PAT }}
         run: |
-          # Read state from repo variable (requires PAT with Variables permission)
-          STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DESIGN_SYSTEM_LAST_RELEASE" --jq '.value' 2>/dev/null || echo "")
+          # Read state from repo variable (requires PAT with Variables permission).
+          # `gh api` prints the error body to stdout on failure (e.g. a 404 when the
+          # variable does not exist yet), so only keep the output when the call succeeds
+          # and the value looks like an ISO-8601 timestamp. Anything else means "no state".
+          if STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DESIGN_SYSTEM_LAST_RELEASE" --jq '.value' 2>/dev/null); then
+            :
+          else
+            echo "::warning::Could not read DESIGN_SYSTEM_LAST_RELEASE (missing variable or SYNC_PAT lacks Variables permission)"
+            STORED=""
+          fi
+          if ! [[ "$STORED" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$ ]]; then
+            [ -n "$STORED" ] && echo "::warning::Ignoring invalid stored value: $STORED"
+            STORED=""
+          fi
 
           # Fetch recent non-draft releases
           RELEASES=$(gh api "repos/Amsterdam/design-system/releases?per_page=100" --jq \
@@ -46,15 +58,16 @@ jobs:
           fi
 
           if [ -z "$STORED" ]; then
-            echo "First run — seeding state"
-            NEWEST=$(echo "$RELEASES" | jq -r '.[0].published_at')
+            echo "No stored state — seeding with the newest upstream release date"
+            NEWEST=$(echo "$RELEASES" | jq -r '[.[].published_at] | sort | last')
             echo "action=seed" >> "$GITHUB_OUTPUT"
             echo "newest_date=$NEWEST" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          # Filter releases published after stored date
-          NEW=$(echo "$RELEASES" | jq --arg since "$STORED" '[.[] | select(.published_at > $since)]')
+          # Filter releases published after stored date (compare as epoch seconds, not strings)
+          NEW=$(echo "$RELEASES" | jq --arg since "$STORED" \
+            '($since | fromdateiso8601) as $s | [.[] | select((.published_at | fromdateiso8601) > $s)]')
           COUNT=$(echo "$NEW" | jq 'length')
 
           if [ "$COUNT" -eq 0 ]; then

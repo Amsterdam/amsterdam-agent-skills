@@ -1,10 +1,10 @@
 # Aesthetic Discipline — Translating frontend-design Principles into ADS Materials
 
-> Read this **before writing JSX** on any non-trivial UI task. ADS gives you the materials. This file teaches you how to use them so the result is not a wireframe.
+> **House style, not ADS documentation.** ADS gives you the materials; this file is this skill's own advice on using them so the result is not a wireframe. Where it differs from the [ADS docs](https://designsystem.amsterdam/), follow ADS.
 
 ## Why this file exists
 
-The vendored Anthropic skill `frontend-design` (at `.agents/skills/frontend-design/SKILL.md` if present in your workspace) teaches *aesthetic discipline*: pick one bold direction and execute it with precision. Its principles — typography hierarchy, dominant color + sharp accent, motion as page-load orchestration, asymmetric composition, atmospheric depth — are sound and apply to every interface.
+The Anthropic skill `frontend-design` (vendored by this repo through `skills-lock.json`; installed under `.agents/skills/` if your tool fetched it) teaches *aesthetic discipline*: pick one bold direction and execute it with precision. Its principles — typography hierarchy, dominant color + sharp accent, motion as page-load orchestration, asymmetric composition, atmospheric depth — are sound and apply to every interface.
 
 Its **specific guidance** does not. It says "pick a distinctive font", "break the grid", "use purple gradients on white". In Amsterdam contexts, all three are forbidden: Amsterdam Sans is mandatory, the 4/8/12 grid is mandatory, and the palette is restricted to `--ams-*` tokens.
 
@@ -22,17 +22,12 @@ It does **not** override any rule in `SKILL.md`. The mechanical rules — Amster
 
 **ADS reality:** Amsterdam Sans is the only font, period. `--ams-typography-font-family` is `'Amsterdam Sans', Arial, sans-serif`. There is no escape valve.
 
-**The legal move:** hierarchy comes from **size jumps**, **weight contrast** (400 body vs 800 headings — no 500/600/700 stops in between), and **uppercase tracking** on small eyebrows. The `level` prop sets semantics; the `size` prop sets visual rank — use them independently to break the default cascade.
+**The legal move:** hierarchy comes from **size jumps**, **weight contrast** (400 body vs 700 headings — use the weight tokens, no in-between stops), and a grey `<Metadata>` eyebrow above the heading. Avoid all-caps text: the `amsterdam-stijl` skill treats it as shouting. The `level` prop sets semantics; the `size` prop sets visual rank — use them independently to break the default cascade.
 
 ```tsx
 // ✅ Editorial hero — three distinct typographic ranks in three lines
 <Column gap="small">
-  <Paragraph
-    size="small"
-    className="uppercase tracking-[0.15em] text-ams-text-secondary"
-  >
-    Programma Zuidas — 2026 → 2031
-  </Paragraph>
+  <Metadata>Programma Zuidas — 2026 → 2031</Metadata>
   <Heading level={1}>Een nieuwe entree voor Zuid</Heading>
   <Paragraph size="large">
     Vijf jaar bouwen, vijf jaar leren, één buurt die opnieuw begint.
@@ -54,7 +49,7 @@ It does **not** override any rule in `SKILL.md`. The mechanical rules — Amster
 - Use `<Paragraph size="large">` for the lede after an `h1`. It is the only ADS-legal lead-paragraph mechanism.
 - Use `text-wrap: balance` (already on `Heading`) for two-line headings. Never let an h1 wrap to a single orphan word.
 - Reserve `level={1}` for one element per page. Multiple `h1`s flatten the hierarchy and break screen reader navigation.
-- For eyebrows, use `<Paragraph size="small" className="uppercase tracking-[0.12em] text-ams-text-secondary">`. This is the closest legal equivalent to a "distinctive display font".
+- For eyebrows (category, date, programme name), use `<Metadata>` — ADS's grey text for exactly this. No uppercase.
 
 ---
 
@@ -144,9 +139,9 @@ It does **not** override any rule in `SKILL.md`. The mechanical rules — Amster
 
 **frontend-design says:** *"One well-orchestrated page load with staggered reveals creates more delight than scattered micro-interactions."*
 
-**ADS reality:** ADS ships no animation primitives. There is no `<Reveal>`, no `<Motion>`, no transition prop on Grid or Column. Tailwind utilities and the `tw-animate-css` package (used in real Amsterdam repos) are the legal vehicles.
+**ADS reality:** ADS ships no animation primitives. There is no `<Reveal>`, no `<Motion>`, no transition prop on Grid or Column. ADS has no guidance on page-load animation, so everything in this section is optional house style. If you add motion, Tailwind utilities and the `tw-animate-css` package are the vehicles.
 
-**The legal move:** define **one** keyframe stagger as a CSS class, apply it to top-level Grid cells, let `:nth-child` create the cascade. Duration 400-600ms. Stagger 60-80ms. Easing `cubic-bezier(0.2, 0.8, 0.2, 1)`. Always wrap in `@media (prefers-reduced-motion: no-preference)`.
+**One option:** define **one** keyframe stagger as a CSS class, apply it to top-level Grid cells, let `:nth-child` create the cascade. Duration 400-600ms. Stagger 60-80ms. Easing `cubic-bezier(0.2, 0.8, 0.2, 1)`. Always wrap in `@media (prefers-reduced-motion: no-preference)`.
 
 ```css
 /* src/styles/reveal.css */
@@ -247,14 +242,14 @@ It does **not** override any rule in `SKILL.md`. The mechanical rules — Amster
 </Page>
 ```
 
-**Lever 3 — one `<Breakout>` or `<Overlap>` moment per page.** `Breakout` lets a single element span beyond the Grid's padding (full-bleed image, edge-to-edge color band). `Overlap` stacks children visually (image + heading on top). Use exactly one per page. Two compete; three is chaos.
+**Lever 3 — a `<Breakout>` or `<Overlap>` focal point.** `Breakout` lets an element span beyond the Grid's padding (full-bleed image, edge-to-edge color band). `Overlap` stacks children visually (image + heading on top). In this skill's experience one per page usually reads best; this is a house rule, not ADS guidance.
 
 ```tsx
 // ✅ One full-bleed hero image — the page's "memorable element"
 // Note: Breakout.Cell uses `colSpan` (not `span`) — different prop name from Grid.Cell.
 <Breakout>
   <Breakout.Cell colSpan="all">
-    <Image src="/zuidas-render.jpg" alt="" aspectRatio="16-5" />
+    <Image src="/zuidas-render.jpg" alt="" aspectRatio="16:5" />
   </Breakout.Cell>
 </Breakout>
 ```
@@ -264,7 +259,7 @@ It does **not** override any rule in `SKILL.md`. The mechanical rules — Amster
 **Cheap wins:**
 - On wide breakpoints, prefer `start={}` over `span={"all"}`. An off-center column always reads more deliberate than a full-bleed centered one.
 - Vary `gap` inside `<Column>`. Outer column `gap="large"` for section separation, inner column `gap="small"` for heading-to-paragraph cohesion. This is already in `references/layout-patterns.md` — apply it.
-- If a page has 5+ sections with the same span, you have not committed to a layout. Pick one section to be the off-center one, one to be `<Breakout>`, and let the rest be uniform.
+- If a page has 5+ sections with the same span, consider making one section off-center or a `<Breakout>`.
 
 ---
 
@@ -331,9 +326,9 @@ When `frontend-design`'s literal advice conflicts with ADS, use this table.
 
 | frontend-design says | ADS does not allow | Instead do |
 |---|---|---|
-| "Pick a distinctive display font" | Amsterdam Sans only | Weight contrast (400 vs 800), size jumps via `Heading size="level-1"`, uppercase tracking on small eyebrows |
+| "Pick a distinctive display font" | Amsterdam Sans only | Weight contrast (400 vs 700), size jumps via `Heading size="level-1"`, `<Metadata>` eyebrows |
 | "Avoid Inter, Roboto, Arial" | Arial is the system fallback for Amsterdam Sans | Already covered — Amsterdam Sans is none of those. If the font fails to load, Arial appears, but that is a network failure, not a design choice |
-| "Break the grid, diagonal flow" | 4/8/12 is mandatory; no rotation | Asymmetric spans with `start={}`, varied `paddingVertical` per section, one `<Breakout>` per page |
+| "Break the grid, diagonal flow" | 4/8/12 is mandatory; no rotation | Asymmetric spans with `start={}`, varied `paddingVertical` per section, an occasional `<Breakout>` |
 | "Dominant purple gradient on white" | No gradients in tokens; no purple-to-white | Dominant `--ams-color-interactive` (Amsterdam blue) or one `<Spotlight color="…">`, with one `--ams-color-highlight-*` accent |
 | "Custom shadows, elaborate effects" | Token-based shadows only (DTCG format, fixed) | Use `<Spotlight>`, layered Grid sections with alternating backgrounds, hairline `--ams-color-separator` rules |
 | "Custom cursors" | Only `--ams-cursor-interactive` and `--ams-cursor-disabled` | Skip. Spend the budget on motion or composition instead |
@@ -344,7 +339,7 @@ When `frontend-design`'s literal advice conflicts with ADS, use this table.
 
 ## The Discipline Checklist
 
-Before writing a single line of JSX on any non-trivial UI task, answer these five questions in **one sentence each**. If you cannot, the design is not committed yet — re-read the principle above and try again.
+For open-ended briefs, answer these four questions in **one sentence each** before writing JSX. They are house style, not ADS rules.
 
 1. **Dominant color.** Which one token covers 80%+ of the canvas?
    *Example: `--ams-color-background` (white) for the body; `--ams-color-interactive` for hero bands.*
@@ -355,11 +350,10 @@ Before writing a single line of JSX on any non-trivial UI task, answer these fiv
 3. **Rhythm.** Which section is dense (`paddingVertical="large"`)? Which is airy (`paddingVertical="2x-large"`)?
    *Example: hero is 2x-large, KPI strip is large, body is x-large.*
 
-4. **Page-load moment.** What is the one staggered reveal sequence? How many top-level cells does it animate?
-   *Example: `.ams-reveal` on the four hero cells, 60-80ms stagger, 520ms duration.*
+4. **Focal point.** Is there one `<Breakout>`, `<Overlap>`, or asymmetric `start={}` element that anchors the page?
+   *Example: `<Breakout>` full-bleed hero image with `aspectRatio="16:5"`.*
 
-5. **Memorable element.** What is the one `<Breakout>`, `<Overlap>`, or asymmetric `start={}` moment per page?
-   *Example: `<Breakout>` full-bleed hero image with `aspect-ratio: 16-5`.*
+Motion (see §3) is optional and not part of the checklist.
 
 If three or more of your answers are "default", the page will look like a wireframe. Pick one to invest in.
 
@@ -376,14 +370,14 @@ A worked-example brief:
 1. **Dominant.** `--ams-color-background` (white body) with one `<Spotlight color="azure">` hero band.
 2. **Sharp accent.** `--ams-color-highlight-magenta` — used on (a) the newsletter form's CTA, (b) the active item in the page navigation, (c) the "Nieuw rapport" Badge. Three uses, no more.
 3. **Rhythm.** Hero `paddingVertical="2x-large"`, lede + body `paddingVertical="x-large"`, related-pages strip `paddingVertical="large"`.
-4. **Page-load moment.** `.ams-reveal` cascade on the four hero cells (eyebrow, h1, lede, CTA group). 520ms / 60ms stagger.
-5. **Memorable element.** `<Breakout>` full-bleed `<Image>` of the Zuidas masterplan render at `aspect-ratio: 16-5`, immediately under the hero spotlight.
+4. **Focal point.** `<Breakout>` full-bleed `<Image>` of the Zuidas masterplan render at `aspectRatio="16:5"`, immediately under the hero spotlight.
+   *Optional motion:* `.ams-reveal` on the four hero cells (eyebrow, h1, lede, CTA group).
 
 ### Sketch
 
 ```tsx
 import {
-  Badge, Breakout, Button, Column, Grid, Heading, Image, Page,
+  Badge, Breakout, Button, Column, Grid, Heading, Image, Metadata, Page,
   PageFooter, PageHeader, Paragraph, Spotlight, StandaloneLink,
 } from "@amsterdam/design-system-react"
 
@@ -400,13 +394,7 @@ export function ZuidasLanding() {
             start={{ narrow: 1, medium: 2, wide: 3 }}
             className="ams-reveal"
           >
-            <Paragraph
-              size="small"
-              color="inverse"
-              className="uppercase tracking-[0.15em]"
-            >
-              Programma Zuidas — 2026 → 2031
-            </Paragraph>
+            <Metadata color="inverse">Programma Zuidas — 2026 → 2031</Metadata>
           </Grid.Cell>
           <Grid.Cell
             span={{ narrow: 4, medium: 6, wide: 8 }}
@@ -442,7 +430,7 @@ export function ZuidasLanding() {
       {/* Note: Breakout.Cell uses `colSpan` (not `span`). */}
       <Breakout>
         <Breakout.Cell colSpan="all">
-          <Image src="/zuidas-masterplan.jpg" alt="" aspectRatio="16-5" />
+          <Image src="/zuidas-masterplan.jpg" alt="" aspectRatio="16:5" />
         </Breakout.Cell>
       </Breakout>
 

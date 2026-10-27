@@ -10,7 +10,7 @@ Integration guide for using Tailwind CSS v4 alongside the Amsterdam Design Syste
 
 ### Vite plugin (recommended)
 
-This is the path used by real Amsterdam apps. Add `@tailwindcss/vite` to your Vite config:
+This is the path the starter (`assets/starter-vite-react/`) uses. Add `@tailwindcss/vite` to your Vite config:
 
 ```ts
 // vite.config.ts
@@ -59,25 +59,17 @@ export default {
 }
 ```
 
-### Disable preflight — required
+### Leave out preflight — required
 
-Tailwind's preflight (CSS reset) **conflicts** with AMS base styles: it strips margins from `<p>`, removes the `<body>` font-family, and overrides `ams-body`. AMS provides its own reset via `@amsterdam/design-system-css`. Disable Tailwind's:
+Tailwind's preflight (CSS reset) **conflicts** with AMS base styles: it strips margins from `<p>`, removes the `<body>` font-family, and overrides `ams-body`. ADS needs no global reset — every component resets the elements it renders.
 
-```js
-// tailwind.config.js
-export default {
-  // ...
-  corePlugins: {
-    preflight: false,
-  },
-}
-```
+In Tailwind v4 you leave preflight out by **not importing it**: import `tailwindcss/theme` and `tailwindcss/utilities` separately (as above) instead of `@import "tailwindcss"`, which bundles `tailwindcss/preflight`.
 
-This is non-negotiable. If you skip it you will see broken paragraph spacing, missing Amsterdam Sans, and `ams-page-header` styling that does not apply.
+> The v3 `corePlugins: { preflight: false }` option does nothing in Tailwind v4 — the v4 JS config loaded through `@config` does not read `corePlugins`. Don't rely on it.
 
 ## Using compact tokens with Tailwind
 
-Real Amsterdam apps almost always use **Compact mode** (internal tools). The cleanest way to get Tailwind spacing utilities that resolve to *exact* compact values — instead of going through CSS variables — is to import `compact.json` directly into `tailwind.config.js` and spread it into `theme.extend.spacing`:
+Applications and internal tools typically use **Compact mode** (the starter does). The cleanest way to get Tailwind spacing utilities that resolve to *exact* compact values — instead of going through CSS variables — is to import `compact.json` directly into `tailwind.config.js` and spread it into `theme.extend.spacing`:
 
 ```js
 // tailwind.config.js
@@ -114,9 +106,6 @@ export default {
       },
     },
   },
-  corePlugins: {
-    preflight: false,
-  },
 }
 ```
 
@@ -127,7 +116,7 @@ import tokens from "@amsterdam/design-system-tokens/dist/index.json"
 const { ams } = tokens
 ```
 
-> **Why both `...ams.space` AND `ams-*: var(...)` keys?** The spread gives you exact values for utilities like `gap-2` (Tailwind's default scale, now overridden with ADS values). The named keys give you `gap-ams-m` semantics for custom layouts where you want to be explicit about which AMS token you mean. Pick the style that fits the line; do not mix them on the same component.
+> **Why both `...ams.space` AND `ams-*: var(...)` keys?** The spread adds keys named after the tokens — `xs`, `s`, `m`, `l`, `xl`, `2xl` — with the literal compact values, so `gap-m` or `p-2xl` resolve to fixed compact values. It does **not** change Tailwind's numeric scale (`gap-2` stays Tailwind's). The `ams-*` keys (`gap-ams-m`) go through the CSS variables, so they follow whichever mode's tokens are loaded. Prefer `ams-*`; use the spread keys only if you need literal values, and don't mix them on one component.
 
 ## Theme Mapping (alternative — `@theme` directive)
 
@@ -235,7 +224,7 @@ If you prefer keeping the bridge in CSS instead of JS, use Tailwind's `@theme` d
 
 ## Motion
 
-ADS ships no animation primitives. Real Amsterdam apps reach for **`tw-animate-css`** as the animation utility library — it gives you `animate-fade-in`, `animate-slide-up`, and similar utilities that compose cleanly with Tailwind.
+ADS ships no animation primitives and has no guidance on page-load animation, so motion is optional. If you add it, **`tw-animate-css`** is a small animation utility library — it gives you `animate-fade-in`, `animate-slide-up`, and similar utilities that compose cleanly with Tailwind.
 
 ```bash
 bun add tw-animate-css

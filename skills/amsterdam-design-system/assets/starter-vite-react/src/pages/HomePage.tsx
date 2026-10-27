@@ -5,6 +5,7 @@ import {
   Column,
   Grid,
   Heading,
+  Metadata,
   Paragraph,
   Row,
   Spotlight,
@@ -14,6 +15,7 @@ import { ChevronForwardIcon } from "@amsterdam/design-system-react-icons"
 import { useQuery } from "@tanstack/react-query"
 
 import { StatCard } from "@/components/StatCard"
+import { RouterLink } from "@/lib/RouterLink"
 
 /*
  * HomePage — the worked example from references/aesthetic-discipline.md.
@@ -64,13 +66,7 @@ export function HomePage() {
             start={{ narrow: 1, medium: 2, wide: 3 }}
             className="ams-reveal"
           >
-            <Paragraph
-              size="small"
-              color="inverse"
-              className="uppercase tracking-[0.15em]"
-            >
-              Programma Zuidas — 2026 → 2031
-            </Paragraph>
+            <Metadata color="inverse">Programma Zuidas — 2026 → 2031</Metadata>
           </Grid.Cell>
 
           <Grid.Cell
@@ -106,6 +102,7 @@ export function HomePage() {
               <StandaloneLink
                 href="/rapport"
                 icon={ChevronForwardIcon}
+                linkComponent={RouterLink}
                 color="inverse"
               >
                 Lees het rapport
@@ -188,7 +185,7 @@ export function HomePage() {
                 geconsulteerd. Inloopavonden vinden maandelijks plaats in het
                 informatiecentrum aan de Strawinskylaan.
               </Paragraph>
-              <StandaloneLink href="/meedoen" icon={ChevronForwardIcon}>
+              <StandaloneLink href="/meedoen" icon={ChevronForwardIcon} linkComponent={RouterLink}>
                 Bekijk de agenda
               </StandaloneLink>
             </Column>
