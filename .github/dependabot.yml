@@ -18,10 +18,14 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
+    ignore:
+      # typescript-eslint 8.x supports TypeScript < 6.1. Drop this once
+      # typescript-eslint supports TypeScript 7, then bump both together.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-      include: "scope"
     groups:
       # Batch routine minor/patch bumps into one PR
       deps-minor-patch:

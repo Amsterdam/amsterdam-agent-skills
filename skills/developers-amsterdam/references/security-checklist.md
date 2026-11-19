@@ -273,24 +273,33 @@ Never hard-code sensitive data in Docker images or Dockerfiles.
 
 ### Image Security
 
-- Use only official, certified Docker images
+- Use Docker Hardened Images (`dhi.io/<image>`); fall back to official images only when no hardened image exists
+- Multi-stage: build in the `-dev` variant, run in the minimal runtime variant (non-root user 65532, no shell, no package manager)
+- Copy dependencies only from hardened images (e.g. `dhi.io/uv`), never install them in the runtime stage
 - Specify exact version tags (never `latest`)
-- Scan images for vulnerabilities
-- Install only necessary packages
-- Run containers as non-root users
+- Scan the final image with Trivy
+- Runtime images can't bind ports below 1024: listen on 8000/8080
 
 ```dockerfile
-# Good: specific version, non-root, minimal
-FROM python:3.12-slim
-
-RUN groupadd -r app && useradd -r -g app app
+# Good: hardened, multi-stage, uv-managed, non-root runtime
+FROM dhi.io/python:3.15-dev AS builder
+COPY --from=dhi.io/uv:0.13 /usr/local/bin/uv /usr/local/bin/
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
 COPY . .
-USER app
-CMD ["gunicorn", "config.wsgi:application"]
+RUN uv sync --frozen --no-dev --no-editable
+
+FROM dhi.io/python:3.15
+WORKDIR /app
+# Venv + app code; files stay root-owned, so the nonroot user can read but not modify them
+COPY --from=builder /app /app
+ENV PATH="/app/.venv/bin:$PATH"
+EXPOSE 8000
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
 ```
+
+Check current tags on the DHI catalog and keep build and runtime Python versions identical. Debug with `docker debug <container>` (there is no shell in the runtime image).
 
 ## Common Vulnerabilities to Avoid
 

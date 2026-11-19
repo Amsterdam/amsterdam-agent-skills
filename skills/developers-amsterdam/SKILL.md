@@ -8,7 +8,8 @@ description: >
   approved stacks (Python/Django, FastAPI, Node.js/TypeScript, React, Next.js),
   Conventional Commits, branch protection, commit signing, 70-80% test
   coverage, security-by-design, JWT RFC9068, CSP, README/ADR standards,
-  EU-PL v1.2, Docker, PostgreSQL, and WCAG 2.1 AA.
+  EU-PL v1.2, Docker Hardened Images, uv for Python, PostgreSQL, Baseline
+  browser support, WCAG 2.1 AA, and AI Act standards for AI/ML systems.
 ---
 
 # City of Amsterdam Engineering Standards
@@ -50,7 +51,8 @@ When the user's request is vague (e.g., "build me an API", "set up a new project
 | Mobile | React Native | Integrated into Amsterdam App platform |
 | Low-code | Mendix | For citizen-facing simple apps |
 | Maps | Leaflet | See maps.developers.amsterdam |
-| Package manager | pnpm | Default for all Node.js/TypeScript projects |
+| Python dependencies | uv | Standard for all Python projects (`pyproject.toml` + `uv.lock`) |
+| Package manager (JS/TS) | pnpm | Recommended default; not an upstream standard |
 
 ### Database Picker
 
@@ -127,6 +129,7 @@ Refs: PROJ-789
 
 Rules:
 - Atomic commits (one logical change per commit)
+- Jupyter notebooks are for exploration only. Refactor to modular, tested `.py` before production or code review; strip all outputs from any committed `.ipynb`
 - Sign commits with GPG or SSH keys (SSH recommended)
 - Never commit: secrets, credentials, PII, generated files, `node_modules`, local configs
 
@@ -179,6 +182,10 @@ Required practices:
 
 **Reject** packages scoring poorly on most criteria. Mixed results = consult team.
 
+### Python: uv
+
+`uv` is the standard dependency manager for all Python projects. New projects: `uv init`. Existing projects on pip / pip-tools / Poetry / setuptools: convert to `pyproject.toml` + `uv.lock`. In GitHub Actions use `astral-sh/setup-uv`; configure Dependabot with `package-ecosystem: "uv"`.
+
 Additional frontend requirements:
 - Regular updates and patches
 - Annual reviews for quality, reliability, and necessity
@@ -201,6 +208,19 @@ Key requirements:
 
 Testing tools: WebAIM WAVE, W3C Markup Validation, Google Lighthouse, VoiceOver, JAWS, TalkBack.
 
+## Browser Support
+
+Frontend and shared UI code uses **[Baseline Widely Available](https://web.dev/baseline)** features only (in all major browsers for 30+ months). No browser-version matrix to maintain; Browserslist is optional.
+
+Enforce it in CI and locally:
+
+| Code | Lint plugin |
+|------|-------------|
+| JS / TS | `eslint-plugin-baseline-js` → `"baseline-js/use-baseline": ["error", { available: "widely" }]` |
+| CSS | `stylelint-plugin-use-baseline` |
+
+Need a newer feature? Use progressive enhancement or a fallback, state the reason in the PR, and raise it in the frontend guild.
+
 ## Database Standards
 
 - **PostgreSQL** is the default RDBMS for all new projects
@@ -210,9 +230,12 @@ Testing tools: WebAIM WAVE, W3C Markup Validation, Google Lighthouse, VoiceOver,
 
 ## Docker Standards
 
+- **Use Docker Hardened Images (DHI)** (`dhi.io/<image>`) in a multi-stage build: build in the `-dev` variant, copy artifacts into the minimal runtime variant (non-root, no shell, no package manager)
+- Pull extra dependencies only from other hardened images (e.g. `dhi.io/uv`), not from the distro package manager in the runtime stage
+- Verify the final image with [Trivy](https://trivy.dev/)
 - Use Docker for containerization in dev, test, and production
 - Base images: well-maintained, specify exact version (never `latest` tag)
-- Common approved images: Alpine, NGINX, Node.js, PHP, Postgres, Python, Ubuntu
+- Where no hardened image exists, use official images (Alpine, NGINX, Node.js, PHP, Postgres, Python, Ubuntu)
 - Install only necessary packages
 - Specify all dependency versions explicitly
 - Dockerfiles live in the app's GitHub repo
@@ -224,7 +247,7 @@ Testing tools: WebAIM WAVE, W3C Markup Validation, Google Lighthouse, VoiceOver,
 
 ## Package Manager & Project Structure
 
-- **pnpm** is the default package manager for all new Node.js/TypeScript projects. npm or yarn require explicit justification (e.g., tooling incompatibility, client constraint)
+- **pnpm** is the recommended package manager for new Node.js/TypeScript projects. This is a convention of this skill, not a developers.amsterdam standard; follow the repo's existing package manager when there is one
 - Use `corepack enable` to pin the pnpm version via `packageManager` field in `package.json`
 
 ### When to Monorepo
@@ -271,6 +294,22 @@ Standard directory structure:
 
 Run commands across packages: `pnpm -r build`, `pnpm --filter web dev`.
 
+## AI Systems (AI Act)
+
+Any project that trains, fine-tunes, or deploys an AI model (including LLM apps and RAG) must meet the seven developers.amsterdam AI standards on top of the general ones:
+
+| Standard | Core requirement |
+|----------|------------------|
+| Data governance & quality | Version datasets (e.g. DVC), separate train/validation/test, version the RAG chunking + embedding model + index |
+| Model architecture & robustness | Disaggregated metrics on a hold-out set; for LLMs measure faithfulness, answer relevance, context precision (Ragas, TruLens); confidence thresholds with human fallback |
+| Fairness & bias | Fix protected attributes, metrics and thresholds **before** testing; for LLMs run [GRIP on LLMs](https://github.com/Amsterdam/grip-on-llms) |
+| Human oversight | Document intended use and prohibited uses; pick HitL / HotL / HiC; override controls and logged overrides |
+| Transparency | Tell users they're dealing with AI; label AI-generated content; plain-language explanation and limitations |
+| AI cybersecurity | Pydantic-validated inputs, prompt-injection / jailbreak / system-prompt-leak guardrails, rate limits, verified model weights |
+| Post-market monitoring | Drift, confidence and fairness monitoring with alerts; retraining SLAs; feed overrides back into retraining |
+
+> Full checklists per standard: read `references/ai-standards.md`
+
 ## Documentation Requirements
 
 Mandatory for all new repos (since May 2024):
@@ -304,7 +343,11 @@ Mandatory for all new repos (since May 2024):
 | 70% frontend / 80% backend coverage | Skip tests for production code |
 | Store secrets in Key Vault / env vars | Hard-code secrets or commit credentials |
 | Document with README, ADRs, changelog | Leave repos undocumented |
-| Use pnpm for Node.js/TypeScript projects | Use npm or yarn without justification |
+| Use uv for Python dependencies | Add new `requirements.txt` / Poetry setups |
+| Docker Hardened Images, multi-stage, Trivy-scanned | Install packages in the runtime image |
+| Baseline Widely Available web features, lint-enforced | Ship newer features without a fallback |
+| Disclose AI use and label AI-generated content | Present AI output as human-authored fact |
+| Refactor notebooks into tested modules for production | Put `.ipynb` with outputs into review |
 
 ## Shared Components
 
@@ -332,3 +375,4 @@ Mandatory for all new repos (since May 2024):
 | `references/testing-standards.md` | Setting up test infrastructure, choosing frameworks, defining coverage targets |
 | `references/security-checklist.md` | Implementing auth, JWT validation, CSP, Docker security, or reviewing security |
 | `references/project-setup-checklist.md` | Creating a new repository, writing README/ADRs, setting up licensing |
+| `references/ai-standards.md` | Building, evaluating, or deploying an AI/ML model, LLM app, or RAG system |

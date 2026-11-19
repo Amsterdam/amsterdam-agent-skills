@@ -118,4 +118,6 @@ Reference files are loaded on-demand (`read references/foo.md`), so they can be 
 
 ## Dependencies
 
-This repo has no build step or runtime dependencies. Skills are plain Markdown files consumed by AI tools.
+Skills are plain Markdown files consumed by AI tools; there is no repo-level build step.
+
+The one exception is `skills/amsterdam-design-system/assets/starter-vite-react/`, a runnable Bun + Vite starter. Dependabot keeps its `package.json` current. After changing it, verify with `bun install && bun run build && bun run lint && bun run fmt:check` from that directory (don't commit `bun.lock` or `node_modules/`).

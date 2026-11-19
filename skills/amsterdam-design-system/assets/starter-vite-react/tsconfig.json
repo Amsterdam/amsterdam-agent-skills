@@ -15,13 +15,11 @@
     "noEmit": true,
 
     "strict": true,
-    "ignoreDeprecations": "6.0",
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

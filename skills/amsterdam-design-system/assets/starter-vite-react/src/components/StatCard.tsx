@@ -50,9 +50,7 @@ export const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
       className={cn(statCard({ accent }), className)}
       {...restProps}
     >
-      <span className="text-sm font-ams text-ams-text-secondary">
-        {label}
-      </span>
+      <span className="text-sm font-ams text-ams-text-secondary">{label}</span>
       <span className="text-3xl font-extrabold font-ams text-ams-text">
         {value}
       </span>

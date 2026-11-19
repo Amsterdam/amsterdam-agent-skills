@@ -431,7 +431,7 @@ export function AppLayout() {
 
 For a runnable version of this exact pattern, see `assets/starter-vite-react/src/layouts/AppLayout.tsx` and `src/router.tsx`.
 
-### Routing links with React Router v7
+### Routing links with React Router (v7+)
 
 Every ADS link component accepts a router link (ADS React v4.2.0+): `linkComponent` on `Link`, `StandaloneLink`, `CallToActionLink`, `SkipLink`, `Breadcrumb.Link`, `Card.Link`, `LinkList.Link`, `Menu.Link`, `PageHeader.MenuLink`, `PageFooter.MenuLink`, `TabNavigation.Link`, `TableOfContents.Link` and `Pagination`; `logoLinkComponent` on `PageHeader`. ADS passes `href` and other anchor attributes straight through to it.
 
