@@ -31,12 +31,33 @@ jobs:
         id: detect
         env:
           GH_TOKEN: ${{ secrets.SYNC_PAT }}
+          UPSTREAM: Amsterdam/development-standards
         run: |
-          # Read state from repo variable (requires PAT with Variables permission)
-          STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DEV_STANDARDS_LAST_COMMIT" --jq '.value' 2>/dev/null) || STORED=""
+          # Read state from repo variable (requires PAT with Variables permission).
+          # `gh api` prints the error body to stdout on failure (e.g. a 404 when the
+          # variable does not exist yet), so only keep the output when the call succeeds
+          # and the value looks like a commit SHA. Anything else means "no state".
+          if STORED=$(gh api "repos/${GITHUB_REPOSITORY}/actions/variables/DEV_STANDARDS_LAST_COMMIT" --jq '.value' 2>/dev/null); then
+            :
+          else
+            echo "::warning::Could not read DEV_STANDARDS_LAST_COMMIT (missing variable or SYNC_PAT lacks Variables permission)"
+            STORED=""
+          fi
+          if ! [[ "$STORED" =~ ^[0-9a-f]{40}$ ]]; then
+            [ -n "$STORED" ] && echo "::warning::Ignoring invalid stored value: $STORED"
+            STORED=""
+          fi
 
-          # Get current HEAD of develop
-          CURRENT_SHA=$(gh api "repos/Amsterdam/development-standards/commits?sha=develop&per_page=1" --jq '.[0].sha')
+          # Amsterdam/development-standards is an internal repo: SYNC_PAT needs
+          # read access to it (Contents + Metadata), or GitHub answers 404.
+          if ! BRANCH=$(gh api "repos/${UPSTREAM}" --jq '.default_branch' 2>/dev/null); then
+            echo "::error::Cannot read ${UPSTREAM}. Give SYNC_PAT read access to it (Contents + Metadata)."
+            exit 1
+          fi
+
+          # Track the upstream default branch (moved from develop to main in 2026)
+          CURRENT_SHA=$(gh api "repos/${UPSTREAM}/commits?sha=${BRANCH}&per_page=1" --jq '.[0].sha')
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
 
           if [ -z "$STORED" ]; then
             echo "First run — seeding state with $CURRENT_SHA"
@@ -46,13 +67,13 @@ jobs:
           fi
 
           if [ "$STORED" = "$CURRENT_SHA" ]; then
-            echo "No changes on develop"
+            echo "No changes on $BRANCH"
             echo "action=none" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           # Compare stored SHA with current HEAD
-          COMPARISON=$(gh api "repos/Amsterdam/development-standards/compare/${STORED}...${CURRENT_SHA}" 2>/dev/null) || {
+          COMPARISON=$(gh api "repos/${UPSTREAM}/compare/${STORED}...${CURRENT_SHA}" 2>/dev/null) || {
             echo "Compare failed (stored SHA may no longer exist). Re-seeding."
             echo "action=seed" >> "$GITHUB_OUTPUT"
             echo "newest_sha=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
@@ -90,7 +111,7 @@ jobs:
 
           SHORT_STORED=$(echo "$STORED" | cut -c1-7)
           SHORT_CURRENT=$(echo "$CURRENT_SHA" | cut -c1-7)
-          echo "compare_url=https://github.com/Amsterdam/development-standards/compare/${SHORT_STORED}...${SHORT_CURRENT}" >> "$GITHUB_OUTPUT"
+          echo "compare_url=https://github.com/${UPSTREAM}/compare/${SHORT_STORED}...${SHORT_CURRENT}" >> "$GITHUB_OUTPUT"
 
       - name: Check for duplicate issue
         if: steps.detect.outputs.action == 'notify'
@@ -117,12 +138,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMIT_COUNT: ${{ steps.detect.outputs.commit_count }}
+          BRANCH: ${{ steps.detect.outputs.branch }}
           COMPARE_URL: ${{ steps.detect.outputs.compare_url }}
         run: |
           TODAY=$(date -u +%Y-%m-%d)
 
           printf '## Upstream Changes Detected\n\n' > /tmp/issue_body.md
-          printf '**%s** new commit(s) on [`Amsterdam/development-standards@develop`](https://github.com/Amsterdam/development-standards/tree/develop).\n\n' "$COMMIT_COUNT" >> /tmp/issue_body.md
+          printf '**%s** new commit(s) on [`Amsterdam/development-standards@%s`](https://github.com/Amsterdam/development-standards/tree/%s).\n\n' "$COMMIT_COUNT" "$BRANCH" "$BRANCH" >> /tmp/issue_body.md
           printf '[View full diff](%s)\n\n' "$COMPARE_URL" >> /tmp/issue_body.md
           printf '## Commits\n\n' >> /tmp/issue_body.md
           cat /tmp/commit_table.md >> /tmp/issue_body.md
@@ -136,6 +158,7 @@ jobs:
           - [ ] `skills/developers-amsterdam/references/testing-standards.md`
           - [ ] `skills/developers-amsterdam/references/security-checklist.md`
           - [ ] `skills/developers-amsterdam/references/project-setup-checklist.md`
+          - [ ] `skills/developers-amsterdam/references/ai-standards.md`
 
           ## What to Look For
 
@@ -153,6 +176,7 @@ jobs:
           3. Update each skill file where the commits impact existing guidance
           4. Do NOT remove existing patterns that still work — only add, update, or mark deprecated
           5. Keep the same file structure and formatting conventions
+          6. Never copy content from the upstream `internal/` folder — this repo is public, upstream is internal
           BODY
 
           gh issue create \
