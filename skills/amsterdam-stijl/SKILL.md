@@ -448,7 +448,7 @@ Deze skill bepaalt de **tekstinhoud** binnen Amsterdam Design System-componenten
 | `Heading` | Informatief, max 5 woorden, geen werkwoord-zin |
 | `Paragraph` | Ongeveer 5 regels / 75 woorden, kernzin eerst |
 | `Link` | Beschrijvend, nooit "klik hier": "Bekijk de voorwaarden" |
-| `Tooltip` / `Description` | Een zin, geeft extra context |
+| `Hint` / `FormFieldStatus` | Een zin, geeft extra context of de status van het veld. ADS heeft geen tooltip: zet hulptekst zichtbaar in een `Hint` |
 
 ## Referentiebestanden
 

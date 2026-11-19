@@ -44,8 +44,8 @@ done
 
 | Skill | Description | Updated |
 |-------|-------------|---------|
-| [amsterdam-design-system](skills/amsterdam-design-system/) | Gemeente Amsterdam design system — React components, `--ams-*` tokens, Grid layout, Spacious/Compact modes, Tailwind v4 bridge | 2026-04-03 |
-| [amsterdam-stijl](skills/amsterdam-stijl/) | Amsterdam municipality writing style — Heldere Taal (B1), Eenvoudige Taal (A2), inclusive language, tone of voice, word choice, text templates | 2026-04-01 |
+| [amsterdam-design-system](skills/amsterdam-design-system/) | Gemeente Amsterdam design system (ADS 4.5) — React components, `--ams-*` tokens, Grid layout, Spacious/Compact/Lo-fi modes, routing links, Tailwind v4 bridge | 2026-10-27 |
+| [amsterdam-stijl](skills/amsterdam-stijl/) | Amsterdam municipality writing style — Heldere Taal (B1), Eenvoudige Taal (A2), inclusive language, tone of voice, word choice, text templates | 2026-10-27 |
 | [developers-amsterdam](skills/developers-amsterdam/) | Gemeente Amsterdam engineering standards — approved tech stacks, Git workflow, testing requirements, security-by-design, documentation standards, EU-PL v1.2, WCAG 2.1 AA | 2026-04-01 |
 
 ## Structure

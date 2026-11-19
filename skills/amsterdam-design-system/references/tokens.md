@@ -1,6 +1,6 @@
 # Amsterdam Design System — Token Catalog
 
-> Covers `@amsterdam/design-system-tokens` **v3.4.0** (April 2026).
+> Covers `@amsterdam/design-system-tokens` **v4.4.0** (October 2026).
 
 Complete `--ams-*` CSS custom property reference for both Spacious (default) and Compact modes.
 
@@ -15,8 +15,8 @@ Brand tokens  →  Common tokens  →  Component tokens
 
 **Reference chain example:**
 ```
-Brand:     --ams-color-interactive-default: #004699
-Common:    --ams-links-color: var(--ams-color-interactive-default)
+Brand:     --ams-color-interactive: #004699
+Common:    --ams-links-color: var(--ams-color-interactive)
 Component: --ams-link-color: var(--ams-links-color)
 ```
 
@@ -39,6 +39,7 @@ Component: --ams-link-color: var(--ams-links-color)
 | CSS Custom Property | Value |
 |-------------------|-------|
 | `--ams-color-background` | `#ffffff` |
+| `--ams-color-background-body` | `#ffffff` (Spacious) / `#e8e8e8` (Compact — grey page, white Grid cells) |
 
 ### Interactive
 
@@ -105,8 +106,10 @@ All spacing tokens use fluid `clamp()` values that scale with viewport width.
 | s | `--ams-space-s` | `0.5rem` | 8px | 8px (fixed) |
 | m | `--ams-space-m` | `clamp(0.75rem, 0.6786rem + 0.3571vw, 1rem)` | 12px | 16px |
 | l | `--ams-space-l` | `clamp(1rem, 0.8571rem + 0.7143vw, 1.5rem)` | 16px | 24px |
-| xl | `--ams-space-xl` | `clamp(1.5rem, 1.2857rem + 1.0714vw, 2.25rem)` | 24px | 36px |
-| 2xl | `--ams-space-2xl` | `clamp(2rem, 1.7143rem + 1.4286vw, 3rem)` | 32px | 48px |
+| xl | `--ams-space-xl` | `clamp(1.25rem, 1.0357rem + 1.0714vw, 2rem)` | 20px | 32px |
+| 2xl | `--ams-space-2xl` | `clamp(1.5rem, 1.2143rem + 1.4286vw, 2.5rem)` | 24px | 40px |
+
+Compact `xl` and `2xl` dropped by 4 and 8px in tokens v4.2.0.
 
 ## Typography
 
@@ -123,7 +126,11 @@ All spacing tokens use fluid `clamp()` values that scale with viewport width.
 | `--ams-typography-body-text-font-size` | `clamp(1.125rem, 1.0893rem + 0.1786vw, 1.25rem)` (~18-20px) |
 | `--ams-typography-body-text-font-weight` | `400` |
 | `--ams-typography-body-text-line-height` | `1.6` |
-| `--ams-typography-body-text-bold-font-weight` | `800` |
+| `--ams-typography-body-text-bold-font-weight` | `700` (was 800 before v4.1.0) |
+| `--ams-typography-body-text-light-font-weight` | `300` |
+| `--ams-typography-body-text-extra-bold-font-weight` | `800` |
+| `--ams-typography-body-text-black-font-weight` | `900` |
+| `--ams-typography-italic-font-style` | `italic` |
 | `--ams-typography-body-text-small-font-size` | `1rem` (16px) |
 | `--ams-typography-body-text-small-line-height` | `1.5` |
 | `--ams-typography-body-text-large-font-size` | ~21-25px fluid |
@@ -144,7 +151,7 @@ All spacing tokens use fluid `clamp()` values that scale with viewport width.
 
 ### Headings — Spacious
 
-All headings: `font-weight: 800`, `text-wrap: balance`
+All headings: `font-weight: var(--ams-typography-heading-font-weight)` (`700`), `text-wrap: balance`
 
 | Level | Font Size | Line Height |
 |-------|-----------|-------------|
@@ -173,6 +180,7 @@ All headings: `font-weight: 800`, `text-wrap: balance`
 | `--ams-border-width-m` | `0.125rem` (2px) |
 | `--ams-border-width-l` | `0.1875rem` (3px) |
 | `--ams-border-width-xl` | `0.25rem` (4px) |
+| `--ams-border-radius` | `0` |
 
 ### Compact Mode (thinner)
 
@@ -240,6 +248,7 @@ Shared across TextInput, TextArea, Select, DateInput, TimeInput, PasswordInput, 
 | `--ams-inputs-padding-block` | `var(--ams-space-s)` |
 | `--ams-inputs-padding-inline` | `var(--ams-space-m)` |
 | `--ams-inputs-disabled-color` | `var(--ams-color-interactive-disabled)` |
+| `--ams-inputs-disabled-background-color` | `#e8e8e8` (v4.3.0+: disabled inputs have a grey fill) |
 | `--ams-inputs-invalid-border-color` | `var(--ams-color-interactive-invalid)` |
 | `--ams-inputs-placeholder-color` | `var(--ams-color-text-secondary)` |
 
@@ -301,17 +310,17 @@ Terms use Heading 4 typography and `text-wrap: balance` for multi-line readabili
 ### Grid
 
 ```
---ams-grid-column-count         (default: 4)
---ams-grid-padding-inline       (default: var(--ams-space-l))
-
-At medium breakpoint:
---ams-grid-column-count: 8
---ams-grid-padding-inline: var(--ams-space-xl)
-
-At wide breakpoint:
---ams-grid-column-count: 12
---ams-grid-padding-inline: var(--ams-space-2xl)
+--ams-grid-column-count                 4
+--ams-grid-padding-inline               var(--ams-space-l)    (Compact: --ams-space-m)
+--ams-grid-vi-medium-column-count       8
+--ams-grid-vi-medium-padding-inline     var(--ams-space-xl)   (Compact: --ams-space-l)
+--ams-grid-vi-wide-column-count         12
+--ams-grid-vi-wide-padding-inline       var(--ams-space-2xl)  (Compact: --ams-space-xl)
+--ams-grid-cell-background-color        initial               (Compact: --ams-color-background)
+--ams-grid-cell-padding-block/-inline   initial               (Compact: --ams-space-m)
 ```
+
+Viewport-dependent component tokens use a `vi-` prefix since v4.0.0 (`*.vi-medium.*`, `*.vi-wide.*`). The old `*.medium.*` / `*.wide.*` names are deprecated aliases. Since v4.5.0, two-value spacing tokens are split into `-start` / `-end` (e.g. `--ams-dialog-header-padding-block-start`); the combined names are deprecated.
 
 ## Using Tokens
 
@@ -339,6 +348,16 @@ const primaryColor = tokens.ams.color.interactive.default // "#004699"
 ```scss
 @use "@amsterdam/design-system-tokens/dist/index.scss" as *;
 ```
+
+### Modes
+
+| Mode | `:root` file | `.ams-theme` file + class |
+|---|---|---|
+| Spacious (default) | `dist/index.css` | `dist/index.theme.css` + `ams-theme` |
+| Compact | add `dist/compact.css` | add `dist/compact.theme.css` + `ams-theme--compact` |
+| Lo-fi (wireframe) | add `dist/lo-fi.css` + `@amsterdam/design-system-assets/font/lo-fi/index.css` | add `dist/lo-fi.theme.css` + `ams-theme--lo-fi` |
+
+JSON (`index.json`, `compact.json`, `lo-fi.json`), SCSS and ES module (`*.mjs` + `.d.ts`) builds exist for each mode.
 
 ### Theme-Scoped (for embedding in non-AMS pages)
 
