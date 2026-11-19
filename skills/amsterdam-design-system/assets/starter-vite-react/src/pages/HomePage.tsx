@@ -155,8 +155,8 @@ export function HomePage() {
               <Heading level={2}>De vier ingrepen</Heading>
               <Paragraph>
                 Het Programma Zuidas bestaat uit vier samenhangende projecten
-                die de bereikbaarheid, leefbaarheid en ruimtelijke kwaliteit
-                van het gebied verbeteren.
+                die de bereikbaarheid, leefbaarheid en ruimtelijke kwaliteit van
+                het gebied verbeteren.
               </Paragraph>
               <Paragraph>
                 De ingrepen zijn op elkaar afgestemd: het verleggen van de
@@ -185,7 +185,11 @@ export function HomePage() {
                 geconsulteerd. Inloopavonden vinden maandelijks plaats in het
                 informatiecentrum aan de Strawinskylaan.
               </Paragraph>
-              <StandaloneLink href="/meedoen" icon={ChevronForwardIcon} linkComponent={RouterLink}>
+              <StandaloneLink
+                href="/meedoen"
+                icon={ChevronForwardIcon}
+                linkComponent={RouterLink}
+              >
                 Bekijk de agenda
               </StandaloneLink>
             </Column>

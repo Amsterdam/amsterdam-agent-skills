@@ -36,8 +36,13 @@ export function AppLayout() {
 
         <PageFooter>
           <PageFooter.Menu>
-            <PageFooter.MenuLink href="/privacy" linkComponent={RouterLink}>Privacy</PageFooter.MenuLink>
-            <PageFooter.MenuLink href="/toegankelijkheid" linkComponent={RouterLink}>
+            <PageFooter.MenuLink href="/privacy" linkComponent={RouterLink}>
+              Privacy
+            </PageFooter.MenuLink>
+            <PageFooter.MenuLink
+              href="/toegankelijkheid"
+              linkComponent={RouterLink}
+            >
               Toegankelijkheid
             </PageFooter.MenuLink>
           </PageFooter.Menu>

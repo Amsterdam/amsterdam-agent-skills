@@ -1,6 +1,6 @@
 # Amsterdam React Starter
 
-A runnable Vite + React + TypeScript scaffold pre-wired with the Amsterdam Design System (ADS) in **Compact mode**, React Router v7, Tanstack Query v5, and Tailwind v4 + ADS bridge.
+A runnable Vite + React + TypeScript scaffold pre-wired with the Amsterdam Design System (ADS) in **Compact mode**, React Router v8, Tanstack Query v5, and Tailwind v4 + ADS bridge.
 
 This starter is the canonical "new app" shape for Gemeente Amsterdam internal tools. Copy the whole tree, run `bun install`, and adapt `src/pages/HomePage.tsx` to your domain. Do not re-invent the setup — every config file here solves a real footgun.
 
@@ -19,15 +19,15 @@ Open <http://localhost:5173>.
 
 ## What's wired
 
-| Concern | Choice | Why |
-|---|---|---|
-| Bundler | **Vite 8** + `@vitejs/plugin-react-swc` | Fast dev server and build for a client-side SPA. For a full application with SSR, Next.js is also a recommended stack (see `developers-amsterdam`). |
-| Routing | **React Router v7** (`react-router`, `createBrowserRouter`) | Listed in the Amsterdam tech stack for SPAs. Outlet-based layouts compose cleanly with ADS Page. |
-| Data | **Tanstack Query v5** | Pre-wired in `src/App.tsx`. Sample query in `src/pages/HomePage.tsx`. |
-| Styling | **Tailwind v4** via `@tailwindcss/vite` | Mapped to AMS tokens in `tailwind.config.js`. Preflight left out (only `tailwindcss/theme` + `utilities` imported) — ADS needs no reset. |
-| Mode | **Compact** (`compact.css` imported) | ADS's mode for applications and internal tools. For a public website, switch to Spacious by deleting one line — see "Switching to Spacious mode" below. |
-| Component variants | **CVA** + `clsx` + `tailwind-merge` | See `src/components/StatCard.tsx` and `src/lib/cn.ts`. |
-| Animation | **`tw-animate-css`** + an optional page-load reveal in `src/styles/reveal.css` | House style, not ADS guidance. Apply `.ams-reveal` to top-level Grid cells if you want it; delete it otherwise. |
+| Concern            | Choice                                                                         | Why                                                                                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bundler            | **Vite 8** + `@vitejs/plugin-react-swc`                                        | Fast dev server and build for a client-side SPA. For a full application with SSR, Next.js is also a recommended stack (see `developers-amsterdam`).     |
+| Routing            | **React Router v8** (`react-router`, `createBrowserRouter`)                    | Listed in the Amsterdam tech stack for SPAs. Outlet-based layouts compose cleanly with ADS Page.                                                        |
+| Data               | **Tanstack Query v5**                                                          | Pre-wired in `src/App.tsx`. Sample query in `src/pages/HomePage.tsx`.                                                                                   |
+| Styling            | **Tailwind v4** via `@tailwindcss/vite`                                        | Mapped to AMS tokens in `tailwind.config.js`. Preflight left out (only `tailwindcss/theme` + `utilities` imported) — ADS needs no reset.                |
+| Mode               | **Compact** (`compact.css` imported)                                           | ADS's mode for applications and internal tools. For a public website, switch to Spacious by deleting one line — see "Switching to Spacious mode" below. |
+| Component variants | **CVA** + `clsx` + `tailwind-merge`                                            | See `src/components/StatCard.tsx` and `src/lib/cn.ts`.                                                                                                  |
+| Animation          | **`tw-animate-css`** + an optional page-load reveal in `src/styles/reveal.css` | House style, not ADS guidance. Apply `.ams-reveal` to top-level Grid cells if you want it; delete it otherwise.                                         |
 
 ## File map
 
@@ -68,7 +68,7 @@ Open <http://localhost:5173>.
 2. **Sharp accent** — `--ams-color-highlight-magenta` used on exactly three elements: the hero Badge, the first StatCard's left border, and the newsletter CTA Button.
 3. **Rhythm** — `paddingVertical="2x-large"` on the hero, `"large"` on the KPI strip and newsletter, `"x-large"` on the body.
 4. **Focal point** — the off-center editorial column at `start={2} span={7}` on wide, plus one `<Breakout>` band.
-5. *Optional motion* — `.ams-reveal` cascade on the four hero Grid cells (respects `prefers-reduced-motion`).
+5. _Optional motion_ — `.ams-reveal` cascade on the four hero Grid cells (respects `prefers-reduced-motion`).
 
 When you replace HomePage with your own page, the checklist in `references/aesthetic-discipline.md` → "The Discipline Checklist" can help on open-ended briefs.
 
@@ -98,29 +98,39 @@ That's it. Spacing, typography, and borders all scale up automatically.
 The starter is minimal on purpose. Add these only when you need them:
 
 ### Tanstack Table — for sortable/filterable data tables
+
 ```bash
 bun add @tanstack/react-table
 ```
+
 See `references/components.md` → "Components ADS does not ship — use Radix primitives" for the wrapping pattern. Wrap rows in ADS `<Table>` markup; let Tanstack handle state.
 
 ### Headless primitives — for components ADS doesn't cover (suggestion, not ADS guidance)
+
 ADS does not ship a Popover, DropdownMenu, Tooltip, or ContextMenu. Check first whether an ADS pattern covers the need (see `references/components.md` → "Components ADS Does Not Ship"). If not, a headless library such as Radix, styled with AMS tokens, conflicts least:
+
 ```bash
 bun add @radix-ui/react-popover @radix-ui/react-dropdown-menu @radix-ui/react-tooltip
 ```
+
 Never reach for `shadcn/ui` directly — its design tokens conflict with ADS.
 
 ### MSAL — for Azure AD authentication
+
 If your internal tool signs users in with Azure AD (Entra ID): The pattern is documented in `references/layout-patterns.md` → "React Router + AppLayout outlet". Add:
+
 ```bash
 bun add @azure/msal-browser @azure/msal-react
 ```
+
 Then wrap the `RouterProvider` in `<MsalProvider>` inside `src/App.tsx`, and add an `AuthGate` outlet wrapper in `src/router.tsx`.
 
 ### Application Insights — for telemetry
+
 ```bash
 bun add @microsoft/applicationinsights-web @microsoft/applicationinsights-react-js
 ```
+
 See the `appinsights-instrumentation` skill for setup.
 
 ## Customizing the navigation
@@ -130,7 +140,9 @@ Every ADS link component takes a router link (ADS React v4.2.0+): `linkComponent
 ADS passes `href` and other anchor attributes straight through, so the starter ships one shared adapter, `src/lib/RouterLink.tsx`, built on React Router's `useHref` + `useLinkClickHandler` (the pattern from the [ADS routing guide](https://designsystem.amsterdam/?path=/docs/docs-guidelines-routing-libraries--docs)). Use it on every internal link:
 
 ```tsx
-<StandaloneLink href="/meedoen" linkComponent={RouterLink}>Bekijk de agenda</StandaloneLink>
+<StandaloneLink href="/meedoen" linkComponent={RouterLink}>
+  Bekijk de agenda
+</StandaloneLink>
 ```
 
 Keep the `linkComponent` stable: import the module-level `RouterLink`, never write `linkComponent={(p) => <a {...p} />}` inline — that remounts the link on every render. Refs are only forwarded to a plain anchor, not to a custom `linkComponent`.

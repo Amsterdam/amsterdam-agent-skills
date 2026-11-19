@@ -138,7 +138,7 @@ Other weights have their own tokens: `--ams-typography-body-text-light-font-weig
 For a new standalone React app, **do not re-invent the setup**. Use the runnable starter at `assets/starter-vite-react/`. It ships:
 
 - **Vite 8** + `@vitejs/plugin-react-swc` (Bun scripts, but `npm` works the same)
-- **React Router v7** with an `<AppLayout>` outlet pattern
+- **React Router v8** with an `<AppLayout>` outlet pattern
 - **Tanstack Query v5** pre-wired in `App.tsx`
 - **Tailwind v4** via `@tailwindcss/vite`, with the AMS bridge in `tailwind.config.js` and preflight left out (only `tailwindcss/theme` + `tailwindcss/utilities` are imported)
 - **ADS React/CSS v4.5.0, tokens v4.4.0** in **Compact mode** (switch to Spacious for public sites, see below)
@@ -516,7 +516,7 @@ import { Link, Breadcrumb, Pagination } from "@amsterdam/design-system-react"
 
 ### React Router
 
-React Router's `Link` takes `to`, not `href`, so pass a small adapter built on `useHref` + `useLinkClickHandler` from `react-router` (v7). Copy `assets/starter-vite-react/src/lib/RouterLink.tsx`:
+React Router's `Link` takes `to`, not `href`, so pass a small adapter built on `useHref` + `useLinkClickHandler` from `react-router` (v7 and v8). Copy `assets/starter-vite-react/src/lib/RouterLink.tsx`:
 
 ```tsx
 import { Link, StandaloneLink } from "@amsterdam/design-system-react"

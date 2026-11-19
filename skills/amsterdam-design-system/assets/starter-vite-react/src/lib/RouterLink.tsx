@@ -5,7 +5,12 @@ type AnchorProps = AnchorHTMLAttributes<HTMLAnchorElement>
 
 const isExternal = (href: string) => /^([a-z][a-z0-9+.-]*:|\/\/)/i.test(href)
 
-function InternalLink({ href, onClick, target, ...props }: AnchorProps & { href: string }) {
+function InternalLink({
+  href,
+  onClick,
+  target,
+  ...props
+}: AnchorProps & { href: string }) {
   const resolvedHref = useHref(href)
   const handleClick = useLinkClickHandler<HTMLAnchorElement>(href, { target })
 

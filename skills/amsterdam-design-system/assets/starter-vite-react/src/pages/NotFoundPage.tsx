@@ -1,4 +1,9 @@
-import { Grid, Heading, Paragraph, StandaloneLink } from "@amsterdam/design-system-react"
+import {
+  Grid,
+  Heading,
+  Paragraph,
+  StandaloneLink,
+} from "@amsterdam/design-system-react"
 
 import { RouterLink } from "@/lib/RouterLink"
 
@@ -10,8 +15,12 @@ export function NotFoundPage() {
         start={{ narrow: 1, medium: 1, wide: 3 }}
       >
         <Heading level={1}>Pagina niet gevonden</Heading>
-        <Paragraph>De pagina die u zoekt bestaat niet of is verplaatst.</Paragraph>
-        <StandaloneLink href="/" linkComponent={RouterLink}>Terug naar de homepage</StandaloneLink>
+        <Paragraph>
+          De pagina die u zoekt bestaat niet of is verplaatst.
+        </Paragraph>
+        <StandaloneLink href="/" linkComponent={RouterLink}>
+          Terug naar de homepage
+        </StandaloneLink>
       </Grid.Cell>
     </Grid>
   )
